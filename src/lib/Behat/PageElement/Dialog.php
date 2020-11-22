@@ -6,37 +6,33 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
-use EzSystems\Behat\Browser\Element\Element;
+use EzSystems\Behat\Browser\Component\Component;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
+use PHPUnit\Framework\Assert;
 
-/** Element that describes dialog popup */
-class Dialog extends Element
+class Dialog extends Component
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'Dialog';
-
-    public function __construct(OldBrowserContext $context)
-    {
-        parent::__construct($context);
-        $this->fields = [
-            'confirm' => '.modal.show button[type="submit"],.modal.show button[data-click]',
-            'decline' => '.modal.show .btn-secondary',
-        ];
-    }
-
     public function confirm(): void
     {
-        $this->context->findElement($this->fields['confirm'])->click();
+        $this->getHTMLPage()->find($this->getSelector('confirm'))->click();
     }
 
     public function decline(): void
     {
-        $this->context->findElement($this->fields['decline'])->click();
+        $this->getHTMLPage()->find($this->getSelector('decline'))->click();
     }
 
-    public function verifyVisibility(): void
+    public function verifyIsLoaded(): void
     {
-        $this->context->waitUntilElementIsVisible($this->fields['confirm']);
-        $this->context->waitUntilElementIsVisible($this->fields['decline']);
+        Assert::assertTrue($this->getHTMLPage()->find($this->getSelector('confirm'))->isVisible());
+        Assert::assertTrue($this->getHTMLPage()->find($this->getSelector('decline'))->isVisible());
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('confirm','.modal.show button[type="submit"],.modal.show button[data-click]'),
+            new CSSSelector('decline', '.modal.show .btn-secondary'),
+        ];
     }
 }

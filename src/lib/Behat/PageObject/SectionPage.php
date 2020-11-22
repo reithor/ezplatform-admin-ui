@@ -38,6 +38,10 @@ class SectionPage extends Page
      * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog[]
      */
     public $dialogs;
+    /**
+     * @var string
+     */
+    protected $expectedSesionName;
 
     public function __construct(OldBrowserContext $context, string $sectionName)
     {
@@ -120,5 +124,15 @@ class SectionPage extends Page
         } else {
             Assert::fail(sprintf('There is no "%s" Content item on the list.', $name));
         }
+    }
+
+    public function setExpectedSectionName(string $sectionName): void
+    {
+        $this->expectedSesionName = $sectionName;
+    }
+
+    public function getAssignedContentCount(string $sectionName): int
+    {
+        return (int) $this->adminList->table->getTableCellValue($sectionName, 'Assigned content');
     }
 }

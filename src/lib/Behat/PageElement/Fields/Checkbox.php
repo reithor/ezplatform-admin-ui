@@ -57,7 +57,7 @@ class Checkbox extends EzFieldElement
     {
         Assert::assertEquals(
             filter_var($values['value'], FILTER_VALIDATE_BOOLEAN),
-            $this->context->findElement($this->fields['fieldContainer'])->getText() === 'Yes',
+            $this->getHTMLPage()->find($this->getSelector('fieldContainer'))->getText() === 'Yes',
             'Field has wrong value'
         );
     }

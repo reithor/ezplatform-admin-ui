@@ -8,14 +8,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\BusinessContext;
 
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\LeftMenu;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
-use EzSystems\Behat\Core\Environment\EnvironmentConstants;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\UpperMenu;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\TrashPage;
-use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentViewPage;
 use PHPUnit\Framework\Assert;
 
 class TrashContext implements Context
@@ -24,14 +17,6 @@ class TrashContext implements Context
      * @var TrashPage
      */
     private $trashPage;
-    /**
-     * @var RightMenu
-     */
-    private $rightMenu;
-    /**
-     * @var Dialog
-     */
-    private $dialog;
 
     public function __construct(TrashPage $trashPage)
     {
@@ -73,15 +58,11 @@ class TrashContext implements Context
      */
     public function iDeleteItemFromTrash(TableNode $itemsTable): void
     {
-        $trashPage = PageObjectFactory::createPage($this->browserContext, TrashPage::PAGE_NAME);
-
         foreach ($itemsTable->getHash() as $itemTable) {
-            $trashPage->trashTable->selectListElement($itemTable['item']);
+            $this->trashPage->select(['Name' => $itemTable['item']]);
         }
 
-        $trashPage->trashTable->clickTrashButton();
-        $trashPage->dialog->verifyVisibility();
-        $trashPage->dialog->confirm();
+        $this->trashPage->deleteSelectedItems();
     }
 
     /**
@@ -89,13 +70,11 @@ class TrashContext implements Context
      */
     public function iRestoreItemFromTrash(TableNode $itemsTable): void
     {
-        $trashPage = PageObjectFactory::createPage($this->browserContext, TrashPage::PAGE_NAME);
-
         foreach ($itemsTable->getHash() as $itemTable) {
-            $trashPage->trashTable->selectListElement($itemTable['item']);
+            $this->trashPage->select(['Name' => $itemTable['item']]);
         }
 
-        $trashPage->trashTable->clickRestoreButton();
+        $this->trashPage->restoreSelectedItems();
     }
 
     /**
@@ -104,10 +83,10 @@ class TrashContext implements Context
     public function iRestoreItemFromTrashUnderNewLocation(TableNode $itemsTable, string $pathToContent): void
     {
         foreach ($itemsTable->getHash() as $itemTable) {
-            $this->trashPage->trashTable->selectListElement(['Name' => $itemTable['item']]);
+            $this->trashPage->select(['Name' => $itemTable['item']]);
         }
 
-        $this->trashPage->restoreUnderNewLocation($pathToContent);
+        $this->trashPage->restoreSelectedNewLocation($pathToContent);
     }
 
     /**

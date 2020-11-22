@@ -22,7 +22,7 @@ class UpperMenu extends Component
 
     public function goToDashboard(): void
     {
-        $this->context->findElement($this->fields['dashboardLink'])->click();
+        $this->getHTMLPage()->find($this->getSelector('dashboardLink'))->click();
     }
 
     public function goToSubTab(string $tabName): void
@@ -36,12 +36,12 @@ class UpperMenu extends Component
 
     public function getNotificationsCount(): int
     {
-        return (int) $this->context->findElement($this->fields['pendingNotificationsCount'])->getAttribute('data-count');
+        return (int) $this->getHTMLPage()->find($this->getSelector('pendingNotificationsCount'))->getAttribute('data-count');
     }
 
     public function chooseFromUserDropdown(string $option): void
     {
-        $this->context->findElement($this->fields['userSettingsToggle'])->click();
+        $this->getHTMLPage()->find($this->getSelector('userSettingsToggle'))->click();
         $this->context->getElementByText($option, $this->fields['userSettingsItem'])->click();
     }
 

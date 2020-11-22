@@ -48,7 +48,7 @@ class TextLine extends EzFieldElement
     {
         Assert::assertEquals(
             $values['value'],
-            $this->context->findElement($this->fields['fieldContainer'])->getText(),
+            $this->getHTMLPage()->find($this->getSelector('fieldContainer'))->getText(),
             'Field has wrong value'
         );
     }

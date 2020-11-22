@@ -8,16 +8,13 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\API\ContentData\FieldTypeNameConverter;
 use EzSystems\Behat\Browser\Component\Component;
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
-use EzSystems\Behat\Browser\Element\Element;
 use EzSystems\Behat\Browser\Selector\CSSSelector;
 
 class ContentField extends Component
 {
     public const FIELD_TYPE_CLASS_REGEX = '/ez[a-z]*-field/';
 
-    public function verifyFieldHasValue(string $label, array $fieldData): void
+    private function verifyFieldHasValue(string $label, array $fieldData)
     {
         throw new \Exception('kaj ja je...');
 
@@ -65,6 +62,11 @@ class ContentField extends Component
     public function getName(): string
     {
         return 'Content field';
+    }
+
+    public function getFieldValue(string $label)
+    {
+        return $this->verifyFieldHasValue();
     }
 
     protected function specifySelectors(): array

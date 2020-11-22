@@ -81,7 +81,7 @@ class ContentRelationTable extends Table
      */
     public function clickTrashIcon(): void
     {
-        $this->context->findElement($this->fields['removeRelations'])->click();
+        $this->getHTMLPage()->find($this->getSelector('removeRelations'))->click();
     }
 
     /**
@@ -89,6 +89,6 @@ class ContentRelationTable extends Table
      */
     public function clickPlusButton(): void
     {
-        $this->context->findElement($this->fields['addRelation'])->click();
+        $this->getHTMLPage()->find($this->getSelector('addRelation'))->click();
     }
 }

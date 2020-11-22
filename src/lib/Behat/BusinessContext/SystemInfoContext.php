@@ -6,11 +6,11 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\BusinessContext;
 
+use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
-use EzSystems\Behat\Browser\Factory\PageObjectFactory;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\SystemInfoPage;
 
-class SystemInfoContext extends BusinessContext
+class SystemInfoContext implements Context
 {
     private $systemInfoTableMapping = [
         'Bundles' => 'Symfony Kernel',
@@ -18,13 +18,22 @@ class SystemInfoContext extends BusinessContext
     ];
 
     /**
+     * @var SystemInfoPage
+     */
+    private $systemInfoPage;
+
+    public function __construct(SystemInfoPage $systemInfoPage)
+    {
+        $this->systemInfoPage = $systemInfoPage;
+    }
+
+    /**
      * @When I go to :tabName tab in System Information
      */
-    public function iGoToTabInSYstemInfo(string $tabName): void
+    public function iGoToTabInSystemInfo(string $tabName): void
     {
-        $systemInfoPage = PageObjectFactory::createPage($this->browserContext, SystemInfoPage::PAGE_NAME);
-        $systemInfoPage->verifyIsLoaded();
-        $systemInfoPage->navLinkTabs->goToTab($tabName);
+        $this->systemInfoPage->verifyIsLoaded();
+        $this->systemInfoPage->goToTab($tabName);
     }
 
     /**
@@ -32,8 +41,7 @@ class SystemInfoContext extends BusinessContext
      */
     public function iSeeSystemInformationTable(string $tabName): void
     {
-        $systemInfoPage = PageObjectFactory::createPage($this->browserContext, SystemInfoPage::PAGE_NAME);
-        $systemInfoPage->verifySystemInfoTable($tabName);
+        $this->systemInfoPage->verifySystemInfoTable($tabName);
     }
 
     /**
@@ -41,10 +49,7 @@ class SystemInfoContext extends BusinessContext
      */
     public function iSeeRecordsInSystemInformation(string $tableName, TableNode $records): void
     {
-        $systemInfoPage = PageObjectFactory::createPage($this->browserContext, SystemInfoPage::PAGE_NAME);
-        $systemInfoPage->navLinkTabs->goToTab($this->systemInfoTableMapping[$tableName]);
-
-        $hash = $records->getHash();
-        $systemInfoPage->verifySystemInfoRecords($tableName, $hash);
+        $this->systemInfoPage->goToTab($this->systemInfoTableMapping[$tableName]);
+        $this->systemInfoPage->verifySystemInfoRecords($tableName, $records->getHash());
     }
 }

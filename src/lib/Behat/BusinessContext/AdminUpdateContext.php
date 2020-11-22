@@ -6,24 +6,32 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\BusinessContext;
 
+use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Notification;
-use EzSystems\Behat\Browser\Factory\PageObjectFactory;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\AdminUpdateItemPage;
+use PHPUnit\Framework\Assert;
 
 /** Context for common actions for creating and updating */
-class AdminUpdateContext extends BusinessContext
+class AdminUpdateContext implements Context
 {
+    /**
+     * @var AdminUpdateItemPage
+     */
+    private $adminUpdateItemPage;
+
+    public function __construct(AdminUpdateItemPage $adminUpdateItemPage)
+    {
+        $this->adminUpdateItemPage = $adminUpdateItemPage;
+    }
+
     /**
      * @When I set fields
      */
     public function iSetFields(TableNode $table): void
     {
-        $updateItemPage = PageObjectFactory::createPage($this->browserContext, AdminUpdateItemPage::PAGE_NAME);
-        $hash = $table->getHash();
-        foreach ($hash as $row) {
-            $updateItemPage->adminUpdateForm->fillFieldWithValue($row['label'], $row['value']);
+        foreach ($table->getHash() as $row) {
+            $this->adminUpdateItemPage->fillFieldWithValue($row['label'], $row['value']);
         }
     }
 
@@ -32,10 +40,8 @@ class AdminUpdateContext extends BusinessContext
      */
     public function verifyFieldsAreSet(TableNode $table): void
     {
-        $updateItemPage = PageObjectFactory::createPage($this->browserContext, AdminUpdateItemPage::PAGE_NAME);
-        $hash = $table->getHash();
-        foreach ($hash as $row) {
-            $updateItemPage->adminUpdateForm->verifyFieldHasValue($row['label'], $row['value']);
+        foreach ($table->getHash() as $row) {
+            Assert::assertEquals($row['value'], $this->adminUpdateItemPage->getFieldValue($row['label']));
         }
     }
 
@@ -44,6 +50,8 @@ class AdminUpdateContext extends BusinessContext
      */
     public function iAddField(string $fieldName): void
     {
+
+        throw new \Exception('refactor me ...');
         $updateItemPage = PageObjectFactory::createPage($this->browserContext, AdminUpdateItemPage::PAGE_NAME);
         $updateItemPage->adminUpdateForm->selectFieldDefinition($fieldName);
         $updateItemPage->adminUpdateForm->clickAddFieldDefinition();
@@ -59,6 +67,8 @@ class AdminUpdateContext extends BusinessContext
      */
     public function iSetFieldInContainer(string $field, string $containerName, string $value): void
     {
+        throw new \Exception('refactor me ...');
+
         $updateItemPage = PageObjectFactory::createPage($this->browserContext, AdminUpdateItemPage::PAGE_NAME);
         $updateItemPage->adminUpdateForm->expandFieldDefinition($containerName);
         $updateItemPage->adminUpdateForm->fillFieldWithValue($field, $value, $containerName);

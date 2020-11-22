@@ -6,48 +6,42 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
-use Behat\Mink\Element\NodeElement;
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
-use EzSystems\Behat\Browser\Element\Element;
-use WebDriver\Exception\ElementNotVisible;
+use EzSystems\Behat\Browser\Component\Component;
+use EzSystems\Behat\Browser\Element\NodeElement;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
+use PHPUnit\Framework\Assert;
 
-class LanguagePicker extends Element
+class LanguagePicker extends Component
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'LanguagePicker';
-
-    private $loadingTimeout;
-
-    public function __construct(OldBrowserContext $context)
-    {
-        parent::__construct($context);
-        $this->fields = [
-            'languagePickerSelector' => '.ez-extra-actions--edit:not(.ez-extra-actions--hidden) #content_edit_language',
-            'languageSelector' => '.ez-extra-actions--edit:not(.ez-extra-actions--hidden) #content_edit_language .form-check-label',
-        ];
-        $this->loadingTimeout = 5;
-    }
-
     public function chooseLanguage($language): void
     {
-        $this->context->getElementByText($language, $this->fields['languageSelector'])->click();
+        $this->getHTMLPage()->findAll($this->getSelector('languageSelector'))->getByText($language)->click();
     }
 
     public function getLanguages(): array
     {
-        return array_map(function (NodeElement $element) {
-            return $element->getText();
-        }, $this->context->findAllElements($this->fields['languageSelector']));
+        return $this->getHTMLPage()->findAll($this->getSelector('languageSelector'))->map(
+            function (NodeElement $element) {
+                return $element->getText();
+            }
+        );
     }
 
     public function isVisible(): bool
     {
-        try {
-            $this->context->waitUntilElementIsVisible($this->fields['languagePickerSelector'], $this->loadingTimeout);
+        return $this->getHTMLPage()->findAll($this->getSelector('languagePickerSelector'))->any();
+    }
 
-            return true;
-        } catch (ElementNotVisible $e) {
-            return false;
-        }
+    public function verifyIsLoaded(): void
+    {
+        Assert::assertTrue($this->isVisible());
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('languagePickerSelector', '.ez-extra-actions--edit:not(.ez-extra-actions--hidden) #content_edit_language'),
+            new CSSSelector('languageSelector', '.ez-extra-actions--edit:not(.ez-extra-actions--hidden) #content_edit_language .form-check-label'),
+        ];
     }
 }

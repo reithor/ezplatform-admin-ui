@@ -25,10 +25,10 @@ class Country extends EzFieldElement
 
     public function setValue(array $parameters): void
     {
-        $this->context->findElement($this->fields['dropdownSelector'])->click();
-        $this->context->waitUntilElementIsVisible($this->fields['dropdownExpanded']);
+        $this->getHTMLPage()->find($this->getSelector('dropdownSelector'))->click();
+        Assert::assertTrue($this->getHTMLPage()->find($this->getSelector('dropdownExpanded'))->isVisible());
         $this->context->getElementByText($parameters['value'], $this->fields['dropdownItem'])->click();
-        $this->context->findElement($this->fields['dropdownSelector'])->click();
+        $this->getHTMLPage()->find($this->getSelector('dropdownSelector'))->click();
     }
 
     public function getValue(): array
@@ -46,7 +46,7 @@ class Country extends EzFieldElement
     {
         Assert::assertEquals(
             $values['value'],
-            $this->context->findElement($this->fields['fieldContainer'])->getText(),
+            $this->getHTMLPage()->find($this->getSelector('fieldContainer'))->getText(),
             'Field has wrong value'
         );
     }

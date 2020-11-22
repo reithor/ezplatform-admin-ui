@@ -53,7 +53,7 @@ class DateAndTimePopup extends Element
         $dateScript = sprintf(self::SETTING_SCRIPT_FORMAT, $this->fields['containerSelector'], $this->fields['flatpickrSelector'], $date->format($dateFormat), $dateFormat);
         $this->context->getSession()->getDriver()->executeScript($dateScript);
 
-        $this->context->waitUntilElementIsVisible($this->fields['dateSet']);
+        Assert::assertTrue($this->getHTMLPage()->find($this->getSelector('dateSet'))->isVisible());
     }
 
     /**

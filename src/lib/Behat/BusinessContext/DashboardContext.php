@@ -6,42 +6,50 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\BusinessContext;
 
+use Behat\Behat\Context\Context;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UpperMenu;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\DashboardPage;
-use EzSystems\Behat\Browser\Factory\PageObjectFactory;
 use PHPUnit\Framework\Assert;
 
-class DashboardContext extends BusinessContext
+class DashboardContext implements Context
 {
+    /**
+     * @var UpperMenu
+     */
+    private $upperMenu;
+    /**
+     * @var DashboardPage
+     */
+    private $dashboardPage;
+
+    public function __construct(UpperMenu $upperMenu, DashboardPage $dashboardPage)
+    {
+        $this->upperMenu = $upperMenu;
+        $this->dashboardPage = $dashboardPage;
+    }
+
     /**
      * @Given I go to dashboard
      */
     public function iGoToDashboard(): void
     {
-        $upperMenu = ElementFactory::createElement($this->browserContext, UpperMenu::ELEMENT_NAME);
-        $upperMenu->goToDashboard();
+        $this->upperMenu->goToDashboard();
     }
 
     /**
-     * @Then going to dashboard we see there's draft :draftName on list
+     * @Then there's draft :draftName on Dashboard list
      */
     public function goingToDashboardISeeDraft(string $draftName): void
     {
-        Assert::assertTrue(
-            $this->goToDashboardAndCheckIfDraftIsOnList($draftName),
-            sprintf('There is no draft %s on the list', $draftName)
-        );
+        Assert::assertTrue($this->isDraftOnList($draftName));
     }
 
     /**
-     * @Then going to dashboard we see there's no draft :draftName on list
+     * @Then there's no draft :draftName on Dashboard list
      */
     public function goingToDashboardISeeNoDraft(string $draftName): void
     {
-        Assert::assertFalse(
-            $this->goToDashboardAndCheckIfDraftIsOnList($draftName),
-            sprintf('There is draft %s on the list', $draftName)
-        );
+        Assert::assertFalse($this->isDraftOnList($draftName));
     }
 
     /**
@@ -49,30 +57,16 @@ class DashboardContext extends BusinessContext
      */
     public function startEditingContentDraft(string $contentDraftName): void
     {
-        $dashboardPage = PageObjectFactory::createPage($this->browserContext, DashboardPage::PAGE_NAME);
-        $dashboardPage->dashboardTable->clickEditButton($contentDraftName);
-    }
-
-    private function goToDashboardAndCheckIfDraftIsOnList(string $draftName): bool
-    {
-        $this->goToDashboard();
-
-        return $this->isDraftOnList($draftName);
-    }
-
-    private function goToDashboard(): void
-    {
-        $dashboardPage = PageObjectFactory::createPage($this->browserContext, DashboardPage::PAGE_NAME);
-        $dashboardPage->open();
+        $this->dashboardPage->editDraft($contentDraftName);
     }
 
     private function isDraftOnList(string $draftName): bool
     {
-        $dashboardPage = PageObjectFactory::createPage($this->browserContext, DashboardPage::PAGE_NAME);
-        if ($dashboardPage->isListEmpty()) {
+        if ($this->dashboardPage->isListEmpty()) {
             return false;
         }
 
-        return $dashboardPage->dashboardTable->isElementOnCurrentPage($draftName);
+        // REFACTOR ME
+        return $this->dashboardPage->dashboardTable->isElementOnCurrentPage($draftName);
     }
 }

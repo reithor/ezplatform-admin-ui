@@ -6,30 +6,54 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
+use ErrorException;
 use EzSystems\Behat\Browser\Page\Page;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\PreviewNav;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 
 class ContentPreviewPage extends Page
 {
-    /** @var string Name by which Page is recognised */
-    public const PAGE_NAME = 'ContentPreview';
-
-    public $previewNav;
-
-    public function __construct(OldBrowserContext $context, string $contentName)
+    protected function getRoute(): string
     {
-        parent::__construct($context);
-        $this->siteAccess = 'admin';
-        $this->route = '/content';
-        $this->pageTitle = 'Previewing: ' . $contentName;
-        $this->pageTitleLocator = '.ez-preview__nav .ez-preview__item--description';
-        $this->previewNav = ElementFactory::createElement($context, PreviewNav::ELEMENT_NAME);
+        throw new ErrorException('Preview page cannot be opened on its own!');
     }
 
-    public function verifyElements(): void
+    public function verifyIsLoaded(): void
     {
-        $this->previewNav->verifyVisibility();
+        $this->getHTMLPage()->find($this->getSelector('previewNav'));
+    }
+
+    public function getName(): string
+    {
+        return 'Content preview';
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('previewNav', '.ez-preview__nav'),
+            new CSSSelector('backToEdit', '.ez-preview__nav .ez-preview__item--back a'),
+            new CSSSelector('title', '.ez-preview__nav .ez-preview__item--description'),
+            new CSSSelector('desktop', '.ez-preview__nav .ez-preview),_item--actions .ez-icon-desktop'),
+            new CSSSelector('tablet', '.ez-preview__nav .ez-preview__item--actions .ez-icon-tablet'),
+            new CSSSelector('mobile', '.ez-preview__nav .ez-preview__item--action), .ez-icon-mobile'),
+            new CSSSelector('selectedView', '.ez-preview__action--selected'),
+        ];
+    }
+
+    public function goBackToEditView(): void
+    {
+        $this->getHTMLPage()->find($this->getSelector('backToEdit'))->click();
+    }
+
+    public function goToView(string $viewName): void
+    {
+        if ($viewName !== $this->getActiveViewName()) {
+            $this->getHTMLPage()->find($this->getSelector($viewName))->click();
+        }
+    }
+
+    public function getActiveViewName(): string
+    {
+        return $this->getHTMLPage()->find($this->getSelector('selectedView'))->getAttribute('data-preview-mode');
     }
 }

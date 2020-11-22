@@ -121,7 +121,7 @@ class NavigationContext implements Context
      */
     public function iNavigateToContentInRoot(string $contentName, string $contentType)
     {
-        $path = EnvironmentConstants::get('ROOT_CONTENT_NAME');
+        $path = $this->argumentParser->replaceRootKeyword('root');
         $this->iNavigateToContent($contentName, $contentType, $path);
     }
 
@@ -130,10 +130,9 @@ class NavigationContext implements Context
      */
     public function verifyIfBreadcrumbShowsPath(string $path): void
     {
-        $breadcrumb = ElementFactory::createElement($this->browserContext, Breadcrumb::ELEMENT_NAME);
         Assert::assertEquals(
             str_replace('/', ' ', $path),
-            $breadcrumb->getBreadcrumb(),
+            $this->breadcrumb->getBreadcrumb(),
             'Breadcrumb shows invalid path'
         );
     }
@@ -143,7 +142,7 @@ class NavigationContext implements Context
      */
     public function verifyIfBreadcrumbShowsPathUnderRoot(string $path): void
     {
-        $path = sprintf('%s/%s', EnvironmentConstants::get('ROOT_CONTENT_NAME'), $path);
+        $path = $this->argumentParser->replaceRootKeyword($path);
         $this->verifyIfBreadcrumbShowsPath($path);
     }
 
@@ -160,6 +159,7 @@ class NavigationContext implements Context
      */
     public function iShouldBeRedirectedToRootInDefaultView(): void
     {
+        // MOVE ME TO PAGE BUILDER
 //        if (EnvironmentConstants::get('ROOT_CONTENT_TYPE') === 'Landing page') {
 //            $previewType = PageObjectFactory::getPreviewType(EnvironmentConstants::get('ROOT_CONTENT_TYPE'));
 //            $pageEditor = PageObjectFactory::createPage($this->browserContext, PageBuilderEditor::PAGE_NAME, $previewType);
@@ -167,7 +167,7 @@ class NavigationContext implements Context
 //            $pageEditor->waitUntilLoaded();
 //            $pageEditor->verifyIsLoaded();
 //        } else {
-            $contentItemPage = PageObjectFactory::createPage($this->browserContext, ContentViewPage::PAGE_NAME, EnvironmentConstants::get('ROOT_CONTENT_NAME'));
-        $contentItemPage->verifyIsLoaded();
+        $this->contentItemPage = $this->argumentParser->replaceRootKeyword('root');
+        $this->contentItemPage->verifyIsLoaded();
     }
 }

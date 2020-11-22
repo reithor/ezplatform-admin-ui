@@ -103,12 +103,12 @@ class ContentRelationMultiple extends EzFieldElement
 
         Assert::assertRegExp(
             sprintf(self::VIEW_PATTERN, $firstValue),
-            $this->context->findElement($this->fields['fieldContainer'])->getText(),
+            $this->getHTMLPage()->find($this->getSelector('fieldContainer'))->getText(),
             'Field has wrong value'
         );
         Assert::assertRegExp(
             sprintf(self::VIEW_PATTERN, $secondValue),
-            $this->context->findElement($this->fields['fieldContainer'])->getText(),
+            $this->getHTMLPage()->find($this->getSelector('fieldContainer'))->getText(),
             'Field has wrong value'
         );
     }

@@ -63,6 +63,21 @@ class ContentUpdateItemPage extends Page
         return 'Content Update';
     }
 
+    public function fillFieldWithValue($label, array $values)
+    {
+        $this->contentUpdateForm->fillFieldWithValue($label, $values);
+    }
+
+    public function getField(string $fieldName)
+    {
+        return $this->contentUpdateForm->getField($fieldName);
+    }
+
+    public function close()
+    {
+        $this->contentUpdateForm->closeUpdateForm();
+    }
+
     protected function specifySelectors(): array
     {
         return [

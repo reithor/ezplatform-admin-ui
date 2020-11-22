@@ -27,6 +27,11 @@ class LeftMenu extends Component
         return 'Left menu';
     }
 
+    public function browse()
+    {
+        $this->clickButton('Browse');
+    }
+
     protected function specifySelectors(): array
     {
         return [

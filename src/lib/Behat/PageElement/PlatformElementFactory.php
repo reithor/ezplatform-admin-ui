@@ -56,7 +56,7 @@ class PlatformElementFactory extends ElementFactory
      * @param string $elementName
      * @param null[]|string[] ...$parameters
      *
-     * @return AdminList|AdminUpdateForm|Breadcrumb|ContentField|ContentRelationTable|ContentTypePicker|ContentUpdateForm|DashboardTable|DateAndTimePopup|DefaultFieldElement|Dialog|DoubleHeaderTable|DraftConflictDialog|DraftConflictTable|Element|IconLinkedListTable|LanguagePicker|LeftMenu|LinkedListTable|NavLinkTabs|Notification|Pagination|PreviewNav|RightMenu|SimpleListTable|SimpleTable|SubitemsList|SubItemsTable|SystemInfoTable|TrashTable|UniversalDiscoveryWidget|UpperMenu|VerticalOrientedTable
+     * @return AdminList|AdminUpdateForm|Breadcrumb|ContentField|ContentRelationTable|ContentTypePicker|ContentUpdateForm|DashboardTable|DateAndTimePopup|DefaultFieldElement|Dialog|DoubleHeaderTable|DraftConflictDialog|DraftConflictTable|Element|IconLinkedListTable|LanguagePicker|LeftMenu|LinkedListTable|TableNavigationTab|Notification|Pagination|PreviewNav|RightMenu|SimpleListTable|SimpleTable|SubitemsList|SubItemsTable|SystemInfoTable|TrashTable|UniversalDiscoveryWidget|UpperMenu|VerticalOrientedTable
      */
     public static function createElement(OldBrowserContext $context, string $elementName, ?string ...$parameters)
     {
@@ -113,8 +113,8 @@ class PlatformElementFactory extends ElementFactory
                 return new SubitemsGridList($context, $parameters[0]);
             case SubitemsList::ELEMENT_NAME:
                 return new SubitemsList($context, $parameters[0]);
-            case NavLinkTabs::ELEMENT_NAME:
-                return new NavLinkTabs($context);
+            case TableNavigationTab::ELEMENT_NAME:
+                return new TableNavigationTab($context);
             case PreviewNav::ELEMENT_NAME:
                 return new PreviewNav($context);
             case RichText::ELEMENT_NAME:

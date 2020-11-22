@@ -34,7 +34,7 @@ class SystemInfoTable extends Table
     {
         Assert::assertEquals(
             $header,
-            $this->context->findElement($this->fields['tableHeader'])->getText(),
+            $this->getHTMLPage()->find($this->getSelector('tableHeader'))->getText(),
             'System info table "%s" has wrong header.'
         );
     }

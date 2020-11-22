@@ -7,8 +7,6 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\BusinessContext;
 
 use Behat\Behat\Context\Context;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
-use EzSystems\Behat\Core\Environment\EnvironmentConstants;
 use EzSystems\Behat\Core\Behat\ArgumentParser;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
 

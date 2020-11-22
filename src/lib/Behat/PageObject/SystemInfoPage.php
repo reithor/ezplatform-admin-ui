@@ -6,49 +6,38 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
+use Behat\Mink\Session;
 use EzSystems\Behat\Browser\Page\Page;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\NavLinkTabs;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\TableNavigationTab;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SimpleTable;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SystemInfoTable;
+use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
 use PHPUnit\Framework\Assert;
 
 class SystemInfoPage extends Page
 {
-    public const PAGE_NAME = 'System Information';
-
-    /**
-     * @var NavLinkTabs
-     */
-    public $navLinkTabs;
-
     /**
      * @var SystemInfoTable
      */
-    public $systemInfoTable;
+    protected $systemInfoTable;
 
-    public function __construct(OldBrowserContext $context)
-    {
-        parent::__construct($context);
-        $this->navLinkTabs = ElementFactory::createElement($context, NavLinkTabs::ELEMENT_NAME);
-        $this->siteAccess = 'admin';
-        $this->route = '/systeminfo';
-        $this->pageTitle = self::PAGE_NAME;
-        $this->pageTitleLocator = '.ez-header h1';
-    }
+    /**
+     * @var TableNavigationTab
+     */
+    protected $tableNavigationTab;
 
-    public function verifyElements(): void
+    public function __construct(Session $session, MinkParameters $minkParameters, TableNavigationTab $tableNavigationTab)
     {
-        $this->navLinkTabs->verifyVisibility();
-        $this->verifySystemInfoTable('Product');
+        parent::__construct($session, $minkParameters);
+
+        $this->tableNavigationTab = $tableNavigationTab;
     }
 
     public function verifySystemInfoTable(string $tabName): void
     {
-        $systemInfoTable = ElementFactory::createElement($this->context, SystemInfoTable::ELEMENT_NAME, '.ez-main-container .active .ez-fieldgroup:nth-of-type(1)');
-        $systemInfoTable->verifyHeader($tabName);
+//        $systemInfoTable->verifyHeader($tabName);
     }
 
     public function verifySystemInfoRecords(string $tableName, array $records): void
@@ -69,5 +58,33 @@ class SystemInfoPage extends Page
                 Assert::fail(sprintf('Could not find requested record [%s] on the "%s" list.', $desiredRecord['Name'], $tableName));
             }
         }
+    }
+
+    public function goToTab(string $tabName)
+    {
+        $this->tableNavigationTab->goToTab($tabName);
+    }
+
+    protected function getRoute(): string
+    {
+        return '/systeminfo';
+    }
+
+    public function verifyIsLoaded(): void
+    {
+        $this->tableNavigationTab->verifyIsLoaded();
+        $this->verifySystemInfoTable('Product');
+    }
+
+    public function getName(): string
+    {
+        return 'System Information';
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('pageTitle', '.ez-header h1'),
+        ];
     }
 }

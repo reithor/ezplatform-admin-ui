@@ -6,13 +6,12 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
+use Behat\Mink\Session;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\NavLinkTabs;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SimpleListTable;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\TableNavigationTab;
+use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
 
 class RolePage extends Page
 {
@@ -39,38 +38,39 @@ class RolePage extends Page
     public $dialog;
 
     /**
-     * @var AdminList|\EzSystems\EzPlatformAdminUi\Behat\PageElement\NavLinkTabs
+     * @var AdminList|\EzSystems\EzPlatformAdminUi\Behat\PageElement\TableNavigationTab
      */
     public $navLinkTabs;
-
-    public function __construct(OldBrowserContext $context, string $roleName)
-    {
-        parent::__construct($context);
-        $this->siteAccess = 'admin';
-        $this->route = '/role/';
-        $this->roleName = $roleName;
-        $this->adminLists['Policies'] = ElementFactory::createElement($this->context, AdminList::ELEMENT_NAME, 'Policies', SimpleListTable::ELEMENT_NAME, $this->activeAdminListContainerLocator);
-        $this->adminLists['Assignments'] = ElementFactory::createElement($this->context, AdminList::ELEMENT_NAME, 'Users and Groups', SimpleListTable::ELEMENT_NAME, $this->activeAdminListContainerLocator);
-        $this->adminList = ElementFactory::createElement($this->context, AdminList::ELEMENT_NAME, '', SimpleListTable::ELEMENT_NAME, $this->activeAdminListContainerLocator);
-        $this->navLinkTabs = ElementFactory::createElement($this->context, NavLinkTabs::ELEMENT_NAME);
-        $this->dialog = ElementFactory::createElement($this->context, Dialog::ELEMENT_NAME);
-        $this->pageTitle = sprintf('Role "%s"', $roleName);
-        $this->pageTitleLocator = '.ez-header h1';
-        $this->fields = [
-            'assignButton' => '.btn-secondary',
-        ];
-    }
-
     /**
-     * Verifies that all necessary elements are visible.
+     * @var string
      */
-    public function verifyElements(): void
+    private $expectedRoleName;
+    /**
+     * @var TableNavigationTab
+     */
+    private $tableNavigationTab;
+
+    public function __construct(Session $session, MinkParameters $minkParameters, TableNavigationTab $tableNavigationTab, Dialog $dialog)
     {
-        $this->navLinkTabs->verifyVisibility();
-        $this->adminLists['Policies']->verifyVisibility();
-        $this->navLinkTabs->goToTab('Assignments');
-        $this->adminLists['Assignments']->verifyVisibility();
+        parent::__construct($session, $minkParameters);
+        $this->tableNavigationTab = $tableNavigationTab;
+        $this->dialog = $dialog;
     }
+
+//    public function qwe(OldBrowserContext $context, string $roleName)
+//    {
+//        $this->roleName = $roleName;
+//        $this->adminLists['Policies'] = ElementFactory::createElement($this->context, AdminList::ELEMENT_NAME, 'Policies', SimpleListTable::ELEMENT_NAME, $this->activeAdminListContainerLocator);
+//        $this->adminLists['Assignments'] = ElementFactory::createElement($this->context, AdminList::ELEMENT_NAME, 'Users and Groups', SimpleListTable::ELEMENT_NAME, $this->activeAdminListContainerLocator);
+//        $this->adminList = ElementFactory::createElement($this->context, AdminList::ELEMENT_NAME, '', SimpleListTable::ELEMENT_NAME, $this->activeAdminListContainerLocator);
+//        $this->navLinkTabs = ElementFactory::createElement($this->context, TableNavigationTab::ELEMENT_NAME);
+//        $this->dialog = ElementFactory::createElement($this->context, Dialog::ELEMENT_NAME);
+//        $this->pageTitle = sprintf('Role "%s"', $roleName);
+//        $this->pageTitleLocator = '.ez-header h1';
+//        $this->fields = [
+//            'assignButton' => '.btn-secondary',
+//        ];
+//    }
 
     /**
      * Verifies if list from given tab is empty.
@@ -79,7 +79,7 @@ class RolePage extends Page
      */
     public function verifyListIsEmpty(string $tabName): void
     {
-        $this->navLinkTabs->goToTab($tabName);
+        $this->tableNavigationTab->goToTab($tabName);
         if ($this->adminLists[$tabName]->table->getItemCount() > 0) {
             throw new \Exception(sprintf('"%s" list is not empty.', $tabName));
         }
@@ -87,13 +87,13 @@ class RolePage extends Page
 
     public function startEditingItem(string $itemName): void
     {
-        $this->navLinkTabs->goToTab('Policies');
+        $this->tableNavigationTab->goToTab('Policies');
         $this->adminLists['Policies']->table->clickEditButton($itemName);
     }
 
     public function startCreatingItem(): void
     {
-        $this->navLinkTabs->goToTab('Policies');
+        $this->tableNavigationTab->goToTab('Policies');
         $this->adminLists['Policies']->clickPlusButton();
     }
 
@@ -108,7 +108,7 @@ class RolePage extends Page
      */
     public function isRoleWithLimitationPresent(string $listName, string $moduleAndFunction, string $limitation): bool
     {
-        $this->navLinkTabs->goToTab($listName);
+        $this->tableNavigationTab->goToTab($listName);
         $adminList = $this->adminLists[$listName];
         $actualPoliciesList = $adminList->table->getTableHash();
 
@@ -157,5 +157,49 @@ class RolePage extends Page
         $combinedExpectedLimitation = sprintf('%s: %s', $expectedLimitationType, implode(', ', $valuePositionsDictionary));
 
         return strpos($actualLimitations, $combinedExpectedLimitation) !== false;
+    }
+
+    public function setExpectedRoleName(string $roleName)
+    {
+        $this->expectedRoleName = $roleName;
+    }
+
+    public function goToTab(string $tabName)
+    {
+        $this->tableNavigationTab->goToTab($tabName);
+    }
+
+    public function deleteSelectedItems()
+    {
+        $this->adminList->clickTrashButton(); //fix me
+        $this->dialog->verifyIsLoaded();
+        $this->dialog->confirm();
+    }
+
+    public function selectElement(array $array)
+    {
+    }
+
+    public function getRoute(): string
+    {
+        return '/role/'; // TODO: get role ID from RoleService
+    }
+
+    public function getName(): string
+    {
+        return 'Role';
+    }
+
+    public function specifySelectors(): array
+    {
+        // TODO: Implement specifySelectors() method.
+    }
+
+    public function verifyIsLoaded(): void
+    {
+        $this->tableNavigationTab->verifyIsLoaded();
+        $this->adminLists['Policies']->verifyIsLoaded();
+        $this->tableNavigationTab->goToTab('Assignments');
+        $this->adminLists['Assignments']->verifyIsLoaded();
     }
 }

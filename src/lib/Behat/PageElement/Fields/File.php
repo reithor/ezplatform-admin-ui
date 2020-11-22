@@ -51,7 +51,7 @@ class File extends EzFieldElement
 
         Assert::assertContains(
             $filename,
-            $this->context->findElement($this->fields['fieldContainer'])->getText(),
+            $this->getHTMLPage()->find($this->getSelector('fieldContainer'))->getText(),
             'Image has wrong file name'
         );
 

@@ -21,14 +21,11 @@ class TrashTable extends Table
         $this->fields['tableTrash'] = '[name=trash_item_restore]';
         $this->fields['listElement'] = $this->fields['list'] . ' tbody .ez-table__cell--after-icon';
         $this->fields['checkboxInput'] = ' input';
-        $this->fields['trashButton'] = '[id=delete-trash-items]';
-        $this->fields['restoreButton'] = '[id=trash_item_restore_restore]';
-        $this->fields['restoreUnderNewLocationButton'] = '[id=trash_item_restore_location_select_content]';
     }
 
     public function verifyVisibility(): void
     {
-        $this->context->waitUntilElementIsVisible($this->fields['tableTrash']);
+        Assert::assertTrue($this->getHTMLPage()->find($this->getSelector('tableTrash'))->isVisible());
     }
 
     public function getTableCellValue(string $header, ?string $secondHeader = null): string
@@ -96,9 +93,5 @@ class TrashTable extends Table
     public function clickRestoreButton(): void
     {
         $this->context->findElement($this->fields['restoreButton'], $this->defaultTimeout)->click();
-    }
-
-    public function clickRestoreUnderNewLocationButton(): void
-    {
     }
 }

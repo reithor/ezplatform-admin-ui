@@ -28,7 +28,7 @@ class ContentUpdateForm extends Component
         $this->getField($fieldName)->setValue($value);
     }
 
-    protected function getField(string $fieldName): EzFieldElement
+    public function getField(string $fieldName): EzFieldElement
     {
         $fieldLocator = new CSSSelector('fieldLocator', sprintf($this->getSelector('nthField'), $this->getFieldPosition($fieldName)));
         $fieldtypeIdentifier = $this->getFieldtypeIdentifier($fieldLocator, $fieldName);

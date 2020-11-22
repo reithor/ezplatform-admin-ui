@@ -72,7 +72,7 @@ class Authors extends EzFieldElement
     {
         Assert::assertEquals(
             sprintf('%s <%s>', $values['name'], $values['email']),
-            $this->context->findElement($this->fields['fieldContainer'])->getText(),
+            $this->getHTMLPage()->find($this->getSelector('fieldContainer'))->getText(),
             'Field has wrong value'
         );
     }

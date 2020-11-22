@@ -81,7 +81,7 @@ class Matrix extends EzFieldElement
     private function addRows(int $numberOfRows): void
     {
         for ($i = 0; $i < $numberOfRows; ++$i) {
-            $this->context->findElement($this->fields['addRowButton'])->click();
+            $this->getHTMLPage()->find($this->getSelector('addRowButton'))->click();
         }
     }
 

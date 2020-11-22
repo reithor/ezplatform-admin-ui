@@ -6,25 +6,12 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
-use EzSystems\Behat\Browser\Element\Element;
+use EzSystems\Behat\Browser\Component\Component;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use PHPUnit\Framework\Assert;
 
-abstract class EzFieldElement extends Element
+abstract class EzFieldElement extends Component
 {
-    protected $label;
-
-    public function __construct(OldBrowserContext $context, string $locator, string $label)
-    {
-        parent::__construct($context);
-        $this->label = $label;
-        $this->fields = [
-            'fieldContainer' => $locator,
-            'fieldLabel' => '.ez-field-edit__label-wrapper',
-            'fieldData' => '.ez-field-edit__data',
-        ];
-    }
-
     abstract public function setValue(array $parameters): void;
 
     abstract public function getValue(): array;
@@ -38,5 +25,13 @@ abstract class EzFieldElement extends Element
             $this->getValue()[0],
             sprintf('Field %s has wrong value', $value['label'])
         );
+    }
+
+    public function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('fieldLabel','.ez-field-edit__label-wrapper'),
+            new CSSSelector('fieldData','.ez-field-edit__data'),
+        ];
     }
 }

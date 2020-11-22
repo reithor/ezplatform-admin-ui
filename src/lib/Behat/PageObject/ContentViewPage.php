@@ -9,8 +9,9 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 use Behat\Mink\Session;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Selector\CSSSelector;
-use EzSystems\Behat\Core\Environment\EnvironmentConstants;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\ContentField;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\ContentTypePicker;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\LanguagePicker;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\SubitemsList;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UpperMenu;
@@ -38,6 +39,18 @@ class ContentViewPage extends Page
 
     /** @var string  */
     private $expectedContentType;
+    /**
+     * @var LanguagePicker
+     */
+    private $languagePicker;
+    /**
+     * @var ContentField
+     */
+    private $contentField;
+    /**
+     * @var string
+     */
+    private $expectedContentName;
 
     public function __construct(
         Session $session,
@@ -45,7 +58,9 @@ class ContentViewPage extends Page
         RightMenu $rightMenu,
         SubitemsList $subItemList,
         ContentTypePicker $contentTypePicker,
-        ContentUpdateItemPage $contentUpdatePage
+        ContentUpdateItemPage $contentUpdatePage,
+        LanguagePicker $languagePicker,
+        ContentField $contentField
     )
     {
         parent::__construct($session, $minkParameters);
@@ -55,6 +70,8 @@ class ContentViewPage extends Page
         $this->subItemList->shouldHaveGridViewEnabled($this->hasGridViewEnabledByDefault());
         $this->contentTypePicker = $contentTypePicker;
         $this->contentUpdatePage = $contentUpdatePage;
+        $this->languagePicker = $languagePicker;
+        $this->contentField = $contentField;
     }
 
     public function startCreatingContent(string $contentTypeName): ContentUpdateItemPage
@@ -67,13 +84,18 @@ class ContentViewPage extends Page
         return $this->contentUpdatePage;
     }
 
+    public function getFieldValue(string $fieldLabel)
+    {
+        $this->contentField->getFieldValue($fieldLabel);
+    }
+
     public function goToSubItem(string $contentName, string $contentType): void
     {
         if ($this->subItemList->canBeSorted()) {
             $this->subItemList->sortBy('Modified', false);
         }
 
-        $this->subItemList->table->clickListElement($contentName, $contentType);
+        $this->subItemList->clickListElement($contentName, $contentType);
 
         $this->setExpectedLocationPath(sprintf('%s/%s', $this->locationPath, $contentName));
         $this->verifyIsLoaded();
@@ -81,6 +103,8 @@ class ContentViewPage extends Page
 
     public function navigateToPath(string $path): void
     {
+        throw new \Exception('jak najmniej tego uzywac...');
+
         $pathArray = explode('/', $path);
         $menuTab = $pathArray[0] === EnvironmentConstants::get('ROOT_CONTENT_NAME') ? 'Content structure' : $pathArray[0];
 
@@ -100,13 +124,14 @@ class ContentViewPage extends Page
 
     private function hasGridViewEnabledByDefault(): bool
     {
-        return $this->pageTitle === 'Media';
+        return $this->expectedContentName === 'Media';
     }
 
     public function setExpectedLocationPath(string $locationPath)
     {
         $this->locationPath = $locationPath;
         $this->expectedContentType = ''; //TODO
+        $this->expectedContentName = ''; // TODO
     }
 
     public function verifyIsLoaded(): void
@@ -123,6 +148,29 @@ class ContentViewPage extends Page
     public function getName(): string
     {
         return 'Content view';
+    }
+
+    public function editContent(?string $language)
+    {
+        $this->rightMenu->clickButton('Edit');
+
+        if ($this->languagePicker->isVisible()) {
+            $availableLanguages = $this->languagePicker->getLanguages();
+            Assert::assertGreaterThan(1, count($availableLanguages));
+            Assert::assertContains($language, $availableLanguages);
+            $this->languagePicker->chooseLanguage($language);
+        }
+    }
+
+    public function isChildElementPresent(array $parameters)
+    {
+        $this->subItemList->isElementInTable($parameters);
+    }
+
+    public function sendToTrash()
+    {
+        $this->rightMenu->clickButton('Send to Trash');
+        $this->dialog->confirm();
     }
 
     protected function specifySelectors(): array

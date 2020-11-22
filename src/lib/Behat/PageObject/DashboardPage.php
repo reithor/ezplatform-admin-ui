@@ -6,41 +6,28 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
+use Behat\Mink\Session;
 use EzSystems\Behat\Browser\Page\Page;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\NavLinkTabs;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\DashboardTable;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\TableNavigationTab;
+use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
 use PHPUnit\Framework\Assert;
 
 class DashboardPage extends Page
 {
-    /** @var string Name by which Page is recognised */
-    public const PAGE_NAME = 'Dashboard';
 
     public const TABLE_CONTAINER = '#ez-tab-list-content-dashboard-my .tab-pane.active';
 
-    /** @var NavLinkTabs */
-    public $navLinkTabs;
-
     public $dashboardTable;
+    /**
+     * @var TableNavigationTab
+     */
+    private $tableNavigationTab;
 
-    public $fields;
-
-    public function __construct(OldBrowserContext $context)
+    public function __construct(Session $session, MinkParameters $minkParameters, TableNavigationTab $tableNavigationTab)
     {
-        parent::__construct($context);
-        $this->siteAccess = 'admin';
-        $this->route = '/dashboard';
-        $this->fields = [
-            'tableSelector' => '.ez-card',
-            'tableTitle' => '.ez-card__title',
-            'tableTabSelector' => '.ez-tabs .nav-item',
-        ];
-        $this->pageTitle = 'My dashboard';
-        $this->pageTitleLocator = '.ez-header h1';
-        $this->navLinkTabs = ElementFactory::createElement($context, NavLinkTabs::ELEMENT_NAME);
-        $this->dashboardTable = ElementFactory::createElement($context, DashboardTable::ELEMENT_NAME, $this::TABLE_CONTAINER);
+        parent::__construct($session, $minkParameters);
+        $this->tableNavigationTab = $tableNavigationTab;
     }
 
     public function switchTab(string $tableName, string $tabName)
@@ -49,20 +36,44 @@ class DashboardPage extends Page
         $this->context->getElementByText($tabName, $this->fields['tableTabSelector'], null, $table)->click();
     }
 
-    /**
-     * Verifies that the Dashboard has the "My content" section.
-     */
-    public function verifyElements(): void
-    {
-        Assert::assertNotNull($this->context->getElementByText('My content', $this->fields['tableSelector'], $this->fields['tableTitle']));
-        $this->navLinkTabs->verifyVisibility();
-        $this->dashboardTable->verifyVisibility();
-    }
-
     public function isListEmpty(): bool
     {
         $tableValue = $this->context->findElement($this::TABLE_CONTAINER)->getText();
 
         return strpos($tableValue, 'No content.') !== false;
+    }
+
+    public function editDraft(string $contentDraftName)
+    {
+        $this->dashboardTable->clickEditButton($contentDraftName);
+    }
+
+    protected function getRoute(): string
+    {
+        return 'dashboard';
+    }
+
+    public function verifyIsLoaded(): void
+    {
+        Assert::assertEquals('My dashboard', $this->getHTMLPage()->find($this->getSelector('pageTitle')));
+
+        Assert::assertNotNull($this->context->getElementByText('My content', $this->fields['tableSelector'], $this->fields['tableTitle']));
+        $this->tableNavigationTab->verifyIsLoaded();
+        $this->dashboardTable->verifyVisibility();
+    }
+
+    public function getName(): string
+    {
+        return 'Dashboard';
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+                new CSSSelector('tableSelector', '.ez-card'),
+                new CSSSelector('tableTitle', '.ez-card__title'),
+                new CSSSelector('tableTabSelector', '.ez-tabs .nav-item'),
+                new CSSSelector('pageTitle', '.ez-header h1'),
+        ];
     }
 }

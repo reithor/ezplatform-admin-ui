@@ -30,7 +30,7 @@ class MapLocation extends EzFieldElement
     public function setValue(array $parameters): void
     {
         $this->setSpecificCoordinate('address', $parameters['address']);
-        $this->context->findElement($this->fields['searchButton'])->click();
+        $this->getHTMLPage()->find($this->getSelector('searchButton'))->click();
 
         $expectedLongitude = $parameters['longitude'];
         $expectedLatitude = $parameters['latitude'];
@@ -96,7 +96,7 @@ class MapLocation extends EzFieldElement
 
     public function verifyValueInItemView(array $values): void
     {
-        $mapText = $this->context->findElement($this->fields['fieldContainer'])->getText();
+        $mapText = $this->getHTMLPage()->find($this->getSelector('fieldContainer'))->getText();
 
         $matches = [];
         preg_match('/Address: (.*) Latitude: (.*) Longitude: (.*)/', $mapText, $matches);

@@ -49,4 +49,24 @@ class LanguagePage extends Page
             sprintf('Attribute "%s" has wrong value.', $label)
         );
     }
+
+    protected function getRoute(): string
+    {
+        // TODO: Implement getRoute() method.
+    }
+
+    public function verifyIsLoaded(): void
+    {
+        // TODO: Implement verifyIsLoaded() method.
+    }
+
+    public function getName(): string
+    {
+        // TODO: Implement getName() method.
+    }
+
+    protected function specifySelectors(): array
+    {
+        // TODO: Implement specifySelectors() method.
+    }
 }

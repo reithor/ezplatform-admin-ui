@@ -25,6 +25,6 @@ abstract class NonEditableField extends EzFieldElement
 
     public function getValue(): array
     {
-        return [$this->context->findElement($this->fields['valueSelector'])->getText()];
+        return [$this->getHTMLPage()->find($this->getSelector('valueSelector'))->getText()];
     }
 }

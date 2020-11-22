@@ -57,16 +57,16 @@ class RichText extends EzFieldElement
     {
         Assert::assertEquals(
             $values['value'],
-            $this->context->findElement($this->fields['fieldContainer'])->getText(),
+            $this->getHTMLPage()->find($this->getSelector('fieldContainer'))->getText(),
             'Field has wrong value'
         );
     }
 
     public function openElementsToolbar(): void
     {
-        $this->context->findElement($this->fields['addButton'])->click();
+        $this->getHTMLPage()->find($this->getSelector('addButton'))->click();
         usleep(200 * 1000); // wait until the transition animations ends
-        $this->context->waitUntilElementIsVisible($this->fields['toolbarButton']);
+        Assert::assertTrue($this->getHTMLPage()->find($this->getSelector('toolbarButton'))->isVisible());
     }
 
     public function changeStyle(string $style): void
@@ -75,7 +75,7 @@ class RichText extends EzFieldElement
             throw new Exception(sprintf('Unsupported style: %s', $style));
         }
 
-        $this->context->findElement($this->fields['styleDropdown'])->click();
+        $this->getHTMLPage()->find($this->getSelector('styleDropdown'))->click();
         $this->context->findElement(sprintf($this->fields['blockStyle'], $style))->click();
     }
 
@@ -98,7 +98,7 @@ class RichText extends EzFieldElement
 
     private function getFieldInput(): NodeElement
     {
-        $fieldInput = $this->context->findElement($this->fields['fieldInput']);
+        $fieldInput = $this->getHTMLPage()->find($this->getSelector('fieldInput'));
         Assert::assertNotNull($fieldInput, sprintf('Input for field %s not found.', $this->label));
         $this->richtextId = $fieldInput->getAttribute('id');
 
@@ -109,7 +109,7 @@ class RichText extends EzFieldElement
     {
         $this->getFieldInput();
         $this->openElementsToolbar();
-        $this->context->findElement($this->fields['unorderedListButton'])->click();
+        $this->getHTMLPage()->find($this->getSelector('unorderedListButton'))->click();
 
         foreach ($listElements as $listElement) {
             $this->insertLine($listElement);
@@ -130,22 +130,22 @@ class RichText extends EzFieldElement
 
     public function clickEmbedInlineButton(): void
     {
-        $this->context->findElement($this->fields['embedInlineButton'])->click();
+        $this->getHTMLPage()->find($this->getSelector('embedInlineButton'))->click();
     }
 
     public function clickEmbedButton(): void
     {
-        $this->context->findElement($this->fields['embedButton'])->click();
+        $this->getHTMLPage()->find($this->getSelector('embedButton'))->click();
     }
 
     public function equalsEmbedInlineItem($itemName): bool
     {
-        return $itemName === $this->context->findElement($this->fields['embedInlineTitle'])->getText();
+        return $itemName === $this->getHTMLPage()->find($this->getSelector('embedInlineTitle'))->getText();
     }
 
     public function equalsEmbedItem($itemName): bool
     {
-        return $itemName === $this->context->findElement($this->fields['embedTitle'])->getText();
+        return $itemName === $this->getHTMLPage()->find($this->getSelector('embedTitle'))->getText();
     }
 
     public function moveElement($direction): void

@@ -39,7 +39,7 @@ class DateAndTime extends EzFieldElement
         $dateAndTimePopup->setTime($time[0], $time[1]);
 
         // This click is closing the date and time picker, to finally ensure that value is set up.
-        $this->context->findElement($this->fields['fieldContainer'])->click();
+        $this->getHTMLPage()->find($this->getSelector('fieldContainer'))->click();
 
         $expectedDateAndTimeValue = date_format(date_create(sprintf('%s, %s', $parameters['date'], $parameters['time'])), self::VIEW_DATE_TIME_FORMAT);
         $currentFieldValue = $this->context->findElement(sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['fieldInput']))->getValue();
@@ -62,7 +62,7 @@ class DateAndTime extends EzFieldElement
     public function verifyValueInItemView(array $values): void
     {
         $expectedDate = date_format(date_create(sprintf('%s, %s', $values['date'], $values['time'])), self::VIEW_DATE_TIME_FORMAT);
-        $actualDate = date_format(date_create($this->context->findElement($this->fields['fieldContainer'])->getText()), self::VIEW_DATE_TIME_FORMAT);
+        $actualDate = date_format(date_create($this->getHTMLPage()->find($this->getSelector('fieldContainer'))->getText()), self::VIEW_DATE_TIME_FORMAT);
         Assert::assertEquals(
             $expectedDate,
             $actualDate,

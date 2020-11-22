@@ -6,23 +6,33 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\BusinessContext;
 
+use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentTypePage;
 use EzSystems\Behat\Browser\Factory\PageObjectFactory;
 use PHPUnit\Framework\Assert;
 
-class ContentTypeContext extends BusinessContext
+class ContentTypeContext implements Context
 {
     private $contentTypeTableHeaders = ['Name', 'Identifier', 'Description'];
+    /**
+     * @var ContentTypePage
+     */
+    private $contentTypePage;
+
+    public function __construct(ContentTypePage $contentTypePage)
+    {
+        $this->contentTypePage = $contentTypePage;
+    }
 
     /**
      * @Then Content Type has proper Global properties
      */
     public function contentTypeHasProperGlobalProperties(TableNode $table): void
     {
-        $hash = $table->getHash();
-        $contentTypePage = PageObjectFactory::createPage($this->browserContext, ContentTypePage::PAGE_NAME, $hash[0]['value']);
-        foreach ($hash as $row) {
+        throw new \Exception('refactor me...');
+
+        foreach ($table->getHash() as $row) {
             if (in_array($row['label'], $this->contentTypeTableHeaders)) {
                 $actualValue = $contentTypePage->contentTypeAdminList->table->getTableCellValue($row['label']);
             } else {
@@ -42,6 +52,9 @@ class ContentTypeContext extends BusinessContext
      */
     public function contentTypeHasField(string $contentTypeName, string $fieldName, string $fieldType): void
     {
+        throw new \Exception('refactor me...');
+
+
         $actualFieldType = PageObjectFactory::createPage($this->browserContext, ContentTypePage::PAGE_NAME, $contentTypeName)
             ->fieldsAdminList->table->getTableCellValue('Type', $fieldName);
 
@@ -61,6 +74,9 @@ class ContentTypeContext extends BusinessContext
      */
     public function contentTypeHasProperFields(string $contentTypeName, TableNode $table): void
     {
+        throw new \Exception('refactor me...');
+
+
         $hash = $table->getHash();
         foreach ($hash as $row) {
             $this->contentTypeHasField($contentTypeName, $row['fieldName'], $row['fieldType']);

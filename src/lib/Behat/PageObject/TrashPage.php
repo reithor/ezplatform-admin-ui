@@ -7,21 +7,16 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use Behat\Mink\Session;
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Selector\CSSSelector;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\TrashTable;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
 use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
 use PHPUnit\Framework\Assert;
 
 class TrashPage extends Page
 {
-
-    public const ITEM_RESTORE_LIST_CONTAINER = '';
-
     /**
      * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog
      */
@@ -55,14 +50,9 @@ class TrashPage extends Page
 
     public function hasElement(string $itemType, string $itemName): bool
     {
-        return !$this->isTrashEmpty() &&
+        return !$this->isEmpty() &&
             ($this->trashTable->isElementInTable($itemName) &&
             $this->trashTable->getTableCellValue('Content type', $itemName) == $itemType);
-    }
-
-    public function restore()
-    {
-//        [name=trash_item_restore]
     }
 
     public function isEmpty(): bool
@@ -72,13 +62,9 @@ class TrashPage extends Page
         return $this->trashTable->getItemCount() === 1 && strpos($firstRowValue, 'Trash is empty.') !== false;
     }
 
-    public function restoreUnderNewLocation(string $pathToContent)
+    public function restoreSelectedNewLocation(string $pathToContent)
     {
-        $this->context->findElement($this->fields['restoreUnderNewLocationButton'], $this->defaultTimeout)->click();
-
-
-        $this->trashTable->clickRestoreUnderNewLocationButton();
-
+        $this->getHTMLPage()->find($this->getSelector('restoreUnderNewLocationButton'))->click();
         $this->universalDiscoveryWidget->verifyIsLoaded();
         $this->universalDiscoveryWidget->selectContent($pathToContent);
         $this->universalDiscoveryWidget->confirm();
@@ -90,6 +76,26 @@ class TrashPage extends Page
         $this->dialog->confirm();
     }
 
+    public function deleteSelectedItems()
+    {
+        $this->getHTMLPage()->find($this->getSelector('trashButton'))->click();
+
+
+        $this->trashTable->clickTrashButton();
+        $this->dialog->verifyVisibility();
+        $this->dialog->confirm();
+    }
+
+    public function select(array $parameters)
+    {
+        throw new \Exception('implement');
+    }
+
+    public function restoreSelectedItems()
+    {
+        $this->getHTMLPage()->find($this->getSelector('restoreButton'))->click();
+    }
+
     protected function getRoute(): string
     {
         return 'trash/list';
@@ -97,8 +103,6 @@ class TrashPage extends Page
 
     public function verifyIsLoaded(): void
     {
-        $this->trashTable->verifyIsLoaded();
-
         Assert::assertEquals(
             'Trash',
             $this->getHTMLPage()->find($this->getSelector('pageTitle'))->getText()
@@ -114,6 +118,9 @@ class TrashPage extends Page
     {
         return [
             new CSSSelector('pageTitle', '.ez-page-title h1'),
-        ];
+            new CSSSelector('restoreButton', '[name=trash_item_restore]'),
+            new CSSSelector('trashButton', '[id=delete-trash-items]'),
+            new CSSSelector('restoreUnderNewLocationButton', '[id=trash_item_restore_location_select_content]'),
+            ];
     }
 }

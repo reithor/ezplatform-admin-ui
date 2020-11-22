@@ -4,11 +4,31 @@
 namespace src\lib\Behat\PageObject;
 
 
+use Behat\Mink\Session;
+use Exception;
 use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\AdminUpdateItemPage;
+use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
 
 class RoleUpdatePage extends AdminUpdateItemPage
 {
+    /**
+     * @var UniversalDiscoveryWidget
+     */
+    private $universalDiscoveryWidget;
+
+    public function __construct(Session $session, MinkParameters $minkParameters, UniversalDiscoveryWidget $universalDiscoveryWidget)
+    {
+        parent::__construct($session, $minkParameters);
+        $this->universalDiscoveryWidget = $universalDiscoveryWidget;
+    }
+
+    private $itemTypeToLabelMapping = [
+        'users' => 'Select Users',
+        'groups' => 'Select User Groups',
+    ];
+
     public function selectLimitationValues(string $selectName, array $values): void
     {
         try
@@ -24,7 +44,7 @@ class RoleUpdatePage extends AdminUpdateItemPage
                     click();
             }
         }
-        catch (\Exception $e) {
+        catch (Exception $e) {
             // no need to remove current selection
         }
 
@@ -52,5 +72,17 @@ class RoleUpdatePage extends AdminUpdateItemPage
             new CSSSelector('limitationDropdownOptionRemove', '.ez-custom-dropdown__remove-selection'),
             new CSSSelector('labelSelector', '.ez-label'),
         ];
+    }
+
+    public function assign(array $items, string $itemType)
+    {
+        $this->clickButton($this->itemTypeToLabelMapping[$itemType]);
+        $this->universalDiscoveryWidget->verifyIsLoaded();
+
+        foreach ($items as $item) {
+            $this->universalDiscoveryWidget->selectContent($item['path']);
+        }
+
+        $this->universalDiscoveryWidget->confirm();
     }
 }

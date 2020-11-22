@@ -61,6 +61,16 @@ class SubitemsList extends Component
         return 'Subitems list';
     }
 
+    public function clickListElement(string $contentName, string $contentType)
+    {
+        $this->table->clickListElement($contentName, $contentType);
+    }
+
+    public function isElementInTable($itemName)
+    {
+        return $this->table->isElementInTable($itemName);
+    }
+
     protected function specifySelectors(): array
     {
         return [

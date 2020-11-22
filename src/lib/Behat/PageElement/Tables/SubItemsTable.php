@@ -79,7 +79,7 @@ class SubItemsTable extends Table
             return 0;
         }
 
-        $isElementNamePresentInTable = strpos($this->context->findElement($this->fields['list'])->getText(), $name) !== false;
+        $isElementNamePresentInTable = strpos($this->getHTMLPage()->find($this->getSelector('list'))->getText(), $name) !== false;
         if (!$isElementNamePresentInTable) {
             return 0;
         }

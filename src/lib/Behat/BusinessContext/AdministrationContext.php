@@ -6,10 +6,9 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\BusinessContext;
 
+use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
 use EzSystems\Behat\Browser\Page\Page;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
-use EzSystems\Behat\Browser\Factory\PageObjectFactory;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\ObjectStateGroupPage;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\ObjectStateGroupsPage;
@@ -22,8 +21,7 @@ use EzSystems\EzPlatformAdminUi\Behat\PageObject\SectionPage;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\SectionsPage;
 use PHPUnit\Framework\Assert;
 
-/** Context for common actions (creating, editing, deleting, etc) in Admin pages (Content Types, Languages, etc.) */
-class AdministrationContext extends BusinessContext
+class AdministrationContext implements Context
 {
     private $itemCreateMapping = [
         'Content Type group' => ContentTypeGroupsPage::PAGE_NAME,
@@ -50,6 +48,8 @@ class AdministrationContext extends BusinessContext
      */
     public function iSeeList(string $pageName, string $parameter = null): void
     {
+        throw new \Exception('refactor me ...');
+
         $contentTypeGroupsPage = PageObjectFactory::createPage($this->browserContext, $pageName, $parameter);
         $contentTypeGroupsPage->verifyElements();
     }
@@ -62,6 +62,8 @@ class AdministrationContext extends BusinessContext
      */
     public function iStartCreatingNew(string $newItemType, ?string $containerItem = null): void
     {
+        throw new \Exception('refactor me ...');
+
         if (!array_key_exists($newItemType, $this->itemCreateMapping)) {
             throw new \InvalidArgumentException(sprintf('Unrecognized item type name: %s', $newItemType));
         }
@@ -74,6 +76,8 @@ class AdministrationContext extends BusinessContext
      */
     public function iStartAssigningTo(string $itemName, string $pageType): void
     {
+        throw new \Exception('refactor me ...');
+
         $pageObject = PageObjectFactory::createPage($this->browserContext, $pageType, $itemName);
         $pageObject->startAssigningToItem($itemName);
     }
@@ -84,6 +88,8 @@ class AdministrationContext extends BusinessContext
      */
     public function verifyElementOnTheList(string $listElementName, string $pageName, ?string $parameter = null): void
     {
+        throw new \Exception('refactor me ...');
+
         $page = PageObjectFactory::createPage($this->browserContext, $pageName, $parameter);
         $page->verifyIsLoaded();
         Assert::assertTrue(
@@ -98,6 +104,8 @@ class AdministrationContext extends BusinessContext
      */
     public function verifyElementNotOnTheList(string $listElementName, string $pageName, string $parameter = null): void
     {
+        throw new \Exception('refactor me ...');
+
         $page = PageObjectFactory::createPage($this->browserContext, $pageName, $parameter);
         $page->verifyIsLoaded();
         Assert::assertFalse(
@@ -115,6 +123,8 @@ class AdministrationContext extends BusinessContext
      */
     private function verifyContentsStatus(string $itemName, string $page, bool $shouldBeEmpty): void
     {
+        throw new \Exception('refactor me ...');
+
         $emptyContainerCellValue = '0';
 
         $contentsCount = PageObjectFactory::createPage($this->browserContext, $page)
@@ -135,6 +145,8 @@ class AdministrationContext extends BusinessContext
      */
     public function isEmptyElementOnTheList(string $itemName, string $page): void
     {
+        throw new \Exception('refactor me ...');
+
         $this->verifyContentsStatus($itemName, $page, true);
     }
 
@@ -143,6 +155,9 @@ class AdministrationContext extends BusinessContext
      */
     public function isNonEmptyElementOnTheList(string $itemName, string $page): void
     {
+        throw new \Exception('refactor me ...');
+
+
         $this->verifyContentsStatus($itemName, $page, false);
     }
 
@@ -151,6 +166,9 @@ class AdministrationContext extends BusinessContext
      */
     public function itemCannotBeSelected(string $itemType, string $itemName): void
     {
+        throw new \Exception('refactor me ...');
+
+
         $isListElementSelectable = PageObjectFactory::createPage($this->browserContext, $this->itemCreateMapping[$itemType])
             ->adminList->table->isElementSelectable($itemName);
 
@@ -165,6 +183,8 @@ class AdministrationContext extends BusinessContext
      */
     public function iGoToListItem(string $itemName, string $itemType, string $itemContainer = null): void
     {
+        throw new \Exception('refactor me ...');
+
         $pageElement = PageObjectFactory::createPage($this->browserContext, $this->itemCreateMapping[$itemType], $itemContainer);
         if ($pageElement->adminList->isElementOnTheList($itemName)) {
             $pageElement->adminList->table->clickListElement($itemName);
@@ -179,6 +199,8 @@ class AdministrationContext extends BusinessContext
      */
     public function iStartEditingItem(string $itemType, string $itemName, ?string $containerName = null): void
     {
+        throw new \Exception('refactor me ...');
+
         $page = PageObjectFactory::createPage($this->browserContext, $this->itemCreateMapping[$itemType], $containerName);
         $page->verifyIsLoaded();
         $page->startEditingItem($itemName);
@@ -189,6 +211,9 @@ class AdministrationContext extends BusinessContext
      */
     public function iStartEditingItemFromDetails(string $itemType, string $itemName): void
     {
+        throw new \Exception('refactor me ...');
+
+
         PageObjectFactory::createPage($this->browserContext, $itemType, $itemName)
             ->startEditingSelf($itemName);
     }
@@ -198,6 +223,8 @@ class AdministrationContext extends BusinessContext
      */
     public function iDeleteItems(string $itemType, TableNode $settings): void
     {
+        throw new \Exception('refactor me ...');
+
         $hash = $settings->getHash();
 
         $page = PageObjectFactory::createPage($this->browserContext, $this->itemCreateMapping[$itemType]);
@@ -213,6 +240,8 @@ class AdministrationContext extends BusinessContext
      */
     public function iDeleteItemsFromContainer(string $itemType, ?string $containerName = null, TableNode $settings): void
     {
+        throw new \Exception('refactor me ...');
+
         $hash = $settings->getHash();
 
         $page = PageObjectFactory::createPage($this->browserContext, $this->itemCreateMapping[$itemType], $containerName);
@@ -228,6 +257,8 @@ class AdministrationContext extends BusinessContext
      */
     public function iDeleteItemsFromDetails(string $itemType, TableNode $settings): void
     {
+        throw new \Exception('refactor me ...');
+
         $hash = $settings->getHash();
 
         $page = PageObjectFactory::createPage($this->browserContext, $itemType, $hash[0]['item']);
@@ -239,6 +270,8 @@ class AdministrationContext extends BusinessContext
      */
     private function performDeletion(Page $page)
     {
+        throw new \Exception('refactor me ...');
+
         $page->adminList->clickTrashButton();
         $dialog = ElementFactory::createElement($this->browserContext, Dialog::ELEMENT_NAME);
         $dialog->verifyVisibility();
@@ -250,6 +283,8 @@ class AdministrationContext extends BusinessContext
      */
     public function itemHasProperAttribute(string $itemType, string $itemName, string $attributeName, string $value)
     {
+        throw new \Exception('refactor me ...');
+
         $pageObject = PageObjectFactory::createPage($this->browserContext, $itemType, $itemName);
 
         $pageObject->verifyItemAttribute($attributeName, $value);
@@ -260,6 +295,8 @@ class AdministrationContext extends BusinessContext
      */
     public function linkItemHasProperAttribute(string $itemName, string $pageName, string $attributeName, string $value)
     {
+        throw new \Exception('refactor me ...');
+
         $pageObject = PageObjectFactory::createPage($this->browserContext, $pageName);
         $pageObject->verifyItemAttribute($attributeName, $value, $itemName);
     }
@@ -269,6 +306,8 @@ class AdministrationContext extends BusinessContext
      */
     public function itemHasProperAttributes(string $itemType, string $itemName, TableNode $settings)
     {
+        throw new \Exception('refactor me ...');
+
         $hash = $settings->getHash();
         foreach ($hash as $setting) {
             $this->itemHasProperAttribute($itemType, $itemName, $setting['label'], $setting['value']);
@@ -280,6 +319,8 @@ class AdministrationContext extends BusinessContext
      */
     public function listIsEmpty(string $listName, string $itemType, string $itemName): void
     {
+        throw new \Exception('refactor me ...');
+
         $pageObject = PageObjectFactory::createPage($this->browserContext, $itemType, $itemName);
         $pageObject->verifyListIsEmpty($listName);
     }

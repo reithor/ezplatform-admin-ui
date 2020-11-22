@@ -6,28 +6,37 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\BusinessContext;
 
+use Behat\Behat\Context\Context;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentPreviewPage;
 use EzSystems\Behat\Browser\Factory\PageObjectFactory;
 
-class ContentPreviewContext extends BusinessContext
+class ContentPreviewContext implements Context
 {
+    /**
+     * @var ContentPreviewPage
+     */
+    private $contentPreviewPage;
+
+    public function __construct(ContentPreviewPage $contentPreviewPage)
+    {
+        $this->contentPreviewPage = $contentPreviewPage;
+    }
+
     /**
      * @When I go to :viewName view in :contentName preview
      */
     public function iGoToPreview(string $viewName, string $contentName): void
     {
-        $previewPage = PageObjectFactory::createPage($this->browserContext, ContentPreviewPage::PAGE_NAME, $contentName);
-        $previewPage->verifyIsLoaded();
-        $previewPage->previewNav->goToView($viewName);
+        $this->contentPreviewPage->verifyIsLoaded();
+        $this->contentPreviewPage->goToView($viewName);
     }
 
     /**
-     * @When I go back from content :contentName preview
+     * @When I go back from content preview
      */
-    public function iGoToBackFromPreview(string $contentName): void
+    public function iGoToBackFromPreview(): void
     {
-        $previewPage = PageObjectFactory::createPage($this->browserContext, ContentPreviewPage::PAGE_NAME, $contentName);
-        $previewPage->verifyIsLoaded();
-        $previewPage->previewNav->goBackToEditView();
+        $this->contentPreviewPage->verifyIsLoaded();
+        $this->contentPreviewPage->goBackToEditView();
     }
 }
