@@ -6,7 +6,7 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Element\Element;
 use PHPUnit\Framework\Assert;
 
@@ -14,7 +14,7 @@ abstract class EzFieldElement extends Element
 {
     protected $label;
 
-    public function __construct(BrowserContext $context, string $locator, string $label)
+    public function __construct(OldBrowserContext $context, string $locator, string $label)
     {
         parent::__construct($context);
         $this->label = $label;

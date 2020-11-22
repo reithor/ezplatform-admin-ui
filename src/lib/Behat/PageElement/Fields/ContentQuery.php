@@ -7,14 +7,14 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
 use Behat\Mink\Element\NodeElement;
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use PHPUnit\Framework\Assert;
 
 class ContentQuery extends NonEditableField
 {
     public const ELEMENT_NAME = 'Content query';
 
-    public function __construct(BrowserContext $context, string $locator, string $label)
+    public function __construct(OldBrowserContext $context, string $locator, string $label)
     {
         parent::__construct($context, $locator, $label);
         $this->fields['queryResultItem'] = 'p a';

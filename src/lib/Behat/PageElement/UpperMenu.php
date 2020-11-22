@@ -6,53 +6,25 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use EzSystems\Behat\Browser\Component\Component;
+use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Element\Element;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
+use PHPUnit\Framework\Assert;
 
 /** Element that describes upper menu (Content, Admin, Page and theirs children) */
-class UpperMenu extends Element
+class UpperMenu extends Component
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'Upper Menu';
-
-    public function __construct(BrowserContext $context)
-    {
-        parent::__construct($context);
-        $this->fields = [
-            'menuButton' => '.ez-main-nav .nav-link',
-            'submenuButton' => '.ez-main-sub-nav .nav-link',
-            'dashboardLink' => '.navbar-brand',
-            'pendingNotificationsCount' => '.ez-user-menu__name-wrapper .n-pending-notifications',
-            'userSettingsToggle' => '.ez-user-menu__name-wrapper',
-            'userSettingsItem' => '.ez-user-menu__item',
-        ];
-    }
-
-    /**
-     * Clicks on top menu, for example "Content" tab.
-     *
-     * @param $tabName
-     */
     public function goToTab(string $tabName): void
     {
         $this->context->getElementByText($tabName, $this->fields['menuButton'])->click();
     }
 
-    /**
-     * Clicks on top menu dashboard link.
-     *
-     * @param $tabName
-     */
     public function goToDashboard(): void
     {
         $this->context->findElement($this->fields['dashboardLink'])->click();
     }
 
-    /**
-     * Clicks on expanded submenu, for example "Content Structure" in "Content" section.
-     *
-     * @param $tabName
-     */
     public function goToSubTab(string $tabName): void
     {
         $this->context->waitUntil(5, function () use ($tabName) {
@@ -60,11 +32,6 @@ class UpperMenu extends Element
         });
 
         $this->context->getElementByText($tabName, $this->fields['submenuButton'])->click();
-    }
-
-    public function verifyVisibility(): void
-    {
-        $this->context->waitUntilElementIsVisible($this->fields['menuButton']);
     }
 
     public function getNotificationsCount(): int
@@ -76,5 +43,27 @@ class UpperMenu extends Element
     {
         $this->context->findElement($this->fields['userSettingsToggle'])->click();
         $this->context->getElementByText($option, $this->fields['userSettingsItem'])->click();
+    }
+
+    public function verifyIsLoaded(): void
+    {
+        Assert::assertTrue($this->getHTMLPage()->find($this->getSelector('menuButton'))->isVisible());
+    }
+
+    public function getName(): string
+    {
+        return 'Upper menu';
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('menuButton', '.ez-main-nav .nav-link'),
+            new CSSSelector('submenuButton', '.ez-main-sub-nav .nav-link'),
+            new CSSSelector('dashboardLink', '.navbar-brand'),
+            new CSSSelector('pendingNotificationsCount', '.ez-user-menu__name-wrapper .n-pending-notifications'),
+            new CSSSelector('userSettingsToggle', '.ez-user-menu__name-wrapper'),
+            new CSSSelector('userSettingsItem', '.ez-user-menu__item'),
+        ];
     }
 }

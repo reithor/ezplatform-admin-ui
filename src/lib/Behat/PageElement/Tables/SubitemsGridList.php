@@ -6,13 +6,13 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables;
 
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use EzSystems\Behat\Browser\Context\OldBrowserContext;
 
 class SubitemsGridList extends ItemsList
 {
     public const ELEMENT_NAME = 'Subitems grid list';
 
-    public function __construct(BrowserContext $context, string $containerLocator)
+    public function __construct(OldBrowserContext $context, string $containerLocator)
     {
         parent::__construct($context, $containerLocator);
         $this->fields['listElement'] = $containerLocator . ' .c-grid-view-item';

@@ -6,19 +6,21 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use Behat\Mink\Session;
+use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Page\Page;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\TrashTable;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
+use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
 use PHPUnit\Framework\Assert;
 
 class TrashPage extends Page
 {
-    /** @var string Name by which Page is recognised */
-    public const PAGE_NAME = 'Trash';
 
-    public const ITEM_RESTORE_LIST_CONTAINER = '[name=trash_item_restore]';
+    public const ITEM_RESTORE_LIST_CONTAINER = '';
 
     /**
      * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog
@@ -29,42 +31,89 @@ class TrashPage extends Page
      * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\TrashTable
      */
     public $trashTable;
-
-    public function __construct(BrowserContext $context)
-    {
-        parent::__construct($context);
-        $this->siteAccess = 'admin';
-        $this->route = '/trash/list';
-        $this->trashTable = ElementFactory::createElement($this->context, TrashTable::ELEMENT_NAME, $this::ITEM_RESTORE_LIST_CONTAINER);
-        $this->dialog = ElementFactory::createElement($this->context, Dialog::ELEMENT_NAME);
-        $this->pageTitle = 'Trash';
-        $this->pageTitleLocator = '.ez-page-title h1';
-    }
-
     /**
-     * Verifies that all necessary elements are visible.
+     * @var UniversalDiscoveryWidget
      */
-    public function verifyElements(): void
+    private $universalDiscoveryWidget;
+    /**
+     * @var RightMenu
+     */
+    private $rightMenu;
+
+    public function __construct(
+        Session $session,
+        MinkParameters $minkParameters,
+        UniversalDiscoveryWidget $universalDiscoveryWidget,
+        Dialog $dialog,
+        RightMenu $rightMenu)
     {
-        $this->trashTable->verifyVisibility();
+        parent::__construct($session, $minkParameters);
+        $this->universalDiscoveryWidget = $universalDiscoveryWidget;
+        $this->dialog = $dialog;
+        $this->rightMenu = $rightMenu;
     }
 
-    public function verifyIfItemInTrash(string $itemType, string $itemName, bool $elementShouldExist): void
+    public function hasElement(string $itemType, string $itemName): bool
     {
-        $isElementInTrash = !$this->isTrashEmpty() &&
-            ($this->trashTable->isElementInTable($itemName) && $this->trashTable->getTableCellValue('Content type', $itemName) == $itemType);
-        $elementShouldExistString = $elementShouldExist ? 'n\'t' : '';
-
-        Assert::assertTrue(
-            ($isElementInTrash == $elementShouldExist),
-            sprintf('Item %s %s is%s in Trash', $itemType, $itemName, $elementShouldExistString)
-        );
+        return !$this->isTrashEmpty() &&
+            ($this->trashTable->isElementInTable($itemName) &&
+            $this->trashTable->getTableCellValue('Content type', $itemName) == $itemType);
     }
 
-    public function isTrashEmpty(): bool
+    public function restore()
+    {
+//        [name=trash_item_restore]
+    }
+
+    public function isEmpty(): bool
     {
         $firstRowValue = $this->trashTable->getCellValue(1, 1);
 
         return $this->trashTable->getItemCount() === 1 && strpos($firstRowValue, 'Trash is empty.') !== false;
+    }
+
+    public function restoreUnderNewLocation(string $pathToContent)
+    {
+        $this->context->findElement($this->fields['restoreUnderNewLocationButton'], $this->defaultTimeout)->click();
+
+
+        $this->trashTable->clickRestoreUnderNewLocationButton();
+
+        $this->universalDiscoveryWidget->verifyIsLoaded();
+        $this->universalDiscoveryWidget->selectContent($pathToContent);
+        $this->universalDiscoveryWidget->confirm();
+    }
+
+    public function emptyTrash()
+    {
+        $this->rightMenu->clickButton('Empty Trash');
+        $this->dialog->confirm();
+    }
+
+    protected function getRoute(): string
+    {
+        return 'trash/list';
+    }
+
+    public function verifyIsLoaded(): void
+    {
+        $this->trashTable->verifyIsLoaded();
+
+        Assert::assertEquals(
+            'Trash',
+            $this->getHTMLPage()->find($this->getSelector('pageTitle'))->getText()
+        );
+    }
+
+    public function getName(): string
+    {
+        return 'Trash';
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('pageTitle', '.ez-page-title h1'),
+        ];
     }
 }

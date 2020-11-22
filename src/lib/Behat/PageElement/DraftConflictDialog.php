@@ -6,7 +6,7 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\Behat\Browser\Element\Element;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\DraftConflictTable;
@@ -19,7 +19,7 @@ class DraftConflictDialog extends Element
 
     public $draftConflictTable;
 
-    public function __construct(BrowserContext $context)
+    public function __construct(OldBrowserContext $context)
     {
         parent::__construct($context);
         $this->fields = [

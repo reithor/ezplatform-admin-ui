@@ -7,7 +7,7 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
 use Behat\Mink\Element\NodeElement;
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use PHPUnit\Framework\Assert;
 
 class Keywords extends EzFieldElement
@@ -31,7 +31,7 @@ var list = tags.map(function (item) {
 taggify.updateTags(list);
 SCRIPT;
 
-    public function __construct(BrowserContext $context, string $locator, string $label)
+    public function __construct(OldBrowserContext $context, string $locator, string $label)
     {
         parent::__construct($context, $locator, $label);
         $this->fields['fieldInput'] = 'input';

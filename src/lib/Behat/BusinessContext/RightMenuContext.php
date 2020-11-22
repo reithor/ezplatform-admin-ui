@@ -6,21 +6,30 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\BusinessContext;
 
+use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
 use PHPUnit\Framework\Assert;
 
-/** Context for actions on right menu */
-class RightMenuContext extends BusinessContext
+class RightMenuContext implements Context
 {
     /**
+     * @var RightMenu
+     */
+    private $rightMenu;
+
+    public function __construct(RightMenu $rightMenu)
+    {
+
+        $this->rightMenu = $rightMenu;
+    }
+
+    /**
      * @Given I click (on) the edit action bar button :button
-     * Click on a AdminUI edit action bar
      */
     public function clickEditActionBar(string $button): void
     {
-        $rightMenu = new RightMenu($this->browserContext);
-        $rightMenu->clickButton($button);
+        $this->rightMenu->clickButton($button);
     }
 
     /**
@@ -28,9 +37,8 @@ class RightMenuContext extends BusinessContext
      */
     public function theButtonsAreDisabled(TableNode $buttons): void
     {
-        $rightMenu = new RightMenu($this->browserContext);
         foreach ($buttons->getHash() as $button) {
-            Assert::assertFalse($rightMenu->isButtonActive($button['buttonName']));
+            Assert::assertFalse($this->rightMenu->isButtonActive($button['buttonName']));
         }
     }
 
@@ -39,7 +47,6 @@ class RightMenuContext extends BusinessContext
      */
     public function buttonIsNotVisible(string $buttonName): void
     {
-        $rightMenu = new RightMenu($this->browserContext);
-        Assert::assertFalse($rightMenu->isButtonVisible($buttonName));
+        Assert::assertFalse($this->rightMenu->isButtonVisible($buttonName));
     }
 }

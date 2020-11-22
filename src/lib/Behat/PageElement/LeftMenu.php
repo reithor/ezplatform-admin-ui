@@ -6,41 +6,32 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
-use EzSystems\Behat\Browser\Context\BrowserContext;
-use EzSystems\Behat\Browser\Element\Element;
+use EzSystems\Behat\Browser\Component\Component;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use PHPUnit\Framework\Assert;
 
-class LeftMenu extends Element
+class LeftMenu extends Component
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'LeftMenu';
-
-    public function __construct(BrowserContext $context)
+    public function clickButton(string $buttonName): void
     {
-        parent::__construct($context);
-        $this->fields = [
-            'buttonSelector' => '.ez-sticky-container .btn',
-            'menuSelector' => '.ez-side-menu',
+        $this->getHTMLPage()->findAll($this->getSelector('buttonSelector'))->getByText($buttonName)->click();
+    }
+
+    public function verifyIsLoaded(): void
+    {
+        Assert::assertTrue($this->getHTMLPage()->find($this->getSelector('menuSelector'))->isVisible());
+    }
+
+    public function getName(): string
+    {
+        return 'Left menu';
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('buttonSelector', '.ez-sticky-container .btn'),
+            new CSSSelector('menuSelector', '.ez-side-menu'),
         ];
-    }
-
-    /**
-     * Clicks a button on the left menu (Search, Browse, Trash).
-     *
-     * @param string $buttonName
-     */
-    public function clickButton(string $buttonName)
-    {
-        $this->context->getElementByText($buttonName, $this->fields['buttonSelector'])->click();
-    }
-
-    public function verifyVisibility(): void
-    {
-        Assert::assertTrue($this->context->findElement($this->fields['menuSelector'])->isVisible());
-    }
-
-    public function isVisible(): bool
-    {
-        return $this->context->isElementVisible($this->fields['menuSelector']);
     }
 }

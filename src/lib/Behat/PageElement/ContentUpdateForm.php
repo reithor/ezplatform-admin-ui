@@ -6,83 +6,58 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
-use EzSystems\Behat\API\ContentData\FieldTypeNameConverter;
-use EzSystems\Behat\Browser\Context\BrowserContext;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
-use EzSystems\Behat\Browser\Element\Element;
+use Behat\Mink\Session;
+use EzSystems\Behat\Browser\Component\Component;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\EzFieldElement;
 use PHPUnit\Framework\Assert;
 
-class ContentUpdateForm extends Element
+class ContentUpdateForm extends Component
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'Content Update Form';
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\EzFieldElement[] */
+    private $fieldTypeComponents;
 
-    public const FIELD_TYPE_CLASS_REGEX = '/ez-field-edit--ez[a-z]*/';
-
-    public function __construct(BrowserContext $context)
+    public function __construct(Session $session, array $fieldTypeComponents)
     {
-        parent::__construct($context);
-        $this->fields = [
-            'formElement' => '[name=ezplatform_content_forms_content_edit]',
-            'closeButton' => '.ez-content-edit-container__close',
-            'fieldLabel' => '.ez-field-edit__label-wrapper label.ez-field-edit__label, .ez-field-edit__label-wrapper legend, .ez-card > .card-body > div > div > legend',
-            'nthField' => '.ez-card .card-body > div > div:nth-of-type(%s)',
-            'noneditableFieldClass' => 'ez-field-edit--eznoneditable',
-            'fieldOfType' => '.ez-field-edit--%s',
-        ];
+        parent::__construct($session);
+        $this->fieldTypeComponents = $fieldTypeComponents;
     }
 
-    public function verifyVisibility(): void
-    {
-        $this->context->waitUntilElementIsVisible($this->fields['formElement']);
-    }
-
-    /**
-     * Fill in field values depending on the field type.
-     *
-     * @param string $fieldName
-     * @param array $value
-     * @param string|null $containerLocator for update form
-     *
-     * @throws \Exception
-     */
     public function fillFieldWithValue(string $fieldName, array $value): void
     {
-        $fieldElement = $this->getField($fieldName);
-        $fieldElement->setValue($value);
+        $this->getField($fieldName)->setValue($value);
     }
 
-    public function getField(string $fieldName): EzFieldElement
+    protected function getField(string $fieldName): EzFieldElement
     {
-        $fieldPosition = $this->context->getElementPositionByText($fieldName, $this->fields['formElement'] . ' ' . $this->fields['fieldLabel']);
-        if ($fieldPosition === 0) {
-            Assert::fail(sprintf('Field %s not found.', $fieldName));
+        $fieldLocator = new CSSSelector('fieldLocator', sprintf($this->getSelector('nthField'), $this->getFieldPosition($fieldName)));
+        $fieldtypeIdentifier = $this->getFieldtypeIdentifier($fieldLocator, $fieldName);
+
+        foreach ($this->fieldTypeComponents as $fieldTypeComponent)
+        {
+            if ($fieldTypeComponent->getName() === $fieldtypeIdentifier) {
+                return $fieldTypeComponent;
+            }
         }
-
-        $fieldLocator = sprintf($this->fields['nthField'], $fieldPosition);
-
-        $isEditable = !$this->context->findElement($fieldLocator)->hasClass($this->fields['noneditableFieldClass']);
-        if (!$isEditable) {
-            $fieldType = strtolower($fieldName);
-        } else {
-            $fieldClass = $this->context->findElement($fieldLocator)->getAttribute('class');
-            preg_match($this::FIELD_TYPE_CLASS_REGEX, $fieldClass, $matches);
-            $fieldType = explode('--', $matches[0])[1];
-        }
-
-        return ElementFactory::createElement($this->context, FieldTypeNameConverter::getFieldTypeNameByIdentifier($fieldType), $fieldLocator, $fieldName);
     }
 
-    /**
-     * Verify that field values are set.
-     *
-     * @param string $fieldName
-     * @param string $value
-     * @param string|null $containerName for fields that defines new field type in content type
-     *
-     * @throws \Exception
-     */
+    protected function getFieldPosition(string $fieldName): int
+    {
+        $fieldElements = $this->getHTMLPage()->findAll($this->getSelector('fieldLabel'));
+        $fieldPosition = 1;
+
+        foreach ($fieldElements as $fieldElement)
+        {
+            if ($fieldElement->getText() === $fieldName) {
+                return $fieldPosition;
+            }
+
+            ++$fieldPosition;
+        }
+
+        Assert::fail(sprintf('Field %s not found.', $fieldName));
+    }
+
     public function verifyFieldHasValue(array $fieldData): void
     {
         $this->getField($fieldData['label'])->verifyValue($fieldData);
@@ -90,6 +65,43 @@ class ContentUpdateForm extends Element
 
     public function closeUpdateForm(): void
     {
-        $this->context->findElement($this->fields['closeButton'])->click();
+        $this->getHTMLPage()->find($this->getSelector('closeButton'))->click();
+    }
+
+    public function verifyIsLoaded(): void
+    {
+        Assert::assertTrue($this->getHTMLPage()->find($this->getSelector('formElement'))->isVisible());
+    }
+
+    public function getName(): string
+    {
+        return 'Content update form';
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('formElement', '[name=ezplatform_content_forms_content_edit]'),
+            new CSSSelector('closeButton', '.ez-content-edit-container__close'),
+            new CSSSelector('fieldLabel', '.ez-field-edit__label-wrapper label.ez-field-edit__label, .ez-field-edit__label-wrapper legend, .ez-card > .card-body > div > div > legend'),
+            new CSSSelector('nthField', '.ez-card .card-body > div > div:nth-of-type(%s)'),
+            new CSSSelector('noneditableFieldClass', 'ez-field-edit--eznoneditable'),
+            new CSSSelector('fieldOfType', '.ez-field-edit--%s'),
+        ];
+    }
+
+    private function getFieldtypeIdentifier(CSSSelector $fieldLocator, string $fieldName): string
+    {
+        throw new \Exception('gdzie to jest uzywane...');
+
+        $isEditable = !$this->getHTMLPage()->find($fieldLocator)->hasClass($this->getSelector('noneditableFieldClass'));
+        if (!$isEditable) {
+            return strtolower($fieldName);
+        }
+
+        $fieldClass = $this->getHTMLPage()->find($fieldLocator)->getAttribute('class');
+        preg_match('/ez-field-edit--ez[a-z]*/', $fieldClass, $matches);
+
+        return explode('--', $matches[0])[1];
     }
 }

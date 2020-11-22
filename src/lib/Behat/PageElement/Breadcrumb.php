@@ -6,43 +6,46 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Element\Element;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
+use PHPUnit\Framework\Assert;
 
 /** Element that describes breadcrumb */
-class Breadcrumb extends Element
+class Breadcrumb extends Component
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'Breadcrumb';
-
-    public function __construct(BrowserContext $context)
-    {
-        parent::__construct($context);
-        $this->fields = [
-            'breadcrumb' => '.breadcrumb',
-            'breadcrumbItem' => '.breadcrumb-item',
-            'breadcrumbItemLink' => '.breadcrumb-item a',
-            'activeBreadcrumb' => '.breadcrumb-item.active',
-        ];
-    }
-
-    public function verifyVisibility(): void
-    {
-        $this->context->waitUntilElementIsVisible($this->fields['breadcrumbItem']);
-    }
-
     public function clickBreadcrumbItem(string $itemName): void
     {
-        $this->context->getElementByText($itemName, $this->fields['breadcrumbItemLink'])->click();
+        $this->getHTMLPage()->findAll($this->getSelector('breadcrumbItemLink'))->getByText($itemName)->click();
     }
 
     public function getActiveName(): string
     {
-        return $this->context->findElement($this->fields['activeBreadcrumb'])->getText();
+        return $this->getHTMLPage()->find($this->getSelector('activeBreadcrumb'))->getText();
     }
 
     public function getBreadcrumb(): string
     {
-        return $this->context->findElement($this->fields['breadcrumb'])->getText();
+        return $this->getHTMLPage()->find($this->getSelector('breadcrumb'))->getText();
+    }
+
+    public function verifyIsLoaded(): void
+    {
+        Assert::assertTrue($this->getHTMLPage()->find($this->getSelector('breadcrumbItem'))->isVisible());
+    }
+
+    public function getName(): string
+    {
+        return 'Breadcrumb';
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('breadcrumb', '.breadcrumb'),
+            new CSSSelector('breadcrumbItem', '.breadcrumb-item'),
+            new CSSSelector('breadcrumbItemLink', '.breadcrumb-item a'),
+            new CSSSelector('activeBreadcrumb', '.breadcrumb-item.active'),
+        ];
     }
 }

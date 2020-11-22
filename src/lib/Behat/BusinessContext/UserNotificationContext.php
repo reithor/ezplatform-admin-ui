@@ -6,21 +6,34 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\BusinessContext;
 
+use Behat\Behat\Context\Context;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UpperMenu;
 use Behat\Gherkin\Node\TableNode;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UserNotificationPopup;
 use PHPUnit\Framework\Assert;
 
-class UserNotificationContext extends BusinessContext
+class UserNotificationContext implements Context
 {
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\UpperMenu */
+    private $upperMenu;
+    /**
+     * @var UserNotificationPopup
+     */
+    private $userNotificationPopup;
+
+    public function __construct(UpperMenu $upperMenu, UserNotificationPopup $userNotificationPopup)
+    {
+        $this->upperMenu = $upperMenu;
+        $this->userNotificationPopup = $userNotificationPopup;
+    }
+
     /**
      * @Given there is an unread notification for current user
      */
     public function thereIsNotificationForCurrentUser()
     {
-        $upperMenu = ElementFactory::createElement($this->browserContext, UpperMenu::ELEMENT_NAME);
-        Assert::assertGreaterThan(0, $upperMenu->getNotificationsCount());
+        Assert::assertGreaterThan(0, $this->upperMenu->getNotificationsCount());
     }
 
     /**
@@ -28,11 +41,10 @@ class UserNotificationContext extends BusinessContext
      */
     public function iGoToUserNotificationWithDetails(TableNode $notificationDetails)
     {
-        $notificationsPopup = ElementFactory::createElement($this->browserContext, UserNotificationPopup::ELEMENT_NAME);
-        $notificationsPopup->verifyVisibility();
-
         $type = $notificationDetails->getHash()[0]['Type'];
         $description = $notificationDetails->getHash()[0]['Description'];
-        $notificationsPopup->clickItem($type, $description);
+
+        $this->userNotificationPopup->verifyIsLoaded();
+        $this->userNotificationPopup->clickNotification($type, $description);
     }
 }

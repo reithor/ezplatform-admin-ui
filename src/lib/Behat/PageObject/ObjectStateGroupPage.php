@@ -6,7 +6,7 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
@@ -34,7 +34,7 @@ class ObjectStateGroupPage extends Page
      */
     public $adminList;
 
-    public function __construct(BrowserContext $context, string $objectStateGroupName)
+    public function __construct(OldBrowserContext $context, string $objectStateGroupName)
     {
         parent::__construct($context);
         $this->siteAccess = 'admin';

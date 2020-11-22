@@ -7,11 +7,11 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables;
 
 use Behat\Mink\Element\TraversableElement;
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use EzSystems\Behat\Browser\Context\OldBrowserContext;
 
 abstract class Table extends ItemsList
 {
-    public function __construct(BrowserContext $context, string $containerLocator)
+    public function __construct(OldBrowserContext $context, string $containerLocator)
     {
         parent::__construct($context, $containerLocator);
         $this->fields['tableCell'] = $containerLocator . ' tr:nth-child(%d) td:nth-child(%d)';

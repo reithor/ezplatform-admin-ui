@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use PHPUnit\Framework\Assert;
 
 class MapLocation extends EzFieldElement
@@ -18,7 +18,7 @@ class MapLocation extends EzFieldElement
 
     private const OPEN_STREET_MAP_TIMEOUT = 20;
 
-    public function __construct(BrowserContext $context, string $locator, string $label)
+    public function __construct(OldBrowserContext $context, string $locator, string $label)
     {
         parent::__construct($context, $locator, $label);
         $this->fields['latitude'] = '#ezplatform_content_forms_content_edit_fieldsData_ezgmaplocation_value_latitude';

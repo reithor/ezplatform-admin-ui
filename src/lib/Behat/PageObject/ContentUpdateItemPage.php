@@ -6,55 +6,72 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use Behat\Mink\Session;
+use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Page\Page;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\ContentUpdateForm;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
+use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
 use PHPUnit\Framework\Assert;
 
 class ContentUpdateItemPage extends Page
 {
-    /** @var string Name by which Page is recognised */
-    public const PAGE_NAME = 'Content Update';
-
     /**
      * @var ContentUpdateForm
      */
-    public $contentUpdateForm;
+    private $contentUpdateForm;
 
     /**
      * @var RightMenu
      */
-    public $rightMenu;
+    private $rightMenu;
 
-    public function __construct(BrowserContext $context, string $contentItemName)
+    private $pageTitle;
+
+    public function __construct(
+        Session $session,
+        MinkParameters $minkParameters,
+        RightMenu $rightMenu,
+        ContentUpdateForm $contentUpdateForm
+    )
     {
-        parent::__construct($context);
-        $this->siteAccess = 'admin';
-        $this->route = '/content';
-        $this->contentUpdateForm = ElementFactory::createElement($this->context, ContentUpdateForm::ELEMENT_NAME);
-        $this->rightMenu = ElementFactory::createElement($this->context, RightMenu::ELEMENT_NAME);
-        $this->pageTitleLocator = '.ez-content-edit-page-title__title';
-        $this->pageTitle = $contentItemName;
+        parent::__construct($session, $minkParameters);
+        $this->rightMenu = $rightMenu;
+        $this->contentUpdateForm = $contentUpdateForm;
     }
 
-    public function verifyElements(): void
+    public function verifyIsLoaded(): void
     {
-        $this->rightMenu->verifyVisibility();
-        $this->contentUpdateForm->verifyVisibility();
-    }
-
-    public function verifyTitle(): void
-    {
-        if ($this->pageTitle === '') {
-            return;
-        }
-
-        Assert::assertStringEndsWith(
+        Assert::assertEquals(
             $this->pageTitle,
-            $this->getPageTitle(),
-            'Wrong page title.'
+            $this->getHTMLPage()->find($this->getSelector('pageTitle'))->getText()
         );
+
+        $this->rightMenu->verifyIsLoaded();
+        $this->contentUpdateForm->verifyIsLoaded();
+    }
+
+    public function setExpectedPageTitle(string $title)
+    {
+        $this->pageTitle = $title;
+    }
+
+    public function getName(): string
+    {
+        return 'Content Update';
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('pageTitle', '.ez-content-edit-page-title__title'),
+        ];
+    }
+
+    protected function getRoute(): string
+    {
+        throw new \Exception('This page cannot be opened on its own!');
     }
 }

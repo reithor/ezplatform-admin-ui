@@ -7,28 +7,12 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables;
 
 use Behat\Mink\Element\NodeElement;
-use EzSystems\Behat\Browser\Context\BrowserContext;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Pagination;
 use PHPUnit\Framework\Assert;
 
 class SubItemsTable extends Table
 {
-    public const ELEMENT_NAME = 'Sub-items Table';
-
-    public function __construct(BrowserContext $context, $containerLocator)
-    {
-        parent::__construct($context, $containerLocator);
-        $this->fields['horizontalHeaders'] = $this->fields['list'] . ' .c-table-view__cell--head';
-        $this->fields['listElement'] = $this->fields['list'] . ' .c-table-view-item__link';
-        $this->fields['nthListElement'] = $this->fields['list'] . ' tr:nth-child(%d) .c-table-view-item__link';
-        $this->fields['listElementType'] = $this->fields['list'] . ' tr:nth-child(%d) .c-table-view-item__cell--content-type';
-        $this->fields['sortingOrderAscending'] = '.c-table-view__cell--sorted-asc';
-        $this->fields['sortingOrderDescending'] = '.c-table-view__cell--sorted-desc';
-        $this->fields['editButton'] = $this->fields['list'] . ' .c-table-view-item__btn--edit';
-        $this->fields['noItems'] = $this->fields['list'] . ' .c-no-items';
-    }
-
     public function getTableCellValue(string $header, ?string $secondHeader = null): string
     {
         $columnPosition = $this->context->getElementPositionByText(
@@ -60,11 +44,6 @@ class SubItemsTable extends Table
         $this->context->waitUntilElementIsVisible($verificationSelector);
     }
 
-    /**
-     * Click link element for sub-item with given name.
-     *
-     * @param string $name
-     */
     public function clickListElement(string $name, ?string $contentType = null): void
     {
         $pagination = ElementFactory::createElement($this->context, Pagination::ELEMENT_NAME);
@@ -163,5 +142,28 @@ class SubItemsTable extends Table
     public function canBeSorted(): bool
     {
         return true;
+    }
+
+    public function verifyIsLoaded(): void
+    {
+    }
+
+    public function getName(): string
+    {
+        return 'Subitems table';
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('horizontalHeaders', '.ez-sil .m-sub-items__list .c-table-view__cell--head'),
+            new CSSSelector('listElement', '.ez-sil .m-sub-items__list .c-table-view-item__link'),
+            new CSSSelector('nthListElement', '.ez-sil .m-sub-items__list tr:nth-child(%d) .c-table-view-item__link'),
+            new CSSSelector('listElementType', '.ez-sil .m-sub-items__list tr:nth-child(%d) .c-table-view-item__cell--content-type'),
+            new CSSSelector('sortingOrderAscending', '.ez-sil .m-sub-items__list .c-table-view__cell--sorted-asc'),
+            new CSSSelector('sortingOrderDescending', '.ez-sil .m-sub-items__list .c-table-view__cell--sorted-desc'),
+            new CSSSelector('editButton', '.ez-sil .m-sub-items__list .c-table-view-item__btn--edit'),
+            new CSSSelector('noItems', '.ez-sil .m-sub-items__list .c-no-items'),
+        ];
     }
 }

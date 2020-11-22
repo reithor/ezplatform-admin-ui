@@ -6,7 +6,7 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\Authors;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\Checkbox;
@@ -52,13 +52,13 @@ use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\VerticalOrientedTable;
 class PlatformElementFactory extends ElementFactory
 {
     /**
-     * @param BrowserContext $context
+     * @param OldBrowserContext $context
      * @param string $elementName
      * @param null[]|string[] ...$parameters
      *
-     * @return AdminList|AdminUpdateForm|Breadcrumb|ContentField|ContentRelationTable|ContentTypePicker|ContentUpdateForm|DashboardTable|DateAndTimePopup|DefaultFieldElement|Dialog|DoubleHeaderTable|DraftConflictDialog|DraftConflictTable|Element|IconLinkedListTable|LanguagePicker|LeftMenu|LinkedListTable|NavLinkTabs|Notification|Pagination|PreviewNav|RightMenu|SimpleListTable|SimpleTable|SubItemsList|SubItemsTable|SystemInfoTable|TrashTable|UniversalDiscoveryWidget|UpperMenu|VerticalOrientedTable
+     * @return AdminList|AdminUpdateForm|Breadcrumb|ContentField|ContentRelationTable|ContentTypePicker|ContentUpdateForm|DashboardTable|DateAndTimePopup|DefaultFieldElement|Dialog|DoubleHeaderTable|DraftConflictDialog|DraftConflictTable|Element|IconLinkedListTable|LanguagePicker|LeftMenu|LinkedListTable|NavLinkTabs|Notification|Pagination|PreviewNav|RightMenu|SimpleListTable|SimpleTable|SubitemsList|SubItemsTable|SystemInfoTable|TrashTable|UniversalDiscoveryWidget|UpperMenu|VerticalOrientedTable
      */
-    public static function createElement(BrowserContext $context, string $elementName, ?string ...$parameters)
+    public static function createElement(OldBrowserContext $context, string $elementName, ?string ...$parameters)
     {
         switch ($elementName) {
             case AdminList::ELEMENT_NAME:
@@ -111,8 +111,8 @@ class PlatformElementFactory extends ElementFactory
                 return new SubItemsTable($context, $parameters[0]);
             case SubitemsGridList::ELEMENT_NAME:
                 return new SubitemsGridList($context, $parameters[0]);
-            case SubItemsList::ELEMENT_NAME:
-                return new SubItemsList($context, $parameters[0]);
+            case SubitemsList::ELEMENT_NAME:
+                return new SubitemsList($context, $parameters[0]);
             case NavLinkTabs::ELEMENT_NAME:
                 return new NavLinkTabs($context);
             case PreviewNav::ELEMENT_NAME:

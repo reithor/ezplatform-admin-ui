@@ -6,25 +6,40 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\BusinessContext;
 
-use EzSystems\Behat\Core\Environment\EnvironmentConstants;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
+use Behat\Behat\Context\Context;
+use EzSystems\Behat\Core\Behat\ArgumentParser;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Notification;
 use PHPUnit\Framework\Assert;
 
 /** Context for actions on notifications */
-class NotificationContext extends BusinessContext
+class NotificationContext implements Context
 {
+    /**
+     * @var Notification
+     */
+    private $notification;
+    /**
+     * @var ArgumentParser
+     */
+    private $argumentParser;
+
+    public function __construct(Notification $notification, ArgumentParser $argumentParser)
+    {
+        $this->notification = $notification;
+        $this->argumentParser = $argumentParser;
+    }
+
     /**
      * @Then notification that :itemType :itemName is :action appears
      */
-    public function notificationAppears(string $itemType, ?string $itemName = null, string $action): void
+    public function notificationAppears(string $itemType, string $itemName, string $action): void
     {
-        $notification = ElementFactory::createElement($this->browserContext, Notification::ELEMENT_NAME);
-        $notification->verifyVisibility();
-        $notification->verifyAlertSuccess();
-        $msg = !$itemName ? sprintf('%s %s.', $itemType, $action) : sprintf('%s \'%s\' %s.', $itemType, $itemName, $action);
-        Assert::assertEquals($msg, $notification->getMessage());
-        $notification->closeAlert();
+        $expectedMessage = sprintf('%s \'%s\' %s.', $itemType, $itemName, $action);
+
+        $this->notification->verifyIsLoaded();
+        $this->notification->verifyAlertSuccess();
+        Assert::assertEquals($expectedMessage, $this->notification->getMessage());
+        $this->notification->closeAlert();
     }
 
     /**
@@ -32,11 +47,10 @@ class NotificationContext extends BusinessContext
      */
     public function specificNotificationAppears(string $message): void
     {
-        $notification = ElementFactory::createElement($this->browserContext, Notification::ELEMENT_NAME);
-        $notification->verifyVisibility();
-        $notification->verifyAlertSuccess();
-        Assert::assertEquals($message, $notification->getMessage());
-        $notification->closeAlert();
+        $this->notification->verifyIsLoaded();
+        $this->notification->verifyAlertSuccess();
+        Assert::assertEquals($message, $this->notification->getMessage());
+        $this->notification->closeAlert();
     }
 
     /**
@@ -44,7 +58,7 @@ class NotificationContext extends BusinessContext
      */
     public function copiedToRootAppears(string $content): void
     {
-        $expectedMessage = sprintf("'%s' copied to '%s'", $content, EnvironmentConstants::get('ROOT_CONTENT_NAME'));
+        $expectedMessage = sprintf("'%s' copied to '%s'", $content, $this->argumentParser->replaceRootKeyword('root'));
         $this->specificNotificationAppears($expectedMessage);
     }
 
@@ -53,10 +67,9 @@ class NotificationContext extends BusinessContext
      */
     public function specificErrorNotificationAppears(string $message): void
     {
-        $notification = ElementFactory::createElement($this->browserContext, Notification::ELEMENT_NAME);
-        $notification->verifyVisibility();
-        $notification->verifyAlertFailure();
-        Assert::assertContains($message, $notification->getMessage());
-        $notification->closeAlert();
+        $this->notification->verifyIsLoaded();
+        $this->notification->verifyAlertFailure();
+        Assert::assertContains($message, $this->notification->getMessage());
+        $this->notification->closeAlert();
     }
 }

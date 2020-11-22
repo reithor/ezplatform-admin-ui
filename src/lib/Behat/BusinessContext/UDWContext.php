@@ -6,18 +6,24 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\BusinessContext;
 
+use Behat\Behat\Context\Context;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\Behat\Core\Environment\EnvironmentConstants;
 use EzSystems\Behat\Core\Behat\ArgumentParser;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
 
-class UDWContext extends BusinessContext
+class UDWContext implements Context
 {
     private $argumentParser;
+    /**
+     * @var UniversalDiscoveryWidget
+     */
+    private $universalDiscoveryWidget;
 
-    public function __construct(ArgumentParser $argumentParser)
+    public function __construct(ArgumentParser $argumentParser, UniversalDiscoveryWidget $universalDiscoveryWidget)
     {
         $this->argumentParser = $argumentParser;
+        $this->universalDiscoveryWidget = $universalDiscoveryWidget;
     }
 
     /**
@@ -25,10 +31,10 @@ class UDWContext extends BusinessContext
      */
     public function iSelectContent(string $pathToContent): void
     {
-        $udw = ElementFactory::createElement($this->browserContext, UniversalDiscoveryWidget::ELEMENT_NAME);
-        $udw->verifyVisibility();
         $pathToContent = $this->argumentParser->replaceRootKeyword($pathToContent);
-        $udw->selectContent($pathToContent);
+
+        $this->universalDiscoveryWidget->verifyIsLoaded();
+        $this->universalDiscoveryWidget->selectContent($pathToContent);
     }
 
     /**
@@ -36,18 +42,19 @@ class UDWContext extends BusinessContext
      */
     public function iSelectRootNodeContent(): void
     {
-        $this->iSelectContent(EnvironmentConstants::get('ROOT_CONTENT_NAME'));
+        $rootContentName = $this->argumentParser->replaceRootKeyword('root');
+        $this->iSelectContent($rootContentName);
     }
 
     /** @When I close the UDW window */
     public function iCloseUDW(): void
     {
-        ElementFactory::createElement($this->browserContext, UniversalDiscoveryWidget::ELEMENT_NAME)->cancel();
+        $this->universalDiscoveryWidget->cancel();
     }
 
     /** @When I confirm the selection in UDW */
     public function iConfirmSelection(): void
     {
-        ElementFactory::createElement($this->browserContext, UniversalDiscoveryWidget::ELEMENT_NAME)->confirm();
+        $this->universalDiscoveryWidget->confirm();
     }
 }

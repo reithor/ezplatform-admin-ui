@@ -6,49 +6,66 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use Behat\Mink\Session;
+use EzSystems\Behat\Browser\Component\Component;
+use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\Behat\Browser\Element\Element;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SubitemsGridList;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SubItemsTable;
+use PHPUnit\Framework\Assert;
 
-class SubItemsList extends Element
+class SubitemsList extends Component
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'Sub-items List';
     /** @var SubItemsTable */
-    public $table;
+    protected $table;
 
-    public function __construct(BrowserContext $context, bool $isGridViewEnabledByDefault)
-    {
-        parent::__construct($context);
-        $this->fields = [
-            'list' => '.ez-sil',
-            'listHeader' => '.ez-sil .m-sub-items__header',
-            'listTable' => '.ez-sil .m-sub-items__list',
-            'multiFileUploadButton' => '.ez-sil .m-sub-items__header .m-mfu__btn--upload',
-            'tableSwitchButton' => '.ez-sil .m-sub-items__header .c-grid-switcher #table',
-            'gridSwitchButton' => '.ez-sil .m-sub-items__header .c-grid-switcher #grid',
-            'showMoreButton' => '.ez-sil .c-load-more .c-load-more__btn--load',
-            'showMoreMessage' => '.ez-sil .c-load-more .c-load-more__message',
-        ];
-        $tableName = $isGridViewEnabledByDefault ? SubitemsGridList::ELEMENT_NAME : SubItemsTable::ELEMENT_NAME;
-        $this->table = ElementFactory::createElement($context, $tableName, $this->fields['listTable']);
-    }
+    protected $currentView;
 
-    public function verifyVisibility(): void
+    protected $isGridViewEnabledByDefault;
+
+    /** @var SubitemsGridList */
+    protected $gridList;
+
+    public function __construct(Session $session, SubitemsGridList $gridList, SubItemsTable $table)
     {
-        $this->context->waitUntilElementIsVisible($this->fields['list']);
+        parent::__construct($session);
+        $this->table = $table;
+        $this->gridList = $gridList;
     }
 
     public function sortBy(string $columnName, bool $ascending): void
     {
-        $this->table->sortBy($columnName, $ascending);
-        $this->verifyVisibility();
+        $this->currentView->sortBy($columnName, $ascending);
+        $this->verifyIsLoaded();
     }
 
     public function canBeSorted(): bool
     {
         return $this->table->canBeSorted();
+    }
+
+    public function shouldHaveGridViewEnabled(bool $enabled): void
+    {
+        $this->currentView = $enabled ? $this->gridList : $this->table;
+    }
+
+    public function verifyIsLoaded(): void
+    {
+        Assert::assertTrue($this->getHTMLPage()->find($this->getSelector('list'))->isVisible());
+    }
+
+    public function getName(): string
+    {
+        return 'Subitems list';
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('list', '.ez-sil'),
+            new CSSSelector('listTable', '.ez-sil .m-sub-items__list'),
+        ];
     }
 }

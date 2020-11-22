@@ -6,7 +6,7 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\NavLinkTabs;
@@ -27,7 +27,7 @@ class DashboardPage extends Page
 
     public $fields;
 
-    public function __construct(BrowserContext $context)
+    public function __construct(OldBrowserContext $context)
     {
         parent::__construct($context);
         $this->siteAccess = 'admin';

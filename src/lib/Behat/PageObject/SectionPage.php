@@ -6,7 +6,7 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
@@ -39,7 +39,7 @@ class SectionPage extends Page
      */
     public $dialogs;
 
-    public function __construct(BrowserContext $context, string $sectionName)
+    public function __construct(OldBrowserContext $context, string $sectionName)
     {
         parent::__construct($context);
         $this->siteAccess = 'admin';

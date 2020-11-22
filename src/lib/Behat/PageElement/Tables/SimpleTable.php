@@ -7,14 +7,14 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables;
 
 use Behat\Mink\Element\NodeElement;
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use EzSystems\Behat\Browser\Context\OldBrowserContext;
 
 class SimpleTable extends Table
 {
     /** @var string Name by which Element is recognised */
     public const ELEMENT_NAME = 'Simple Table';
 
-    public function __construct(BrowserContext $context, $containerLocator)
+    public function __construct(OldBrowserContext $context, $containerLocator)
     {
         parent::__construct($context, $containerLocator);
         $this->fields['horizontalHeaders'] = sprintf('%1$s .ez-table__header + .table thead th, %1$s .ez-table-header + .table thead th, %1$s.ez-table-header + .table thead th, .ez-table-header + form thead th', $this->fields['list']);

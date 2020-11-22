@@ -6,7 +6,7 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\DashboardTable;
@@ -16,7 +16,7 @@ class SearchPage extends Page
 {
     public const PAGE_NAME = 'Search';
 
-    public function __construct(BrowserContext $context)
+    public function __construct(OldBrowserContext $context)
     {
         parent::__construct($context);
         $this->route = '/search';

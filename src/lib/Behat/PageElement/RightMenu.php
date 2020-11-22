@@ -6,45 +6,41 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
-use EzSystems\Behat\Browser\Context\BrowserContext;
-use EzSystems\Behat\Browser\Element\Element;
+use EzSystems\Behat\Browser\Component\Component;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
+use PHPUnit\Framework\Assert;
 
-/** Element that describes right action menu (Create, Preview, Publish etc.) */
-class RightMenu extends Element
+class RightMenu extends Component
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'Right Menu';
-
-    public function __construct(BrowserContext $context)
-    {
-        parent::__construct($context);
-        $this->fields = [
-            'menuButton' => '.ez-context-menu .btn',
-        ];
-    }
-
-    /**
-     * Clicks a button on the right menu.
-     *
-     * @param $buttonName
-     */
     public function clickButton(string $buttonName): void
     {
-        $this->context->getElementByText($buttonName, $this->fields['menuButton'])->click();
+        $this->getHTMLPage()->findAll($this->getSelector('menuButton'))->getByText($buttonName)->click();
     }
 
     public function isButtonActive(string $buttonName): bool
     {
-        return !$this->context->getElementByText($buttonName, $this->fields['menuButton'])->hasAttribute('disabled');
+        return $this->getHTMLPage()->findAll($this->getSelector('menuButton'))->getByText($buttonName)->hasAttribute('disabled');
     }
 
     public function isButtonVisible(string $buttonName): bool
     {
-        return $this->context->getElementByText($buttonName, $this->fields['menuButton']) !== null;
+        return $this->getHTMLPage()->findAll($this->getSelector('menuButton'))->hasByText($buttonName);
     }
 
-    public function verifyVisibility(): void
+    public function verifyIsLoaded(): void
     {
-        $this->context->waitUntilElementIsVisible($this->fields['menuButton']);
+        Assert::assertTrue($this->getHTMLPage()->find($this->getSelector('menuButton'))->isVisible());
+    }
+
+    public function getName(): string
+    {
+        return 'Right menu';
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+             new CSSSelector('menuButton','.ez-context-menu .btn'),
+        ];
     }
 }

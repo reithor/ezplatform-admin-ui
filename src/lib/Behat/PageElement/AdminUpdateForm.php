@@ -6,55 +6,16 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
-use Behat\Mink\Element\NodeElement;
 use EzSystems\Behat\API\ContentData\FieldTypeNameConverter;
-use EzSystems\Behat\Browser\Context\BrowserContext;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
-use EzSystems\Behat\Browser\Element\Element;
+use EzSystems\Behat\Browser\Component\Component;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\DefaultFieldElement;
 use PHPUnit\Framework\Assert;
 
-/** Element that describes structures in all update forms */
-class AdminUpdateForm extends Element
+class AdminUpdateForm extends Component
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'Admin Update Form';
-
     private const NEW_FIELD_TITLE_PATTERN = 'New FieldDefinition (%s)';
 
-    public function __construct(BrowserContext $context)
-    {
-        parent::__construct($context);
-        $this->fields = [
-            'formElement' => '.form-group',
-            'mainFormSection' => 'form',
-            'richTextSelector' => '.ez-data-source__richtext',
-            'fieldTypesList' => '#ezplatform_content_forms_contenttype_update_fieldTypeSelection',
-            'addFieldDefinition' => 'ezplatform_content_forms_contenttype_update_addFieldDefinition',
-            'fieldDefinitionContainer' => '.ez-card--toggle-group:nth-child(%s)',
-            'fieldDefinitionName' => '.ez-card--toggle-group .ez-card__header .form-check-label',
-            'fieldBody' => 'ez-card__body',
-            'fieldCollapsed' => 'ez-card--collapsed',
-            'fieldDefinitionToggler' => '.ez-card__body-display-toggler',
-            'closeButton' => '.ez-content-edit-container__close',
-            'button' => 'button',
-        ];
-    }
-
-    public function verifyVisibility(): void
-    {
-        $this->context->waitUntilElementIsVisible($this->fields['formElement']);
-    }
-
-    /**
-     * Fill in field values depending on the field type.
-     *
-     * @param string $fieldName
-     * @param string $value
-     * @param string|null $containerName for fields that defines new field type in content type
-     *
-     * @throws \Exception
-     */
     public function fillFieldWithValue(string $fieldName, $value, ?string $containerName = null): void
     {
         $newContainerName = (!$containerName) ? $containerName : sprintf(self::NEW_FIELD_TITLE_PATTERN, FieldTypeNameConverter::getFieldTypeIdentifierByName($containerName));
@@ -62,15 +23,6 @@ class AdminUpdateForm extends Element
         $fieldElement->setValue($value);
     }
 
-    /**
-     * Verify that field values are set.
-     *
-     * @param string $fieldName
-     * @param string $value
-     * @param string|null $containerName for fields that defines new field type in content type
-     *
-     * @throws \Exception
-     */
     public function verifyFieldHasValue(string $fieldName, $value, ?string $containerName = null): void
     {
         $fieldElement = $this->getField($fieldName, $containerName);
@@ -92,11 +44,6 @@ class AdminUpdateForm extends Element
         return ElementFactory::createElement($this->context, DefaultFieldElement::ELEMENT_NAME, $fieldName, $container);
     }
 
-    /**
-     * Select field definition with given name from select list.
-     *
-     * @param string $fieldName
-     */
     public function selectFieldDefinition(string $fieldName): void
     {
         $this->context->findElement($this->fields['fieldTypesList'], $this->defaultTimeout)->selectOption($fieldName);
@@ -107,13 +54,6 @@ class AdminUpdateForm extends Element
         $this->context->pressButton($this->fields['addFieldDefinition']);
     }
 
-    /**
-     * Verifies that form container with new field definition of given name is visible.
-     *
-     * @param string $fieldName
-     *
-     * @throws \Exception
-     */
     public function verifyNewFieldDefinitionFormExists(string $fieldName): void
     {
         $form = $this->context->getElementByText(sprintf(self::NEW_FIELD_TITLE_PATTERN, FieldTypeNameConverter::getFieldTypeIdentifierByName($fieldName)), $this->fields['fieldDefinitionName']);
@@ -122,12 +62,6 @@ class AdminUpdateForm extends Element
         }
     }
 
-    /**
-     * Click button with given label.
-     *
-     * @param string $label
-     * @param int $indexOfButton
-     */
     public function clickButton(string $label, int $indexOfButton = 0): void
     {
         $formButtons = $this->context->findAllElements($this->fields['button'], $this->context->findElement($this->fields['mainFormSection']));
@@ -136,11 +70,6 @@ class AdminUpdateForm extends Element
         $filteredButtons[$indexOfButton]->click();
     }
 
-    /**
-     * Expand field definition if it is collapsed.
-     *
-     * @param string $fieldName
-     */
     public function expandFieldDefinition(string $fieldName): void
     {
         $container = $this->context->findElement($this->getFieldDefinitionContainerLocator(sprintf($this::NEW_FIELD_TITLE_PATTERN, FieldTypeNameConverter::getFieldTypeIdentifierByName($fieldName))));
@@ -151,17 +80,38 @@ class AdminUpdateForm extends Element
         }
     }
 
-    /**
-     * Returns NodeElement that contains all fields for specified content type field type.
-     *
-     * @param string $containerName
-     *
-     * @return NodeElement
-     */
     public function getFieldDefinitionContainerLocator(string $containerName): string
     {
         $containerIndex = $this->context->getElementPositionByText($containerName, $this->fields['fieldDefinitionName']);
 
         return sprintf($this->fields['fieldDefinitionContainer'], $containerIndex);
+    }
+
+    public function verifyIsLoaded(): void
+    {
+        Assert::assertTrue($this->getHTMLPage()->find($this->getSelector('formElement'))->isVisible());
+    }
+
+    public function getName(): string
+    {
+        return 'Admin update form';
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('formElement', '.form-group'),
+            new CSSSelector('mainFormSection', 'form'),
+            new CSSSelector('richTextSelector', '.ez-data-source__richtext'),
+            new CSSSelector('fieldTypesList', '#ezplatform_content_forms_contenttype_update_fieldTypeSelection'),
+            new CSSSelector('addFieldDefinition', 'ezplatform_content_forms_contenttype_update_addFieldDefinition'),
+            new CSSSelector('fieldDefinitionContainer', '.ez-card--toggle-group:nth-child(%s)'),
+            new CSSSelector('fieldDefinitionName', '.ez-card--toggle-group .ez-card__header .form-check-label'),
+            new CSSSelector('fieldBody', 'ez-card__body'),
+            new CSSSelector('fieldCollapsed', 'ez-card--collapsed'),
+            new CSSSelector('fieldDefinitionToggler', '.ez-card__body-display-toggler'),
+            new CSSSelector('closeButton', '.ez-content-edit-container__close'),
+            new CSSSelector('button', 'button'),
+        ];
     }
 }

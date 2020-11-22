@@ -7,14 +7,14 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables;
 
 use Behat\Mink\Element\NodeElement;
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use EzSystems\Behat\Browser\Context\OldBrowserContext;
 
 class TrashTable extends Table
 {
     /** @var string Name by which Element is recognised */
     public const ELEMENT_NAME = 'Trash Table';
 
-    public function __construct(BrowserContext $context, $containerLocator)
+    public function __construct(OldBrowserContext $context, $containerLocator)
     {
         parent::__construct($context, $containerLocator);
         $this->fields['horizontalHeaders'] = $this->fields['list'] . ' thead th';
@@ -78,7 +78,7 @@ class TrashTable extends Table
      *
      * @param string $name
      */
-    public function selectListElement(string $name): void
+    public function selectListElement(array $parameters): void
     {
         $this->selectElement($name, $this->fields['listElement']);
     }
@@ -100,6 +100,5 @@ class TrashTable extends Table
 
     public function clickRestoreUnderNewLocationButton(): void
     {
-        $this->context->findElement($this->fields['restoreUnderNewLocationButton'], $this->defaultTimeout)->click();
     }
 }

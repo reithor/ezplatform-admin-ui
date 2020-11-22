@@ -6,14 +6,14 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables;
 
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use PHPUnit\Framework\Assert;
 
 class SystemInfoTable extends Table
 {
     public const ELEMENT_NAME = 'System Info Table';
 
-    public function __construct(BrowserContext $context, $containerLocator)
+    public function __construct(OldBrowserContext $context, $containerLocator)
     {
         parent::__construct($context, $containerLocator);
         $this->fields['listElement'] = $this->fields['list'] . ' td:nth-child(1)';

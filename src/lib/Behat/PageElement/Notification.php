@@ -6,47 +6,24 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
-use EzSystems\Behat\Browser\Context\BrowserContext;
-use EzSystems\Behat\Browser\Element\Element;
+use Exception;
+use EzSystems\Behat\Browser\Component\Component;
+use EzSystems\Behat\Browser\Element\NodeElement;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use PHPUnit\Framework\Assert;
 
 /** Element that describes user notification bar, that appears on the bottom of the screen */
-class Notification extends Element
+class Notification extends Component
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'Notification';
-
-    private $checkVisibilityTimeout;
+    /** @var NodeElement */
     private $notificationElement;
-
-    public function __construct(BrowserContext $context)
-    {
-        parent::__construct($context);
-        $this->fields = [
-            'alert' => '.ez-notifications-container .alert.show',
-            'alertMessage' => '.ez-notifications-container .alert.show span:nth-of-type(2)',
-            'successAlert' => 'alert-success',
-            'failureAlert' => 'alert-danger',
-            'closeAlert' => 'button.close',
-        ];
-        $this->checkVisibilityTimeout = 1;
-    }
-
-    public function verifyVisibility(): void
-    {
-        $this->context->waitUntil(20, function () {
-            return $this->isVisible();
-        });
-
-        $this->setAlertElement();
-    }
 
     public function verifyAlertSuccess(): void
     {
         $this->setAlertElement();
 
         Assert::assertTrue(
-            $this->notificationElement->hasClass($this->fields['successAlert']),
+            $this->notificationElement->hasClass($this->getSelector('successAlert')),
             'Success alert not found.'
         );
     }
@@ -56,8 +33,8 @@ class Notification extends Element
         $this->setAlertElement();
 
         Assert::assertTrue(
-            $this->notificationElement->hasClass($this->fields['failureAlert']),
-            'Success alert not found.'
+            $this->notificationElement->hasClass($this->getSelector('failureAlert')),
+            'Failure alert not found.'
         );
     }
 
@@ -66,8 +43,8 @@ class Notification extends Element
         $this->setAlertElement();
 
         try {
-            return $this->context->findElement($this->fields['alertMessage'])->getText();
-        } catch (\Exception $e) {
+            return $this->getHTMLPage()->find($this->getSelector('alertMessage'))->getText();
+        } catch (Exception $e) {
             Assert::fail('Notification alert not found, no message can be fetched.');
         }
     }
@@ -77,9 +54,9 @@ class Notification extends Element
         if ($this->isVisible()) {
             $this->setAlertElement();
 
-            $this->notificationElement->find('css', $this->fields['closeAlert'])->click();
+            $this->notificationElement->find($this->getSelector('closeAlert'))->click();
 
-            $this->context->waitUntil($this->defaultTimeout, function () {
+            $this->getHTMLPage()->waitUntil(function () {
                 return !$this->isVisible();
             });
         }
@@ -87,13 +64,42 @@ class Notification extends Element
 
     public function isVisible(): bool
     {
-        return $this->context->isElementVisible($this->fields['alert'], $this->checkVisibilityTimeout);
+        return $this->getHTMLPage()->setTimeout(1)->find($this->getSelector('alert'))->isVisible();
     }
 
     private function setAlertElement(): void
     {
         if (!isset($this->notificationElement)) {
-            $this->notificationElement = $this->context->findElement($this->fields['alert']);
+            $this->notificationElement = $this->getHTMLPage()->find($this->getSelector('alert'));
         }
+    }
+
+    public function verifyIsLoaded(): void
+    {
+        Assert::assertTrue(
+            $this
+                ->getHTMLPage()
+                ->setTimeout(20)
+                ->find($this->getSelector('alert'))
+        );
+
+
+        $this->setAlertElement();
+    }
+
+    public function getName(): string
+    {
+        return 'Notification';
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('alert', '.ez-notifications-container .alert.show'),
+            new CSSSelector('alertMessage', '.ez-notifications-container .alert.show span:nth-of-type(2)'),
+            new CSSSelector('successAlert', 'alert-success'),
+            new CSSSelector('failureAlert', 'alert-danger'),
+            new CSSSelector('closeAlert', 'button.close'),
+        ];
     }
 }

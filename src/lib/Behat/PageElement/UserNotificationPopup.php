@@ -7,49 +7,55 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use Exception;
-use EzSystems\Behat\Browser\Context\BrowserContext;
-use EzSystems\Behat\Browser\Element\Element;
+use EzSystems\Behat\Browser\Component\Component;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use PHPUnit\Framework\Assert;
 
-class UserNotificationPopup extends Element
+class UserNotificationPopup extends Component
 {
-    public const ELEMENT_NAME = 'UserNotificationPopup';
-
-    public function __construct(BrowserContext $context)
+    public function clickNotification(string $expectedType, string $expectedDescription)
     {
-        parent::__construct($context);
-        $this->fields = [
-            'notificationsPopupTitle' => '#view-notifications .modal-title',
-            'notificationItem' => '.ez-notifications-modal__item',
-            'notificationType' => '.ez-notifications-modal__type',
-            'notificationDescription' => '.ez-notifications-modal__description',
-        ];
-    }
+        $notifications = $this->getHTMLPage()->findAll($this->getSelector('notificationItem'));
 
-    public function verifyVisibility(): void
-    {
-        $this->context->waitUntilElementIsVisible($this->fields['notificationsPopupTitle']);
-        Assert::assertNotNull($this->context->getElementByTextFragment('Notifications', $this->fields['notificationsPopupTitle']));
-    }
-
-    public function clickItem($type, $description)
-    {
-        $notifications = $this->context->findAllElements($this->fields['notificationItem']);
-        foreach ($notifications as $notification) {
-            $currentType = $this->context->findElement($this->fields['notificationType'], $this->defaultTimeout, $notification)->getText();
-            if ($currentType !== $type) {
+        foreach($notifications as $notification)
+        {
+            $type = $notification->find($this->getSelector('notificationType'))->getText();
+            if ($type !== $expectedType){
                 continue;
             }
 
-            $currentDescription = $this->context->findElement($this->fields['notificationDescription'])->getText();
-
-            if ($currentDescription === $description) {
-                $notification->click();
-
-                return;
+            $description = $notification->find($this->getSelector('notificationDescription'))->getText();
+            if ($description !== $expectedDescription) {
+                continue;
             }
+
+            $notification->click();
+            return;
         }
 
         throw new Exception(sprintf('Notification of type: %s with description: %d not found', $type, $description));
+    }
+
+    public function verifyIsLoaded(): void
+    {
+        Assert::assertContains(
+            'Notifications',
+            $this->getHTMLPage()->find($this->getSelector('notificationsPopupTitle'))->getText()
+        );
+    }
+
+    public function getName(): string
+    {
+        return 'User notification popup';
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('notificationsPopupTitle', '#view-notifications .modal-title'),
+            new CSSSelector('notificationItem', '.ez-notifications-modal__item'),
+            new CSSSelector('notificationType', '.ez-notifications-modal__type'),
+            new CSSSelector('notificationDescription', '.ez-notifications-modal__description'),
+        ];
     }
 }

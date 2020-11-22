@@ -6,7 +6,7 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Factory\PageObjectFactory;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Page\Preview\FolderPreview;
@@ -14,17 +14,17 @@ use EzSystems\Behat\Browser\Page\Preview\FolderPreview;
 class PlatformPageObjectFactory extends PageObjectFactory
 {
     /**
-     * @return AdminUpdateItemPage|ContentItemPage|ContentPreviewPage|ContentTypeGroupPage|ContentTypeGroupsPage|ContentTypePage|ContentUpdateItemPage|DashboardPage|LanguagePage|LanguagesPage|LoginPage|ObjectStateGroupPage|ObjectStateGroupsPage|ObjectStatePage|Page|RolePage|RolesPage|SectionPage|SectionsPage|SystemInfoPage|TrashPage
+     * @return AdminUpdateItemPage|ContentViewPage|ContentPreviewPage|ContentTypeGroupPage|ContentTypeGroupsPage|ContentTypePage|ContentUpdateItemPage|DashboardPage|LanguagePage|LanguagesPage|LoginPage|ObjectStateGroupPage|ObjectStateGroupsPage|ObjectStatePage|Page|RolePage|RolesPage|SectionPage|SectionsPage|SystemInfoPage|TrashPage
      */
-    public static function createPage(BrowserContext $context, string $pageName, ?string ...$parameters): Page
+    public static function createPage(OldBrowserContext $context, string $pageName, ?string ...$parameters): Page
     {
         switch ($pageName) {
             case LoginPage::PAGE_NAME:
                 return new LoginPage($context);
             case DashboardPage::PAGE_NAME:
                 return new DashboardPage($context);
-            case ContentItemPage::PAGE_NAME:
-                return new ContentItemPage($context, $parameters[0]);
+            case ContentViewPage::PAGE_NAME:
+                return new ContentViewPage($context, $parameters[0]);
             case ContentTypeGroupsPage::PAGE_NAME:
                 return new ContentTypeGroupsPage($context);
             case AdminUpdateItemPage::PAGE_NAME:

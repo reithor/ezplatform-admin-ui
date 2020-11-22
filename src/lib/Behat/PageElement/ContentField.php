@@ -7,30 +7,20 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\API\ContentData\FieldTypeNameConverter;
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use EzSystems\Behat\Browser\Component\Component;
+use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\Behat\Browser\Element\Element;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 
-class ContentField extends Element
+class ContentField extends Component
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'ContentField';
-
     public const FIELD_TYPE_CLASS_REGEX = '/ez[a-z]*-field/';
-
-    public function __construct(BrowserContext $context)
-    {
-        parent::__construct($context);
-        $this->fields = [
-            'nthFieldContainer' => 'div.ez-content-field:nth-of-type(%s)',
-            'fieldName' => '.ez-content-field-name',
-            'fieldValue' => '.ez-content-field-value',
-            'fieldValueContainer' => ':first-child',
-        ];
-    }
 
     public function verifyFieldHasValue(string $label, array $fieldData): void
     {
+        throw new \Exception('kaj ja je...');
+
         $fieldIndex = $this->context->getElementPositionByText(sprintf('%s:', $label), $this->fields['fieldName']);
         $fieldLocator = sprintf(
             '%s %s',
@@ -52,6 +42,8 @@ class ContentField extends Element
 
     private function getFieldTypeIdentifier(string $fieldClass): string
     {
+        throw new \Exception('a gdzie to...');
+
         if (strpos($fieldClass, 'ez-table') !== false) {
             return 'ezmatrix';
         }
@@ -64,5 +56,24 @@ class ContentField extends Element
         $matchedValue = explode('-', $matches[0])[0];
 
         return $matchedValue;
+    }
+
+    public function verifyIsLoaded(): void
+    {
+    }
+
+    public function getName(): string
+    {
+        return 'Content field';
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('nthFieldContainer', 'div.ez-content-field:nth-of-type(%s)'),
+            new CSSSelector('fieldName', '.ez-content-field-name'),
+            new CSSSelector('fieldValue', '.ez-content-field-value'),
+            new CSSSelector('fieldValueContainer', ':first-child'),
+        ];
     }
 }

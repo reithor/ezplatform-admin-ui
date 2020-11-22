@@ -6,54 +6,79 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use Behat\Mink\Session;
 use EzSystems\Behat\Browser\Page\Page;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\LinkedListTable;
+use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
 use PHPUnit\Framework\Assert;
 
 class LanguagesPage extends Page
 {
-    /** @var string Name by which Page is recognised */
-    public const PAGE_NAME = 'Languages';
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList */
+    protected $adminList;
 
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList
-     */
-    public $adminList;
-
-    public function __construct(BrowserContext $context)
+    public function __construct(Session $session, MinkParameters $minkParameters, AdminList $adminList)
     {
-        parent::__construct($context);
-        $this->adminList = ElementFactory::createElement($this->context, AdminList::ELEMENT_NAME, self::PAGE_NAME, LinkedListTable::ELEMENT_NAME);
-        $this->siteAccess = 'admin';
-        $this->route = '/language/list';
-        $this->pageTitle = self::PAGE_NAME;
-        $this->pageTitleLocator = '.ez-header h1';
+        parent::__construct($session, $minkParameters);
+        $this->adminList = $adminList;
     }
 
-    public function verifyElements(): void
+    public function edit(string $languageName): void
     {
-        $this->adminList->verifyVisibility();
+        $this->adminList->editItem(['Name' => $languageName]);
     }
 
-    public function startEditingItem(string $itemName): void
+    public function create(): void
     {
-        $this->adminList->table->clickEditButton($itemName);
+        $this->getHTMLPage()->find($this->getSelector('createButton'))->click();
     }
 
-    public function verifyItemAttribute(string $label, string $value, string $itemName): void
+    public function delete(string $languageName): void
     {
+        $this->adminList->selectItem(['Name' => $languageName]);
+        $this->getHTMLPage()->find($this->get('trashButton'))->click();
+    }
+
+    public function verifyLanguageAttribute(string $label, string $value, string $itemName): void
+    {
+//        // TODO
+//        Assert::assertEquals(
+//            $value,
+//            $this->adminList->
+//        );
+    }
+
+    protected function getRoute(): string
+    {
+        return 'language/list';
+    }
+
+    public function verifyIsLoaded(): void
+    {
+        $this->adminList->verifyIsLoaded();
         Assert::assertEquals(
-            $value,
-            $this->adminList->table->getTableCellValue($itemName, $label),
-            sprintf('Attribute "%s" of item "%s" has wrong value.', $label, $itemName)
+            'Content',
+            $this->getHTMLPage()->find($this->getSelector('pageTitle'))->getText()
+        );
+        Assert::assertEquals(
+            sprintf("Content Types in '%s'", $this->expectedName),
+            $this->getHTMLPage()->find($this->getSelector('listHeader'))->getText()
         );
     }
 
-    public function startCreatingItem(): void
+    public function getName(): string
     {
-        $this->adminList->clickPlusButton();
+        return 'Languages';
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('pageTitle',  '.ez-header h1'),
+            new CSSSelector('listHeader', '.ez-table-header .ez-table-header__headline, header .ez-table__headline, header h5'),
+            new CSSSelector('createButton', '.ez-icon-create'),
+            new CSSSelector('trashButton', '.ez-icon-trash,button[data-original-title^="Delete"]'),
+        ];
     }
 }

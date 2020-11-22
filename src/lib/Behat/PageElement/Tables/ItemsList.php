@@ -6,14 +6,15 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables;
 
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use EzSystems\Behat\Browser\Component\Component;
+use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Element\Element;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Pagination;
 
-abstract class ItemsList extends Element
+abstract class ItemsList extends Component
 {
-    public function __construct(BrowserContext $context, string $containerLocator)
+    public function __construct(OldBrowserContext $context, string $containerLocator)
     {
         parent::__construct($context);
         $this->fields['list'] = $containerLocator;

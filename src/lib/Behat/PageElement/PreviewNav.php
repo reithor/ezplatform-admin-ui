@@ -6,7 +6,7 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Element\Element;
 
 class PreviewNav extends Element
@@ -14,7 +14,7 @@ class PreviewNav extends Element
     /** @var string Name by which Element is recognised */
     public const ELEMENT_NAME = 'PreviewNavLink';
 
-    public function __construct(BrowserContext $context)
+    public function __construct(OldBrowserContext $context)
     {
         parent::__construct($context);
         $this->fields = [

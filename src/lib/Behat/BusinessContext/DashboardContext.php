@@ -6,12 +6,22 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\BusinessContext;
 
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\UpperMenu;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\DashboardPage;
 use EzSystems\Behat\Browser\Factory\PageObjectFactory;
 use PHPUnit\Framework\Assert;
 
 class DashboardContext extends BusinessContext
 {
+    /**
+     * @Given I go to dashboard
+     */
+    public function iGoToDashboard(): void
+    {
+        $upperMenu = ElementFactory::createElement($this->browserContext, UpperMenu::ELEMENT_NAME);
+        $upperMenu->goToDashboard();
+    }
+
     /**
      * @Then going to dashboard we see there's draft :draftName on list
      */

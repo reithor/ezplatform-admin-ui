@@ -6,7 +6,7 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
@@ -43,7 +43,7 @@ class RolePage extends Page
      */
     public $navLinkTabs;
 
-    public function __construct(BrowserContext $context, string $roleName)
+    public function __construct(OldBrowserContext $context, string $roleName)
     {
         parent::__construct($context);
         $this->siteAccess = 'admin';

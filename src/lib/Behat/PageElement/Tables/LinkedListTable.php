@@ -6,14 +6,14 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables;
 
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use EzSystems\Behat\Browser\Context\OldBrowserContext;
 
 class LinkedListTable extends Table
 {
     /** @var string Name by which Element is recognised */
     public const ELEMENT_NAME = 'Linked List Table';
 
-    public function __construct(BrowserContext $context, $containerLocator)
+    public function __construct(OldBrowserContext $context, $containerLocator)
     {
         parent::__construct($context, $containerLocator);
         $this->fields['horizontalHeaders'] = $this->fields['list'] . ' .ez-table-header + .table thead th, .ez-table-header + form thead th';
@@ -80,10 +80,5 @@ class LinkedListTable extends Table
     {
         $position = $this->context->getElementPositionByText($listItemName, $this->fields['listElement']);
         $this->context->findElement(sprintf($this->fields['assignButton'], $position))->click();
-    }
-
-    public function verifyVisibility(): void
-    {
-        $this->context->waitUntilElementIsVisible('.ez-table-header__headline');
     }
 }

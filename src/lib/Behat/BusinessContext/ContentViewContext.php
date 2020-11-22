@@ -17,7 +17,7 @@ use EzSystems\EzPlatformAdminUi\Behat\PageElement\LanguagePicker;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\LeftMenu;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
-use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentItemPage;
+use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentViewPage;
 use EzSystems\Behat\Browser\Factory\PageObjectFactory;
 use PHPUnit\Framework\Assert;
 
@@ -35,7 +35,7 @@ class ContentViewContext extends BusinessContext
      */
     public function startCreatingContent(string $contentType): void
     {
-        PageObjectFactory::createPage($this->browserContext, ContentItemPage::PAGE_NAME, 'Home')->startCreatingContent($contentType);
+        PageObjectFactory::createPage($this->browserContext, ContentViewPage::PAGE_NAME, 'Home')->startCreatingContent($contentType);
     }
 
     /**
@@ -77,7 +77,7 @@ class ContentViewContext extends BusinessContext
      */
     public function iSeeTitle(string $title): void
     {
-        $contentItemPage = PageObjectFactory::createPage($this->browserContext, ContentItemPage::PAGE_NAME, 'Home');
+        $contentItemPage = PageObjectFactory::createPage($this->browserContext, ContentViewPage::PAGE_NAME, 'Home');
         Assert::assertEquals($title, $contentItemPage->getPageTitle());
     }
 
@@ -91,7 +91,7 @@ class ContentViewContext extends BusinessContext
      */
     private function verifyItemExistenceInSubItemList(string $itemName, string $itemType, string $containerName, bool $itemShouldExist): void
     {
-        $isItemInTable = PageObjectFactory::createPage($this->browserContext, ContentItemPage::PAGE_NAME, $containerName)
+        $isItemInTable = PageObjectFactory::createPage($this->browserContext, ContentViewPage::PAGE_NAME, $containerName)
             ->subItemList->table->isElementInTable($itemName);
 
         $itemShouldExistString = $itemShouldExist ? '' : 'n\'t';
@@ -135,7 +135,7 @@ class ContentViewContext extends BusinessContext
         $path = $this->argumentParser->replaceRootKeyword($path);
         $spacedPath = str_replace('/', ' ', $path);
 
-        $contentPage = PageObjectFactory::createPage($this->browserContext, ContentItemPage::PAGE_NAME, $contentName);
+        $contentPage = PageObjectFactory::createPage($this->browserContext, ContentViewPage::PAGE_NAME, $contentName);
         $contentPage->verifyIsLoaded();
         $contentPage->verifyContentType($contentType);
         $breadcrumb = ElementFactory::createElement($this->browserContext, Breadcrumb::ELEMENT_NAME);
@@ -158,7 +158,7 @@ class ContentViewContext extends BusinessContext
     {
         $this->verifyImOnContentItemPage($contentName, $contentType, $path);
 
-        PageObjectFactory::createPage($this->browserContext, ContentItemPage::PAGE_NAME, $contentName)->verifySubItemListVisibility();
+        PageObjectFactory::createPage($this->browserContext, ContentViewPage::PAGE_NAME, $contentName)->verifySubItemListVisibility();
     }
 
     /**
@@ -186,7 +186,7 @@ class ContentViewContext extends BusinessContext
     public function contentAttributesEqual(TableNode $parameters): void
     {
         $hash = $parameters->getHash();
-        $contentItemPage = PageObjectFactory::createPage($this->browserContext, ContentItemPage::PAGE_NAME, '');
+        $contentItemPage = PageObjectFactory::createPage($this->browserContext, ContentViewPage::PAGE_NAME, '');
         foreach ($hash as $fieldData) {
             $contentItemPage->contentField->verifyFieldHasValue($fieldData['label'], $fieldData);
         }
@@ -197,7 +197,7 @@ class ContentViewContext extends BusinessContext
      */
     public function articleMainContentFieldEquals(string $intro): void
     {
-        $contentItemPage = PageObjectFactory::createPage($this->browserContext, ContentItemPage::PAGE_NAME, '');
+        $contentItemPage = PageObjectFactory::createPage($this->browserContext, ContentViewPage::PAGE_NAME, '');
         $fieldName = EnvironmentConstants::get('ARTICLE_MAIN_FIELD_NAME');
         $contentItemPage->contentField->verifyFieldHasValue($fieldName, ['value' => $intro]);
     }
@@ -227,7 +227,7 @@ class ContentViewContext extends BusinessContext
      */
     public function goingToPathTheresNoSubItem(string $path, string $contentName, string $contentType): void
     {
-        $contentPage = PageObjectFactory::createPage($this->browserContext, ContentItemPage::PAGE_NAME, $contentName);
+        $contentPage = PageObjectFactory::createPage($this->browserContext, ContentViewPage::PAGE_NAME, $contentName);
         $contentPage->navigateToPath($path);
 
         $explodedPath = explode('/', $path);
@@ -248,13 +248,13 @@ class ContentViewContext extends BusinessContext
      */
     public function goingToPathTheresSubItem(string $path, string $contentName, string $contentType): void
     {
-        $contentPage = PageObjectFactory::createPage($this->browserContext, ContentItemPage::PAGE_NAME, $contentName);
+        $contentPage = PageObjectFactory::createPage($this->browserContext, ContentViewPage::PAGE_NAME, $contentName);
         $contentPage->navigateToPath($path);
 
         $explodedPath = explode('/', $path);
         $pathSize = count($explodedPath);
 
-        $contentItemPage = PageObjectFactory::createPage($this->browserContext, ContentItemPage::PAGE_NAME, $explodedPath[$pathSize - 1]);
+        $contentItemPage = PageObjectFactory::createPage($this->browserContext, ContentViewPage::PAGE_NAME, $explodedPath[$pathSize - 1]);
 
         Assert::assertTrue(
             $contentItemPage->subItemList->table->isElementInTable($contentName),

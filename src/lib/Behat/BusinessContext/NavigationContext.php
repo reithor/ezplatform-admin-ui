@@ -6,24 +6,46 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\BusinessContext;
 
-use EzSystems\Behat\Core\Environment\EnvironmentConstants;
+use Behat\Behat\Context\Context;
+use Exception;
+use EzSystems\Behat\Browser\Page\PageRegistry;
 use EzSystems\Behat\Core\Behat\ArgumentParser;
-use EzSystems\EzPlatformPageBuilder\Tests\Behat\PageObject\PageBuilderEditor;
+use EzSystems\Behat\Core\Environment\EnvironmentConstants;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Breadcrumb;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UpperMenu;
-use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentItemPage;
-use EzSystems\Behat\Browser\Factory\PageObjectFactory;
+use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentViewPage;
 use PHPUnit\Framework\Assert;
 
-/** Context for general navigation actions */
-class NavigationContext extends BusinessContext
+class NavigationContext implements Context
 {
+    /** @var \EzSystems\Behat\Core\Behat\ArgumentParser */
     private $argumentParser;
 
-    public function __construct(ArgumentParser $argumentParser)
+    /** @var \EzSystems\Behat\Browser\Page\PageRegistry[] */
+    private $pageRegistry;
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\UpperMenu */
+    private $upperMenu;
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Breadcrumb */
+    private $breadcrumb;
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentViewPage  */
+    private $contentViewPage;
+
+    public function __construct(
+        ArgumentParser $argumentParser,
+        UpperMenu $upperMenu,
+        Breadcrumb $breadcrumb,
+        ContentViewPage $contentViewPage,
+        PageRegistry $pageRegistry
+    )
     {
         $this->argumentParser = $argumentParser;
+        $this->pageRegistry = $pageRegistry;
+        $this->upperMenu = $upperMenu;
+        $this->breadcrumb = $breadcrumb;
+        $this->contentViewPage = $contentViewPage;
     }
 
     /**
@@ -31,17 +53,7 @@ class NavigationContext extends BusinessContext
      */
     public function openPage(string $pageName): void
     {
-        $page = PageObjectFactory::createPage($this->browserContext, $pageName);
-        $page->open();
-    }
-
-    /**
-     * @Given I go to dashboard
-     */
-    public function iGoToDashboard(): void
-    {
-        $upperMenu = ElementFactory::createElement($this->browserContext, UpperMenu::ELEMENT_NAME);
-        $upperMenu->goToDashboard();
+        $this->pageRegistry->get($pageName)->open();
     }
 
     /**
@@ -49,8 +61,7 @@ class NavigationContext extends BusinessContext
      */
     public function tryToOpenPage(string $pageName): void
     {
-        $page = PageObjectFactory::createPage($this->browserContext, $pageName);
-        $page->open(false);
+        $this->pageRegistry->get($pageName)->tryToOpen();
     }
 
     /**
@@ -59,8 +70,11 @@ class NavigationContext extends BusinessContext
      */
     public function iAmOnPage(string $pageName, string $itemName = ''): void
     {
-        $page = PageObjectFactory::createPage($this->browserContext, $pageName, $itemName);
-        $page->verifyIsLoaded();
+        if ($itemName !== '') {
+            throw new Exception('zbadaj parametry do pagea');
+        }
+
+        $this->pageRegistry->get($pageName)->verifyIsLoaded();
     }
 
     /**
@@ -69,11 +83,10 @@ class NavigationContext extends BusinessContext
      */
     public function iGoToTab(string $tabName, string $subTab = null): void
     {
-        $upperMenu = ElementFactory::createElement($this->browserContext, UpperMenu::ELEMENT_NAME);
-        $upperMenu->goToTab($tabName);
+        $this->upperMenu->goToTab($tabName);
 
         if ($subTab !== null) {
-            $upperMenu->goToSubTab($subTab);
+            $this->upperMenu->goToSubTab($subTab);
         }
     }
 
@@ -82,9 +95,8 @@ class NavigationContext extends BusinessContext
      */
     public function iClickOnBreadcrumbLink(string $element): void
     {
-        $breadcrumb = ElementFactory::createElement($this->browserContext, Breadcrumb::ELEMENT_NAME);
-        $breadcrumb->verifyVisibility();
-        $breadcrumb->clickBreadcrumbItem($element);
+        $this->breadcrumb->verifyIsLoaded();
+        $this->breadcrumb->clickBreadcrumbItem($element);
     }
 
     /**
@@ -95,15 +107,13 @@ class NavigationContext extends BusinessContext
     {
         if ($path !== null) {
             $path = $this->argumentParser->replaceRootKeyword($path);
-            $pathArray = explode('/', $path);
-            $lastItemInPath = end($pathArray);
 
-            $contentPage = PageObjectFactory::createPage($this->browserContext, ContentItemPage::PAGE_NAME, $lastItemInPath);
-            $contentPage->navigateToPath($path);
-        } else {
-            $contentPage = PageObjectFactory::createPage($this->browserContext, ContentItemPage::PAGE_NAME, null);
+            $this->contentViewPage->navigateToPath($path);
+            $this->contentViewPage->setExpectedLocationPath($path);
+            $this->contentViewPage->verifyIsLoaded();
         }
-        $contentPage->goToSubItem($contentName, $contentType);
+        $this->contentViewPage->goToSubItem($contentName, $contentType);
+        $this->contentViewPage->verifyIsLoaded();
     }
 
     /**
@@ -142,8 +152,7 @@ class NavigationContext extends BusinessContext
      */
     public function iGoToUserNotifications()
     {
-        $upperMenu = ElementFactory::createElement($this->browserContext, UpperMenu::ELEMENT_NAME);
-        $upperMenu->chooseFromUserDropdown('View Notifications');
+        $this->upperMenu->chooseFromUserDropdown('View Notifications');
     }
 
     /**
@@ -151,15 +160,14 @@ class NavigationContext extends BusinessContext
      */
     public function iShouldBeRedirectedToRootInDefaultView(): void
     {
-        if (EnvironmentConstants::get('ROOT_CONTENT_TYPE') === 'Landing page') {
-            $previewType = PageObjectFactory::getPreviewType(EnvironmentConstants::get('ROOT_CONTENT_TYPE'));
-            $pageEditor = PageObjectFactory::createPage($this->browserContext, PageBuilderEditor::PAGE_NAME, $previewType);
-            $pageEditor->pagePreview->setTitle(EnvironmentConstants::get('ROOT_CONTENT_NAME'));
-            $pageEditor->waitUntilLoaded();
-            $pageEditor->verifyIsLoaded();
-        } else {
-            $contentItemPage = PageObjectFactory::createPage($this->browserContext, ContentItemPage::PAGE_NAME, EnvironmentConstants::get('ROOT_CONTENT_NAME'));
-            $contentItemPage->verifyIsLoaded();
-        }
+//        if (EnvironmentConstants::get('ROOT_CONTENT_TYPE') === 'Landing page') {
+//            $previewType = PageObjectFactory::getPreviewType(EnvironmentConstants::get('ROOT_CONTENT_TYPE'));
+//            $pageEditor = PageObjectFactory::createPage($this->browserContext, PageBuilderEditor::PAGE_NAME, $previewType);
+//            $pageEditor->pagePreview->setTitle(EnvironmentConstants::get('ROOT_CONTENT_NAME'));
+//            $pageEditor->waitUntilLoaded();
+//            $pageEditor->verifyIsLoaded();
+//        } else {
+            $contentItemPage = PageObjectFactory::createPage($this->browserContext, ContentViewPage::PAGE_NAME, EnvironmentConstants::get('ROOT_CONTENT_NAME'));
+        $contentItemPage->verifyIsLoaded();
     }
 }

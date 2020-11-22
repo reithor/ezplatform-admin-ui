@@ -6,62 +6,80 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use EzSystems\Behat\Browser\Context\BrowserContext;
+use Behat\Mink\Session;
 use EzSystems\Behat\Browser\Page\Page;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\IconLinkedListTable;
+use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
+use PHPUnit\Framework\Assert;
 
 class ContentTypeGroupPage extends Page
 {
-    /** @var string Name by which Page is recognised */
-    public const PAGE_NAME = 'Content Type group';
-    /** @var string Name of actual group */
-    public $groupName;
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList  */
+    protected $adminList;
 
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList
-     */
-    public $adminList;
+    /** @var string */
+    protected $expectedName;
 
-    public function __construct(BrowserContext $context, string $groupName)
+    public function __construct(Session $session, MinkParameters $minkParameters, AdminList $adminList)
     {
-        parent::__construct($context);
-        $this->siteAccess = 'admin';
-        $this->route = '/contenttypegroup/';
-        $this->groupName = $groupName;
-        $this->adminList = ElementFactory::createElement($this->context, AdminList::ELEMENT_NAME, sprintf('Content Types in \'%s\'', $this->groupName), IconLinkedListTable::ELEMENT_NAME);
-        $this->pageTitle = $groupName;
-        $this->pageTitleLocator = '.ez-header h1';
+        parent::__construct($session, $minkParameters);
+        $this->adminList = $adminList;
     }
 
-    /**
-     * Verifies that all necessary elements are visible.
-     */
-    public function verifyElements(): void
+    public function verifyListIsEmpty(): void
     {
-        $this->adminList->verifyVisibility();
+        Assert::assertTrue($this->adminList->isEmpty());
     }
 
-    /**
-     * Verifies if lists from given tab is empty.
-     *
-     * @param string $tabName
-     */
-    public function verifyListIsEmpty(string $tabName): void
+    public function edit(string $contentTypeName): void
     {
-        if ($this->adminList->table->getItemCount() > 0) {
-            throw new \Exception(sprintf('%s list is not empty.', $tabName));
-        }
+        $this->adminList->editItem($contentTypeName);
     }
 
-    public function startEditingItem(string $itemName): void
+    public function goTo(string $contentTypeName): void
     {
-        $this->adminList->table->clickEditButton($itemName);
+        $this->adminList->clickItem(['Name' => $contentTypeName]);
     }
 
-    public function startCreatingItem(): void
+    public function create(): void
     {
-        $this->adminList->clickPlusButton();
+        $this->getHTMLPage()->find($this->getSelector('createButton'))->click();
+    }
+
+    protected function getRoute(): string
+    {
+        return '/contenttypegroup/<id>'; // TODO: Get ContentTypeGroupID z nazwy
+    }
+
+    public function verifyIsLoaded(): void
+    {
+        $this->adminList->verifyIsLoaded();
+        Assert::assertEquals(
+            'Content',
+            $this->getHTMLPage()->find($this->getSelector('pageTitle'))->getText()
+        );
+        Assert::assertEquals(
+            sprintf("Content Types in '%s'", $this->expectedName),
+            $this->getHTMLPage()->find($this->getSelector('listHeader'))->getText()
+        );
+    }
+    
+    public function setExpectedContentTypeGroupName(string $expectedName) {
+        $this->expectedName = $expectedName;
+    }
+
+    public function getName(): string
+    {
+        return 'Content Type group';
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('pageTitle',  '.ez-header h1'),
+            new CSSSelector('listHeader', '.ez-table-header .ez-table-header__headline, header .ez-table__headline, header h5'),
+            new CSSSelector('createButton', '.ez-icon-create'),
+        ];
     }
 }
