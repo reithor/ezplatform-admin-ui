@@ -61,25 +61,25 @@ class UniversalDiscoveryWidget extends Component
     {
         return $this->getHTMLPage()
             ->setTimeout(self::SHORT_TIMEOUT)
-            ->findAll($this->getSelector('multiSelectAddButon'))
+            ->findAll($this->getSelector('multiSelectAddButton'))
             ->any();
     }
 
     protected function addItemToMultiSelection(string $itemName, int $level): void
     {
-        $currentSelectedItemSelector = new CSSSelector('', sprintf($this->getSelector('treeLevelSelectedFormat'), $level));
+        $currentSelectedItemSelector = new CSSSelector('', sprintf($this->getSelector('treeLevelSelectedFormat')->getSelector(), $level));
         $this->getHTMLPage()->findAll($currentSelectedItemSelector)->getByText($itemName)->mouseOver();
 
-        $addItemSelector = new CSSSelector('', sprintf($this->getSelector('currentlySelectedAddItemButtonFormat'), $level));
+        $addItemSelector = new CSSSelector('', sprintf($this->getSelector('currentlySelectedAddItemButtonFormat')->getSelector(), $level));
         $this->getHTMLPage()->find($addItemSelector)->click();
 
-        $addedItemSelector = new CSSSelector('', sprintf($this->getSelector('currentlySelectedItemAddedFormat'), $level));
+        $addedItemSelector = new CSSSelector('', sprintf($this->getSelector('currentlySelectedItemAddedFormat')->getSelector(), $level));
         Assert::assertTrue($this->getHTMLPage()->find($addedItemSelector)->isVisible());
     }
 
     protected function selectTreeBranch(string $itemName, int $level): void
     {
-        $treeLevelSelector = new CSSSelector('', sprintf($this->getSelector('treeLevelFormat'), $level));
+        $treeLevelSelector = new CSSSelector('', sprintf($this->getSelector('treeLevelFormat')->getSelector(), $level));
 
         Assert::assertTrue($this->getHTMLPage()->setTimeout(self::LONG_TIMEOUT)->find($treeLevelSelector)->isVisible());
 
@@ -98,11 +98,11 @@ class UniversalDiscoveryWidget extends Component
             $currentItems = $this->getItemsFromLevel($level + 1);
         }
 
-        $treeElementsSelector = new CSSSelector('', sprintf($this->getSelector('treeLevelElementsFormat'), $level));
+        $treeElementsSelector = new CSSSelector('', sprintf($this->getSelector('treeLevelElementsFormat')->getSelector(), $level));
         $this->getHTMLPage()->findAll($treeElementsSelector)->getByText($itemName)->click();
         Assert::assertTrue(
             $this->getHTMLPage()->findAll(
-                new CSSSelector('', sprintf($this->getSelector('treeLevelSelectedFormat'), $level))
+                new CSSSelector('', sprintf($this->getSelector('treeLevelSelectedFormat')->getSelector(), $level))
             )->getByText($itemName)->isVisible()
         );
 
@@ -121,7 +121,7 @@ class UniversalDiscoveryWidget extends Component
 
     protected function getItemsFromLevel(int $level): array
     {
-        $levelItemsSelector = new CSSSelector('css', sprintf($this->getSelector('treeLevelElementsFormat'), $level));
+        $levelItemsSelector = new CSSSelector('css', sprintf($this->getSelector('treeLevelElementsFormat')->getSelector(), $level));
 
         return $this->getHTMLPage()->findAll($levelItemsSelector)->map(
             function (NodeElement $element) {
@@ -134,10 +134,10 @@ class UniversalDiscoveryWidget extends Component
     {
         $selectedElementSelector = new CSSSelector(
             'selectedElement',
-            sprintf($this->getSelector('treeLevelSelectedFormat'), $level)
+            sprintf($this->getSelector('treeLevelSelectedFormat')->getSelector(), $level)
         );
 
-        $elements = $this->getHTMLPage()->findAll($selectedElementSelector);
+        $elements = $this->getHTMLPage()->setTimeout(self::SHORT_TIMEOUT)->findAll($selectedElementSelector);
 
         return $elements->any() ? $elements->single()->getText() : null;
     }
@@ -149,7 +149,7 @@ class UniversalDiscoveryWidget extends Component
             find(
                 new CSSSelector(
                     'css',
-                    sprintf($this->getSelector('treeLevelElementsFormat'), $currentLevel + 1))
+                    sprintf($this->getSelector('treeLevelElementsFormat')->getSelector(), $currentLevel + 1))
             )->isVisible();
     }
 

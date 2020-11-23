@@ -7,12 +7,13 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\BusinessContext;
 
 use Behat\Behat\Context\Context;
+use Behat\Behat\Tester\Exception\PendingException;
 use Exception;
 use EzSystems\Behat\Browser\Page\PageRegistry;
 use EzSystems\Behat\Core\Behat\ArgumentParser;
-use EzSystems\Behat\Core\Environment\EnvironmentConstants;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Breadcrumb;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UpperMenu;
+use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentUpdateItemPage;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentViewPage;
 use PHPUnit\Framework\Assert;
 
@@ -32,13 +33,18 @@ class NavigationContext implements Context
 
     /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentViewPage  */
     private $contentViewPage;
+    /**
+     * @var ContentUpdateItemPage
+     */
+    private $contentUpdateItemPage;
 
     public function __construct(
         ArgumentParser $argumentParser,
         UpperMenu $upperMenu,
         Breadcrumb $breadcrumb,
         ContentViewPage $contentViewPage,
-        PageRegistry $pageRegistry
+        PageRegistry $pageRegistry,
+        ContentUpdateItemPage $contentUpdateItemPage
     )
     {
         $this->argumentParser = $argumentParser;
@@ -46,22 +52,23 @@ class NavigationContext implements Context
         $this->upperMenu = $upperMenu;
         $this->breadcrumb = $breadcrumb;
         $this->contentViewPage = $contentViewPage;
+        $this->contentUpdateItemPage = $contentUpdateItemPage;
     }
 
     /**
-     * @Given I open :pageName page
+     * @Given I open :pageName page in admin SiteAccess
      */
     public function openPage(string $pageName): void
     {
-        $this->pageRegistry->get($pageName)->open();
+        $this->pageRegistry->get($pageName)->open('admin');
     }
 
     /**
-     * @Given I try to open :pageName page
+     * @Given I try to open :pageName page in admin SiteAccess
      */
     public function tryToOpenPage(string $pageName): void
     {
-        $this->pageRegistry->get($pageName)->tryToOpen();
+        $this->pageRegistry->get($pageName)->tryToOpen('admin');
     }
 
     /**
@@ -125,26 +132,6 @@ class NavigationContext implements Context
         $this->iNavigateToContent($contentName, $contentType, $path);
     }
 
-    /**
-     * @Then breadcrumb shows :path path
-     */
-    public function verifyIfBreadcrumbShowsPath(string $path): void
-    {
-        Assert::assertEquals(
-            str_replace('/', ' ', $path),
-            $this->breadcrumb->getBreadcrumb(),
-            'Breadcrumb shows invalid path'
-        );
-    }
-
-    /**
-     * @Then breadcrumb shows :path path under root path
-     */
-    public function verifyIfBreadcrumbShowsPathUnderRoot(string $path): void
-    {
-        $path = $this->argumentParser->replaceRootKeyword($path);
-        $this->verifyIfBreadcrumbShowsPath($path);
-    }
 
     /**
      * @Given I go to user notifications
@@ -169,5 +156,37 @@ class NavigationContext implements Context
 //        } else {
         $this->contentItemPage = $this->argumentParser->replaceRootKeyword('root');
         $this->contentItemPage->verifyIsLoaded();
+    }
+
+    /**
+     * @Given I'm on Content view Page for :path
+     * @Given there exists Content view Page for :path
+     */
+    public function iMOnContentViewPageFor(string $path)
+    {
+        $path = $this->argumentParser->parseUrl($path);
+        $path = $this->argumentParser->replaceRootKeyword($path);
+        $this->contentViewPage->setExpectedLocationPath($path);
+        $this->contentViewPage->open('admin');
+        $this->contentViewPage->verifyIsLoaded();
+    }
+
+    /**
+     * @Given I should be on Content view Page for :path
+     */
+    public function iShouldBeOnContentViewPage(string $path)
+    {
+        $path = $this->argumentParser->parseUrl($path);
+        $this->contentViewPage->setExpectedLocationPath($path);
+        $this->contentViewPage->verifyIsLoaded();
+    }
+
+    /**
+     * @Given I should be on Content Update page for :contentItemName
+     */
+    public function iShouldBeOnContentUpdatePageForItem(string $contentItemName)
+    {
+        $this->contentUpdateItemPage->setExpectedPageTitle($contentItemName);
+        $this->contentUpdateItemPage->verifyIsLoaded();
     }
 }

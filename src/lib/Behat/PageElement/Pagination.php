@@ -6,31 +6,34 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
+use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Element\Element;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 
-class Pagination extends Element
+class Pagination extends Component
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'Pagination';
-
-    public function __construct(OldBrowserContext $context)
-    {
-        parent::__construct($context);
-        $this->fields = [
-            'nextButton' => '.pagination .page-item.next:not(.disabled)',
-            'spinner' => '.m-sub-items__spinner-wrapper',
-        ];
-    }
-
     public function isNextButtonActive(): bool
     {
-        return $this->context->isElementVisible($this->fields['nextButton']);
+        return $this->getHTMLPage()->findAll($this->getSelector('nextButton'))->any();
     }
 
     public function clickNextButton(): void
     {
         $this->getHTMLPage()->find($this->getSelector('nextButton'))->click();
-        $this->context->waitUntilElementDisappears($this->fields['spinner'], 10);
+//        $this->context->waitUntilElementDisappears($this->fields['spinner'], 10);
+    }
+
+    public function verifyIsLoaded(): void
+    {
+
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('nextButton','.pagination .page-item.next:not(.disabled)'),
+            new CSSSelector('spinner','.m-sub-items__spinner-wrapper'),
+        ];
     }
 }

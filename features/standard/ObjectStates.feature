@@ -4,7 +4,9 @@ Feature: Object States management
   I want to manage Object States.
 
   Background:
-    Given I am logged as "admin"
+        Given I open Login page in admin SiteAccess
+    And I log in as admin
+
       And I go to "Object States" in "Admin" tab
 
   @javascript @common

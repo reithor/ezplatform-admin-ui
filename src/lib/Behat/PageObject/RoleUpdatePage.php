@@ -1,12 +1,13 @@
 <?php
 
 
-namespace src\lib\Behat\PageObject;
-
+namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use Behat\Mink\Session;
 use Exception;
+use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\AdminUpdateItemPage;
 use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
@@ -18,9 +19,9 @@ class RoleUpdatePage extends AdminUpdateItemPage
      */
     private $universalDiscoveryWidget;
 
-    public function __construct(Session $session, MinkParameters $minkParameters, UniversalDiscoveryWidget $universalDiscoveryWidget)
+    public function __construct(Browser $browser, RightMenu $rightMenu, UniversalDiscoveryWidget $universalDiscoveryWidget)
     {
-        parent::__construct($session, $minkParameters);
+        parent::__construct($browser, $rightMenu);
         $this->universalDiscoveryWidget = $universalDiscoveryWidget;
     }
 

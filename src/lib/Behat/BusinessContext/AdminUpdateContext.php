@@ -52,14 +52,14 @@ class AdminUpdateContext implements Context
     {
 
         throw new \Exception('refactor me ...');
-        $updateItemPage = PageObjectFactory::createPage($this->browserContext, AdminUpdateItemPage::PAGE_NAME);
-        $updateItemPage->adminUpdateForm->selectFieldDefinition($fieldName);
-        $updateItemPage->adminUpdateForm->clickAddFieldDefinition();
-        $updateItemPage->adminUpdateForm->verifyNewFieldDefinitionFormExists($fieldName);
-        $notification = ElementFactory::createElement($this->browserContext, Notification::ELEMENT_NAME);
-        $notification->verifyVisibility();
-        $notification->verifyAlertSuccess();
-        $notification->closeAlert();
+        // $updateItemPage = PageObjectFactory::createPage($this->browserContext, AdminUpdateItemPage::PAGE_NAME);
+        // $updateItemPage->adminUpdateForm->selectFieldDefinition($fieldName);
+        // $updateItemPage->adminUpdateForm->clickAddFieldDefinition();
+        // $updateItemPage->adminUpdateForm->verifyNewFieldDefinitionFormExists($fieldName);
+        // $notification = ElementFactory::createElement($this->browserContext, Notification::ELEMENT_NAME);
+        // $notification->verifyVisibility();
+        // $notification->verifyAlertSuccess();
+        // $notification->closeAlert();
     }
 
     /**
@@ -69,8 +69,8 @@ class AdminUpdateContext implements Context
     {
         throw new \Exception('refactor me ...');
 
-        $updateItemPage = PageObjectFactory::createPage($this->browserContext, AdminUpdateItemPage::PAGE_NAME);
-        $updateItemPage->adminUpdateForm->expandFieldDefinition($containerName);
-        $updateItemPage->adminUpdateForm->fillFieldWithValue($field, $value, $containerName);
+        // $updateItemPage = PageObjectFactory::createPage($this->browserContext, AdminUpdateItemPage::PAGE_NAME);
+        // $updateItemPage->adminUpdateForm->expandFieldDefinition($containerName);
+        // $updateItemPage->adminUpdateForm->fillFieldWithValue($field, $value, $containerName);
     }
 }

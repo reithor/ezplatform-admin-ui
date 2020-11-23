@@ -1,10 +1,13 @@
+@richtext
 Feature: Content items creation
   As an administrator
   In order to menage content to my site
   I want to create, edit, copy and move content items.
 
   Background:
-    Given I am logged as "admin"
+        Given I open Login page in admin SiteAccess
+    And I log in as admin
+
       And I go to "Content structure" in "Content" tab
 
   @javascript @common

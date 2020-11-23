@@ -9,35 +9,13 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\LinkedListTable;
 use PHPUnit\Framework\Assert;
 
 class ObjectStateGroupsPage extends Page
 {
-    /** @var string Name by which Page is recognised */
-    public const PAGE_NAME = 'Object state groups';
-
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList
-     */
-    public $adminList;
-
-    public function __construct(OldBrowserContext $context)
-    {
-        parent::__construct($context);
-        $this->adminList = ElementFactory::createElement($this->context, AdminList::ELEMENT_NAME, self::PAGE_NAME, LinkedListTable::ELEMENT_NAME);
-        $this->siteAccess = 'admin';
-        $this->route = '/state/groups';
-        $this->pageTitle = self::PAGE_NAME;
-        $this->pageTitleLocator = '.ez-header h1';
-    }
-
-    public function verifyElements(): void
-    {
-        $this->adminList->verifyVisibility();
-    }
-
     public function verifyItemAttribute(string $label, string $value, string $itemName): void
     {
         Assert::assertEquals(
@@ -55,5 +33,32 @@ class ObjectStateGroupsPage extends Page
     public function startCreatingItem(): void
     {
         $this->adminList->clickPlusButton();
+    }
+
+    protected function getRoute(): string
+    {
+        return '/state/groups';
+    }
+
+    public function verifyIsLoaded(): void
+    {
+        Assert::assertEquals(
+            'Object state groups',
+            $this->getHTMLPage()->find($this->getSelector('pageTitle'))->getText()
+        );
+
+        $this->adminList->verifyIsLoaded();
+    }
+
+    public function getName(): string
+    {
+        return 'Object state groups';
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('pageTitle', '.ez-header h1'),
+        ];
     }
 }

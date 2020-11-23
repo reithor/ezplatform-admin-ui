@@ -10,7 +10,7 @@ use Behat\Mink\Element\NodeElement;
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use PHPUnit\Framework\Assert;
 
-class Matrix extends EzFieldElement
+class Matrix extends FieldTypeComponent
 {
     /** @var string Name by which Element is recognised */
     public const ELEMENT_NAME = 'Matrix';

@@ -10,10 +10,9 @@ use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\RolePage;
-use EzSystems\EzPlatformAdminUi\Behat\PageObject\AdminUpdateItemPage;
+use EzSystems\EzPlatformAdminUi\Behat\PageObject\RoleUpdatePage;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Exception;
-use src\lib\Behat\PageObject\RoleUpdatePage;
 
 class RolesContext implements Context
 {
@@ -176,9 +175,10 @@ class RolesContext implements Context
      */
     public function iSelectSectionLimitation(string $limitationName): void
     {
-        PageObjectFactory::createPage($this->browserContext, AdminUpdateItemPage::PAGE_NAME)
-            ->adminUpdateForm->fillFieldWithValue('Sections', 'true');
-        $this->browserContext->selectOption($this->fields['newPolicyAssignmentLimitation'], $limitationName);
+        throw new \Exception('refactor me...');
+        // PageObjectFactory::createPage($this->browserContext, AdminUpdateItemPage::PAGE_NAME)
+        //     ->adminUpdateForm->fillFieldWithValue('Sections', 'true');
+        // $this->browserContext->selectOption($this->fields['newPolicyAssignmentLimitation'], $limitationName);
     }
 
     /**

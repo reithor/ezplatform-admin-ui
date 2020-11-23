@@ -8,7 +8,6 @@ namespace EzSystems\EzPlatformAdminUi\Behat\BusinessContext;
 
 use Behat\Behat\Context\Context;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentPreviewPage;
-use EzSystems\Behat\Browser\Factory\PageObjectFactory;
 
 class ContentPreviewContext implements Context
 {
@@ -23,9 +22,9 @@ class ContentPreviewContext implements Context
     }
 
     /**
-     * @When I go to :viewName view in :contentName preview
+     * @When I go to :viewName preview
      */
-    public function iGoToPreview(string $viewName, string $contentName): void
+    public function iGoToPreview(string $viewName): void
     {
         $this->contentPreviewPage->verifyIsLoaded();
         $this->contentPreviewPage->goToView($viewName);

@@ -11,14 +11,14 @@ use EzSystems\Behat\Browser\Context\OldBrowserContext;
 
 abstract class Table extends ItemsList
 {
-    public function __construct(OldBrowserContext $context, string $containerLocator)
-    {
-        parent::__construct($context, $containerLocator);
-        $this->fields['tableCell'] = $containerLocator . ' tr:nth-child(%d) td:nth-child(%d)';
-        $this->fields['editButton'] = $containerLocator . ' tr:nth-child(%s) [data-original-title="Edit"]';
-        $this->fields['listRow'] = $containerLocator . ' tbody tr';
-        $this->fields['horizontalHeaders'] = $containerLocator . ' thead th';
-    }
+//    public function __construct(OldBrowserContext $context, string $containerLocator)
+//    {
+//        parent::__construct($context, $containerLocator);
+//        $this->fields['tableCell'] = $containerLocator . ' tr:nth-child(%d) td:nth-child(%d)';
+//        $this->fields['editButton'] = $containerLocator . ' tr:nth-child(%s) [data-original-title="Edit"]';
+//        $this->fields['listRow'] = $containerLocator . ' tbody tr';
+//        $this->fields['horizontalHeaders'] = $containerLocator . ' thead th';
+//    }
 
     abstract public function getTableCellValue(string $header, ?string $secondHeader = null): string;
 

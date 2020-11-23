@@ -15,63 +15,47 @@ use PHPUnit\Framework\Assert;
 /** Element that describes user notification bar, that appears on the bottom of the screen */
 class Notification extends Component
 {
-    /** @var NodeElement */
-    private $notificationElement;
-
     public function verifyAlertSuccess(): void
     {
-        $this->setAlertElement();
-
         Assert::assertTrue(
-            $this->notificationElement->hasClass($this->getSelector('successAlert')),
+            $this->getHTMLPage()
+                ->setTimeout(20)
+                ->find($this->getSelector('successAlert'))
+                ->isVisible(),
             'Success alert not found.'
         );
     }
 
     public function verifyAlertFailure(): void
     {
-        $this->setAlertElement();
-
         Assert::assertTrue(
-            $this->notificationElement->hasClass($this->getSelector('failureAlert')),
+            $this->getHTMLPage()
+                ->setTimeout(20)
+                ->find($this->getSelector('failureAlert'))
+                ->isVisible(),
             'Failure alert not found.'
         );
     }
 
     public function getMessage(): string
     {
-        $this->setAlertElement();
-
-        try {
-            return $this->getHTMLPage()->find($this->getSelector('alertMessage'))->getText();
-        } catch (Exception $e) {
-            Assert::fail('Notification alert not found, no message can be fetched.');
-        }
+        return $this->getHTMLPage()->find($this->getSelector('alertMessage'))->getText();
     }
 
     public function closeAlert(): void
     {
-        if ($this->isVisible()) {
-            $this->setAlertElement();
+        $alerts = $this->getHTMLPage()->findAll($this->getSelector('alert'));
 
-            $this->notificationElement->find($this->getSelector('closeAlert'))->click();
-
-            $this->getHTMLPage()->waitUntil(function () {
-                return !$this->isVisible();
-            });
+        if ($alerts->any()) {
+            $alerts->single()->click();
         }
     }
 
     public function isVisible(): bool
     {
-        return $this->getHTMLPage()->setTimeout(1)->find($this->getSelector('alert'))->isVisible();
-    }
+        $elements =  $this->getHTMLPage()->findAll($this->getSelector('alert'));
 
-    private function setAlertElement(): void
-    {
-        if (!isset($this->notificationElement)) {
-            $this->notificationElement = $this->getHTMLPage()->find($this->getSelector('alert'));
-        }
+        return $elements->any() ? $elements->single()->isVisible() : false;
     }
 
     public function verifyIsLoaded(): void
@@ -79,17 +63,9 @@ class Notification extends Component
         Assert::assertTrue(
             $this
                 ->getHTMLPage()
-                ->setTimeout(20)
                 ->find($this->getSelector('alert'))
+                ->isVisible()
         );
-
-
-        $this->setAlertElement();
-    }
-
-    public function getName(): string
-    {
-        return 'Notification';
     }
 
     protected function specifySelectors(): array
@@ -97,8 +73,8 @@ class Notification extends Component
         return [
             new CSSSelector('alert', '.ez-notifications-container .alert.show'),
             new CSSSelector('alertMessage', '.ez-notifications-container .alert.show span:nth-of-type(2)'),
-            new CSSSelector('successAlert', 'alert-success'),
-            new CSSSelector('failureAlert', 'alert-danger'),
+            new CSSSelector('successAlert', '.alert-success'),
+            new CSSSelector('failureAlert', '.alert-danger'),
             new CSSSelector('closeAlert', 'button.close'),
         ];
     }

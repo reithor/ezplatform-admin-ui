@@ -11,7 +11,7 @@ use PHPUnit\Framework\Assert;
 use Behat\Mink\Element\NodeElement;
 use Exception;
 
-class RichText extends EzFieldElement
+class RichText extends FieldTypeComponent
 {
     /** @var string Name by which Element is recognised */
     public const ELEMENT_NAME = 'Rich text';

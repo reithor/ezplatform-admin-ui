@@ -8,6 +8,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Page\Page;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SimpleTable;
@@ -15,8 +16,6 @@ use PHPUnit\Framework\Assert;
 
 class ObjectStatePage extends Page
 {
-    /** @var string Name by which Page is recognised */
-    public const PAGE_NAME = 'Object state';
     /** @var string */
     private $objectStateName;
 
@@ -24,22 +23,6 @@ class ObjectStatePage extends Page
      * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList
      */
     public $adminList;
-
-    public function __construct(OldBrowserContext $context, string $objectStateName)
-    {
-        parent::__construct($context);
-        $this->adminList = ElementFactory::createElement($this->context, AdminList::ELEMENT_NAME, self::PAGE_NAME . ' information', SimpleTable::ELEMENT_NAME);
-        $this->objectStateName = $objectStateName;
-        $this->siteAccess = 'admin';
-        $this->route = '/state/state';
-        $this->pageTitle = sprintf('Object state: %s', $objectStateName);
-        $this->pageTitleLocator = '.ez-header h1';
-    }
-
-    public function verifyElements(): void
-    {
-        $this->adminList->verifyVisibility();
-    }
 
     public function startEditingSelf(string $itemName): void
     {
@@ -53,5 +36,37 @@ class ObjectStatePage extends Page
             $this->adminList->table->getTableCellValue($label),
             sprintf('Attribute "%s" has wrong value.', $label)
         );
+    }
+
+    protected function getRoute(): string
+    {
+        return '/state/state'; // TODO: add object state id here
+    }
+
+    public function getName(): string
+    {
+        return 'Object state';
+    }
+
+    public function setExpectedObjectStateName(string $objectStateName)
+    {
+        $this->objectStateName = $objectStateName;
+    }
+
+    public function verifyIsLoaded(): void
+    {
+        Assert::assertEquals(
+            'Object state: %s',
+            $this->getHTMLPage()->find($this->getSelector('pageTitle'))->getText()
+        );
+
+        $this->adminList->verifyIsLoaded();
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('pageTitle', '.ez-header h1'),
+        ];
     }
 }

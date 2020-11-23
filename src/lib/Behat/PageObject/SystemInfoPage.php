@@ -7,6 +7,7 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use Behat\Mink\Session;
+use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Selector\CSSSelector;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
@@ -28,9 +29,9 @@ class SystemInfoPage extends Page
      */
     protected $tableNavigationTab;
 
-    public function __construct(Session $session, MinkParameters $minkParameters, TableNavigationTab $tableNavigationTab)
+    public function __construct(Browser $browser, TableNavigationTab $tableNavigationTab)
     {
-        parent::__construct($session, $minkParameters);
+        parent::__construct($browser);
 
         $this->tableNavigationTab = $tableNavigationTab;
     }

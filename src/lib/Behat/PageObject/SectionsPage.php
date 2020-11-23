@@ -8,6 +8,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Page\Page;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\LinkedListTable;
@@ -15,28 +16,10 @@ use PHPUnit\Framework\Assert;
 
 class SectionsPage extends Page
 {
-    /** @var string Name by which Page is recognised */
-    public const PAGE_NAME = 'Sections';
-
     /**
      * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList
      */
     public $adminList;
-
-    public function __construct(OldBrowserContext $context)
-    {
-        parent::__construct($context);
-        $this->adminList = ElementFactory::createElement($this->context, AdminList::ELEMENT_NAME, self::PAGE_NAME, LinkedListTable::ELEMENT_NAME);
-        $this->siteAccess = 'admin';
-        $this->route = '/section/list';
-        $this->pageTitle = self::PAGE_NAME;
-        $this->pageTitleLocator = '.ez-header h1';
-    }
-
-    public function verifyElements(): void
-    {
-        $this->adminList->verifyVisibility();
-    }
 
     public function verifyItemAttribute(string $label, string $value, string $itemName): void
     {
@@ -60,5 +43,32 @@ class SectionsPage extends Page
     public function startCreatingItem(): void
     {
         $this->adminList->clickPlusButton();
+    }
+
+    protected function getRoute(): string
+    {
+        return '/section/list';
+    }
+
+    public function getName(): string
+    {
+        return 'Sections';
+    }
+
+    public function verifyIsLoaded(): void
+    {
+        Assert::assertEquals(
+            'Sections',
+            $this->getHTMLPage()->find($this->getSelector('pageTitle'))->getText()
+        );
+
+        $this->adminList->verifyIsLoaded();
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('pageTitle', '.ez-header h1'),
+        ];
     }
 }

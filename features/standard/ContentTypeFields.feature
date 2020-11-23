@@ -9,7 +9,7 @@ Feature: Content fields setting and editing
       | Field Type  | Name        | Identifier          | Required | Searchable | Translatable | Settings       |
       | <fieldName> | Field       | <fieldInternalName> | no      | no	      | yes          | <fieldSettings>  |
       | Text line   | Name        | name	            | no      | yes	      | yes          |                  |
-    And I am logged as "admin"
+    And I am logged as admin
       And I go to "Content structure" in "Content" tab
     When I start creating a new content "<fieldName> CT"
       And I set content fields
@@ -58,7 +58,7 @@ Feature: Content fields setting and editing
       And I create a 'Image Asset CT2' Content Type in "Content" with 'ImageAssetCT2' identifier
       | Field Type  | Name         | Identifier        | Required | Searchable | Translatable | Settings        |
       | Image Asset | ImageAField  | imageafield       | yes      | no	       | yes          |                 |
-      And I am logged as "admin"
+      And I am logged as admin
       And I go to "Content structure" in "Content" tab
     When I start creating a new content 'Image Asset CT2'
       And I select "Media/Images/ImageAssetImage" from Image Asset Repository for "ImageAField" field
@@ -71,7 +71,9 @@ Feature: Content fields setting and editing
 
   @javascript @common
   Scenario Outline: Edit content item with given field
-    Given I am logged as "admin"
+        Given I open Login page in admin SiteAccess
+    And I log in as admin
+
       And I go to "Content structure" in "Content" tab
       And I open UDW and go to "root/<oldContentItemName>"
     When I click on the edit action bar button "Edit"
@@ -118,7 +120,7 @@ Feature: Content fields setting and editing
       | Field Type  | Name        | Identifier          | Required | Searchable | Translatable | Settings        |
       | <fieldName> | Field       | <fieldInternalName> | no       | no	        | yes          | <fieldSettings> |
       | Text line   | Name        | name	            | no       | yes	    | yes          |                 |
-    And I am logged as "admin"
+    And I am logged as admin
     And I go to "Content structure" in "Content" tab
     When I start creating a new content "<fieldName> CT"
     And the "Ezcontentquery" field is noneditable
@@ -137,7 +139,9 @@ Feature: Content fields setting and editing
 
   @javascript @common @queryFieldType
   Scenario: Edit content item with Content Query
-    Given I am logged as "admin"
+        Given I open Login page in admin SiteAccess
+    And I log in as admin
+
     And I navigate to content "Content query" of type "Content query CT" in root path
     When I click on the edit action bar button "Edit"
     And I set content fields

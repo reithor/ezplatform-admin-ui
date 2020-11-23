@@ -4,7 +4,9 @@ Feature: Languages management
   I want to manage Languages for my website.
 
   Background:
-    Given I am logged as "admin"
+        Given I open Login page in admin SiteAccess
+    And I log in as admin
+
       And I go to "Languages" in "Admin" tab
 
   @javascript @common

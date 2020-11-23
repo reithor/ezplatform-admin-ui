@@ -9,6 +9,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 use ErrorException;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Selector\CSSSelector;
+use PHPUnit\Framework\Assert;
 
 class ContentPreviewPage extends Page
 {
@@ -19,7 +20,7 @@ class ContentPreviewPage extends Page
 
     public function verifyIsLoaded(): void
     {
-        $this->getHTMLPage()->find($this->getSelector('previewNav'));
+        Assert::assertTrue($this->getHTMLPage()->find($this->getSelector('previewNav'))->isVisible());
     }
 
     public function getName(): string
@@ -33,9 +34,9 @@ class ContentPreviewPage extends Page
             new CSSSelector('previewNav', '.ez-preview__nav'),
             new CSSSelector('backToEdit', '.ez-preview__nav .ez-preview__item--back a'),
             new CSSSelector('title', '.ez-preview__nav .ez-preview__item--description'),
-            new CSSSelector('desktop', '.ez-preview__nav .ez-preview),_item--actions .ez-icon-desktop'),
+            new CSSSelector('desktop', '.ez-preview__nav .ez-preview__item--actions .ez-icon-desktop'),
             new CSSSelector('tablet', '.ez-preview__nav .ez-preview__item--actions .ez-icon-tablet'),
-            new CSSSelector('mobile', '.ez-preview__nav .ez-preview__item--action), .ez-icon-mobile'),
+            new CSSSelector('mobile', '.ez-preview__nav .ez-preview__item--actions .ez-icon-mobile'),
             new CSSSelector('selectedView', '.ez-preview__action--selected'),
         ];
     }

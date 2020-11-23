@@ -1,0 +1,51 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: true
+
+  EzSystems\EzPlatformAdminUi\Behat\PageObject\AdminUpdateItemPage: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentUpdateItemPage:
+    arguments:
+      $fieldTypeComponents: !tagged_iterator ezplatform.behat.admin_ui.field
+
+  EzSystems\EzPlatformAdminUi\Behat\PageObject\ObjectStateGroupsPage: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageObject\SearchPage: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentPreviewPage: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentViewPage: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageObject\ObjectStatePage: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageObject\SectionPage: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentTypeGroupPage: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageObject\DashboardPage: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageObject\SectionsPage: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentTypeGroupsPage: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageObject\LanguagePage: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageObject\RolePage: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageObject\SystemInfoPage: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentTypePage: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageObject\LanguagesPage: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageObject\RoleUpdatePage: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageObject\TrashPage: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentTypeUpdatePage: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageObject\ObjectStateGroupPage: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageObject\RolesPage: ~

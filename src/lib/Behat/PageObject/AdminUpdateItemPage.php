@@ -6,14 +6,22 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
+use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
 use PHPUnit\Framework\Assert;
 
 class AdminUpdateItemPage extends Page
 {
     /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu */
-    public $rightMenu;
+    protected $rightMenu;
+
+    public function __construct(Browser $browser, RightMenu $rightMenu)
+    {
+        parent::__construct($browser);
+        $this->rightMenu = $rightMenu;
+    }
 
     public function getFieldValue($label)
     {

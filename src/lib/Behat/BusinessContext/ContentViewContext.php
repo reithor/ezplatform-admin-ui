@@ -80,7 +80,7 @@ class ContentViewContext implements Context
     }
 
     /**
-     * @Then there's :itemName :itemType on Sub-items list
+     * @Then there's a :itemName :itemType on Subitems list
      */
     public function verifyThereIsItemInSubItemList(string $itemName, string $itemType): void
     {
@@ -88,7 +88,7 @@ class ContentViewContext implements Context
     }
 
     /**
-     * @Then there's no :itemName :itemType on Sub-items list
+     * @Then there's no :itemName :itemType on Subitems list
      */
     public function verifyThereIsNoItemInSubItemListInRoot(string $itemName, string $itemType): void
     {

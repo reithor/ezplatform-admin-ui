@@ -9,7 +9,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use PHPUnit\Framework\Assert;
 
-class FloatField extends EzFieldElement
+class FloatField extends FieldTypeComponent
 {
     /** @var string Name by which Element is recognised */
     public const ELEMENT_NAME = 'Float';

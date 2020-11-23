@@ -4,7 +4,9 @@ Feature: Content types management
   I want to manage my Content types.
 
   Background:
-    Given I am logged as "admin"
+        Given I open Login page in admin SiteAccess
+    And I log in as admin
+
       And I go to "Content Types" in "Admin" tab
       And I go to "Content" "Content Type group" page
 

@@ -4,7 +4,9 @@ Feature: Content type groups management
   I want to manage my Content types structure.
 
   Background:
-    Given I am logged as "admin"
+        Given I open Login page in admin SiteAccess
+    And I log in as admin
+
       And I go to "Content Types" in "Admin" tab
 
   @javascript @common

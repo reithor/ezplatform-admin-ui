@@ -7,41 +7,25 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use PHPUnit\Framework\Assert;
 
-class TextLine extends EzFieldElement
+class TextLine extends FieldTypeComponent
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'Text line';
-
-    public function __construct(OldBrowserContext $context, string $locator, string $label)
-    {
-        parent::__construct($context, $locator, $label);
-        $this->fields['fieldInput'] = 'input';
-    }
-
     public function setValue(array $parameters): void
     {
-        $fieldInput = $this->context->findElement(
-            sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['fieldInput'])
-        );
+        $fieldInputSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('fieldInput'));
 
-        Assert::assertNotNull($fieldInput, sprintf('Input for field %s not found.', $this->label));
-
-        $values = array_values($parameters);
-        $fieldInput->setValue('');
-        $fieldInput->setValue($values[0]);
+        $value = array_values($parameters)[0];
+        $this->getHTMLPage()->find($fieldInputSelector)->setValue($value);
     }
 
     public function getValue(): array
     {
-        $fieldInput = $this->context->findElement(
-            sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['fieldInput'])
-        );
+        $fieldInputSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('fieldInput'));
+        $value = $this->getHTMLPage()->find($fieldInputSelector)->getValue();
 
-        Assert::assertNotNull($fieldInput, sprintf('Input for field %s not found.', $this->label));
-
-        return [$fieldInput->getValue()];
+        return [$value];
     }
 
     public function verifyValueInItemView(array $values): void
@@ -51,5 +35,17 @@ class TextLine extends EzFieldElement
             $this->getHTMLPage()->find($this->getSelector('fieldContainer'))->getText(),
             'Field has wrong value'
         );
+    }
+
+    public function specifySelectors(): array
+    {
+        return [
+                new CSSSelector('fieldInput', 'input'),
+            ];
+    }
+
+    function getFieldTypeIdentifier(): string
+    {
+        return 'ezstring';
     }
 }

@@ -8,6 +8,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Page\Page;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\LinkedListTable;
@@ -15,31 +16,10 @@ use PHPUnit\Framework\Assert;
 
 class RolesPage extends Page
 {
-    /** @var string Name by which Page is recognised */
-    public const PAGE_NAME = 'Roles';
-
     /**
      * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList
      */
     public $adminList;
-
-    public function __construct(OldBrowserContext $context)
-    {
-        parent::__construct($context);
-        $this->adminList = ElementFactory::createElement($this->context, AdminList::ELEMENT_NAME, self::PAGE_NAME, LinkedListTable::ELEMENT_NAME);
-        $this->siteAccess = 'admin';
-        $this->route = '/role/list';
-        $this->pageTitle = self::PAGE_NAME;
-        $this->pageTitleLocator = '.ez-header h1';
-    }
-
-    public function verifyElements(): void
-    {
-        $this->adminList->verifyVisibility();
-        $this->context->waitUntil($this->defaultTimeout, function () {
-            return $this->adminList->table->getItemCount() > 0;
-        });
-    }
 
     public function verifyItemAttribute(string $label, string $value, string $itemName): void
     {
@@ -63,5 +43,36 @@ class RolesPage extends Page
     public function startCreatingItem(): void
     {
         $this->adminList->clickPlusButton();
+    }
+
+    protected function getRoute(): string
+    {
+        return '/role/list';
+    }
+
+    public function getName(): string
+    {
+        return 'Roles';
+    }
+
+    public function verifyIsLoaded(): void
+    {
+        Assert::assertEquals(
+            'Roles',
+            $this->getHTMLPage()->find($this->getSelector('pageTitle'))->getText()
+        );
+
+        $this->adminList->verifyIsLoaded();
+
+        $this->context->waitUntil($this->defaultTimeout, function () {
+            return $this->adminList->table->getItemCount() > 0;
+        });
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('pageTitle', '.ez-header h1'),
+        ];
     }
 }

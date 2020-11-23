@@ -12,7 +12,7 @@ use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\ContentRelationTable;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
 use PHPUnit\Framework\Assert;
 
-class ContentRelationSingle extends EzFieldElement
+class ContentRelationSingle extends FieldTypeComponent
 {
     /** @var string Name by which Element is recognised */
     public const ELEMENT_NAME = 'Content relation (single)';

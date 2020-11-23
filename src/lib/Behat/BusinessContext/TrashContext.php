@@ -90,7 +90,7 @@ class TrashContext implements Context
     }
 
     /**
-     * @Then there is :itemType :itemName on trash list
+     * @Then there is a :itemType :itemName on Trash list
      */
     public function thereIsItemOnTrashList(string $itemType, string $itemName): void
     {
@@ -98,7 +98,7 @@ class TrashContext implements Context
     }
 
     /**
-     * @Then there is no :itemType :itemName on trash list
+     * @Then there is no :itemType :itemName on Trash list
      */
     public function thereIsNoItemOnTrashList(string $itemType, string $itemName): void
     {

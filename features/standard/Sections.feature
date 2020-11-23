@@ -4,7 +4,9 @@ Feature: Sections management
   I want to manage my content Sections.
 
   Background:
-    Given I am logged as "admin"
+        Given I open Login page in admin SiteAccess
+    And I log in as admin
+
       And I go to "Sections" in "Admin" tab
 
   @javascript @common

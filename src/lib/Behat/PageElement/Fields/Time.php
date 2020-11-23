@@ -11,7 +11,7 @@ use EzSystems\EzPlatformAdminUi\Behat\PageElement\DateAndTimePopup;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
 use PHPUnit\Framework\Assert;
 
-class Time extends EzFieldElement
+class Time extends FieldTypeComponent
 {
     /** @var string Name by which Element is recognised */
     public const ELEMENT_NAME = 'Time';

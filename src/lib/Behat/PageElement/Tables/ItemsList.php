@@ -14,12 +14,6 @@ use EzSystems\EzPlatformAdminUi\Behat\PageElement\Pagination;
 
 abstract class ItemsList extends Component
 {
-    public function __construct(OldBrowserContext $context, string $containerLocator)
-    {
-        parent::__construct($context);
-        $this->fields['list'] = $containerLocator;
-    }
-
     public function getItemCount(): int
     {
         return count($this->context->getSession()->getPage()->findAll('css', $this->fields['listElement']));

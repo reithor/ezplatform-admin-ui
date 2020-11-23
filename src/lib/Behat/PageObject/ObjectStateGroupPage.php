@@ -6,7 +6,9 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
+use Behat\Mink\Session;
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
+use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Selector\CSSSelector;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
@@ -14,6 +16,7 @@ use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\LinkedListTable;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SimpleTable;
+use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
 use PHPUnit\Framework\Assert;
 
 class ObjectStateGroupPage extends Page
@@ -39,9 +42,9 @@ class ObjectStateGroupPage extends Page
      */
     private $dialog;
 
-    public function __construct(Session $session, MinkParameters $minkParameters, Dialog $dialog)
+    public function __construct(Browser $browser, Dialog $dialog)
     {
-        parent::__construct($session, $minkParameters);
+        parent::__construct($browser);
         $this->dialog = $dialog;
     }
 

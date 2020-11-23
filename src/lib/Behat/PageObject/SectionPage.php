@@ -6,21 +6,12 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Page\Page;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SimpleTable;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use PHPUnit\Framework\Assert;
 
 class SectionPage extends Page
 {
-    /** @var string Name by which Page is recognised */
-    public const PAGE_NAME = 'Section';
-    /** @var string Name of actual group */
-    public $sectionName;
-
     /** @var string locator for container of Content list */
     public $secondListContainerLocator = 'section:nth-of-type(2)';
 
@@ -38,33 +29,20 @@ class SectionPage extends Page
      * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog[]
      */
     public $dialogs;
+
+    //    public function __construct(OldBrowserContext $context, string $sectionName)
+//    {
+//        $this->adminLists['Section information'] = ElementFactory::createElement($this->context, AdminList::ELEMENT_NAME, 'Section information', SimpleTable::ELEMENT_NAME);
+//        $this->adminLists['Content items'] = ElementFactory::createElement($this->context, AdminList::ELEMENT_NAME, 'Content items', SimpleTable::ELEMENT_NAME, $this->secondListContainerLocator);
+//        $this->adminList = ElementFactory::createElement($this->context, AdminList::ELEMENT_NAME, '', SimpleTable::ELEMENT_NAME);
+//        $this->dialogs['Section information'] = ElementFactory::createElement($this->context, Dialog::ELEMENT_NAME);
+//
+//    }
     /**
      * @var string
      */
-    protected $expectedSesionName;
+    private $expectedSectionName;
 
-    public function __construct(OldBrowserContext $context, string $sectionName)
-    {
-        parent::__construct($context);
-        $this->siteAccess = 'admin';
-        $this->route = '/section/view/';
-        $this->sectionName = $sectionName;
-        $this->adminLists['Section information'] = ElementFactory::createElement($this->context, AdminList::ELEMENT_NAME, 'Section information', SimpleTable::ELEMENT_NAME);
-        $this->adminLists['Content items'] = ElementFactory::createElement($this->context, AdminList::ELEMENT_NAME, 'Content items', SimpleTable::ELEMENT_NAME, $this->secondListContainerLocator);
-        $this->adminList = ElementFactory::createElement($this->context, AdminList::ELEMENT_NAME, '', SimpleTable::ELEMENT_NAME);
-        $this->dialogs['Section information'] = ElementFactory::createElement($this->context, Dialog::ELEMENT_NAME);
-        $this->pageTitle = sprintf('Section: %s', $sectionName);
-        $this->pageTitleLocator = '.ez-header h1';
-    }
-
-    /**
-     * Verifies that all necessary elements are visible.
-     */
-    public function verifyElements(): void
-    {
-        $this->adminLists['Section information']->verifyVisibility();
-        $this->adminLists['Content items']->verifyVisibility();
-    }
 
     /**
      * Verifies if list of Content items is empty.
@@ -126,13 +104,41 @@ class SectionPage extends Page
         }
     }
 
-    public function setExpectedSectionName(string $sectionName): void
-    {
-        $this->expectedSesionName = $sectionName;
-    }
-
     public function getAssignedContentCount(string $sectionName): int
     {
         return (int) $this->adminList->table->getTableCellValue($sectionName, 'Assigned content');
+    }
+
+    protected function getRoute(): string
+    {
+        return 'section/view'; // TODO: take section name into account
+    }
+
+    public function setExpectedSectionName(string $sectionName): void
+    {
+        $this->expectedSectionName = $sectionName;
+    }
+
+    public function verifyIsLoaded(): void
+    {
+        Assert::assertEquals(
+            'Section: %s',
+            $this->getHTMLPage()->find($this->getSelector('pageTitle'))->getText()
+        );
+
+        $this->adminLists['Section information']->verifyVisibility();
+        $this->adminLists['Content items']->verifyVisibility();
+    }
+
+    public function getName(): string
+    {
+        return 'Section';
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('pageTitle', '.ez-header h1'),
+        ];
     }
 }

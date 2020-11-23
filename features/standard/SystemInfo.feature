@@ -5,7 +5,9 @@ Feature: System info verification
   I want to have access to all System Information.
 
   Background:
-    Given I am logged as "admin"
+        Given I open Login page in admin SiteAccess
+    And I log in as admin
+
       And I go to "System Information" in "Admin" tab
 
   @javascript @common

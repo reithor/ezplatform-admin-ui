@@ -65,12 +65,9 @@ class ContentUpdateContext implements Context
      */
     public function verifyFieldsAreSet(TableNode $table): void
     {
-            throw new \Exception('refactor me...');
-//        $updateItemPage = PageObjectFactory::createPage($this->browserContext, ContentUpdateItemPage::PAGE_NAME, '');
-//        $hash = $table->getHash();
-//        foreach ($hash as $row) {
-//            $updateItemPage->contentUpdateForm->verifyFieldHasValue($row);
-//        }
+        foreach ($table->getHash() as $row) {
+            $this->contentUpdateItemPage->verifyFieldHasValue($row['label'], $row);
+        }
     }
 
     /**
@@ -79,18 +76,6 @@ class ContentUpdateContext implements Context
     public function iClickCloseButton(): void
     {
         $this->contentUpdateItemPage->close();
-    }
-
-    /**
-     * @When I set article main content field to :intro
-     */
-    public function iSetArticleMainContentField(string $intro): void
-    {
-        throw new \Exception('refactor me...');
-
-        $updateItemPage = PageObjectFactory::createPage($this->browserContext, ContentUpdateItemPage::PAGE_NAME, '');
-        $fieldName = EnvironmentConstants::get('ARTICLE_MAIN_FIELD_NAME');
-        $updateItemPage->contentUpdateForm->fillFieldWithValue($fieldName, ['value' => $intro]);
     }
 
     /**

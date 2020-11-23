@@ -23,18 +23,18 @@ use PHPUnit\Framework\Assert;
 
 class AdministrationContext implements Context
 {
-    private $itemCreateMapping = [
-        'Content Type group' => ContentTypeGroupsPage::PAGE_NAME,
-        'Content Type' => ContentTypeGroupPage::PAGE_NAME,
-        'Language' => LanguagesPage::PAGE_NAME,
-        'Role' => RolesPage::PAGE_NAME,
-        'Limitation' => RolePage::PAGE_NAME,
-        'Policy' => RolePage::PAGE_NAME,
-        'Section' => SectionsPage::PAGE_NAME,
-        'Object state group' => ObjectStateGroupsPage::PAGE_NAME,
-        'Object state' => ObjectStateGroupPage::PAGE_NAME,
-        'User' => '',
-    ];
+    // private $itemCreateMapping = [
+    //     'Content Type group' => ContentTypeGroupsPage::PAGE_NAME,
+    //     'Content Type' => ContentTypeGroupPage::PAGE_NAME,
+    //     'Language' => LanguagesPage::PAGE_NAME,
+    //     'Role' => RolesPage::PAGE_NAME,
+    //     'Limitation' => RolePage::PAGE_NAME,
+    //     'Policy' => RolePage::PAGE_NAME,
+    //     'Section' => SectionsPage::PAGE_NAME,
+    //     'Object state group' => ObjectStateGroupsPage::PAGE_NAME,
+    //     'Object state' => ObjectStateGroupPage::PAGE_NAME,
+    //     'User' => '',
+    // ];
     private $emptyHeaderMapping = [
         'Content Type groups' => 'Number of Content Types',
         'Sections' => 'Assigned content',

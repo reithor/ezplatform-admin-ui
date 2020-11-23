@@ -7,10 +7,14 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use Behat\Mink\Session;
+use EzSystems\Behat\API\Facade\ContentFacade;
+use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Breadcrumb;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\ContentField;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\ContentTypePicker;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\LanguagePicker;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\SubitemsList;
@@ -51,19 +55,34 @@ class ContentViewPage extends Page
      * @var string
      */
     private $expectedContentName;
+    /**
+     * @var Dialog
+     */
+    private $dialog;
+    /**
+     * @var ContentFacade
+     */
+    private $contentFacade;
+    private $route;
+    /**
+     * @var Breadcrumb
+     */
+    private $breadcrumb;
 
     public function __construct(
-        Session $session,
-        MinkParameters $minkParameters,
+        Browser $browser,
         RightMenu $rightMenu,
         SubitemsList $subItemList,
         ContentTypePicker $contentTypePicker,
         ContentUpdateItemPage $contentUpdatePage,
         LanguagePicker $languagePicker,
-        ContentField $contentField
+        ContentField $contentField,
+        Dialog $dialog,
+        ContentFacade $contentFacade,
+        Breadcrumb $breadcrumb
     )
     {
-        parent::__construct($session, $minkParameters);
+        parent::__construct($browser);
 
         $this->rightMenu = $rightMenu;
         $this->subItemList = $subItemList;
@@ -72,6 +91,9 @@ class ContentViewPage extends Page
         $this->contentUpdatePage = $contentUpdatePage;
         $this->languagePicker = $languagePicker;
         $this->contentField = $contentField;
+        $this->dialog = $dialog;
+        $this->contentFacade = $contentFacade;
+        $this->breadcrumb = $breadcrumb;
     }
 
     public function startCreatingContent(string $contentTypeName): ContentUpdateItemPage
@@ -105,21 +127,21 @@ class ContentViewPage extends Page
     {
         throw new \Exception('jak najmniej tego uzywac...');
 
-        $pathArray = explode('/', $path);
-        $menuTab = $pathArray[0] === EnvironmentConstants::get('ROOT_CONTENT_NAME') ? 'Content structure' : $pathArray[0];
+        // $pathArray = explode('/', $path);
+        // $menuTab = $pathArray[0] === EnvironmentConstants::get('ROOT_CONTENT_NAME') ? 'Content structure' : $pathArray[0];
 
-        $upperMenu = ElementFactory::createElement($this->context, UpperMenu::ELEMENT_NAME);
-        $upperMenu->goToTab('Content');
-        $upperMenu->goToSubTab($menuTab);
+        // $upperMenu = ElementFactory::createElement($this->context, UpperMenu::ELEMENT_NAME);
+        // $upperMenu->goToTab('Content');
+        // $upperMenu->goToSubTab($menuTab);
 
-        $pathSize = count($pathArray);
-        if ($pathSize > 1) {
-            for ($i = 1; $i < $pathSize; ++$i) {
-                $contentPage = PageObjectFactory::createPage($this->context, self::PAGE_NAME, $pathArray[$i - 1]);
-                $contentPage->verifyIsLoaded();
-                $contentPage->subItemList->table->clickListElement($pathArray[$i]);
-            }
-        }
+        // $pathSize = count($pathArray);
+        // if ($pathSize > 1) {
+        //     for ($i = 1; $i < $pathSize; ++$i) {
+        //         $contentPage = PageObjectFactory::createPage($this->context, self::PAGE_NAME, $pathArray[$i - 1]);
+        //         $contentPage->verifyIsLoaded();
+        //         $contentPage->subItemList->table->clickListElement($pathArray[$i]);
+        //     }
+        // }
     }
 
     private function hasGridViewEnabledByDefault(): bool
@@ -129,15 +151,29 @@ class ContentViewPage extends Page
 
     public function setExpectedLocationPath(string $locationPath)
     {
+        $content = $this->contentFacade->getContentByLocationURL($locationPath);
+
         $this->locationPath = $locationPath;
-        $this->expectedContentType = ''; //TODO
-        $this->expectedContentName = ''; // TODO
+        $this->expectedContentType = $content->getContentType()->getName();
+        $this->expectedContentName = $content->getName();
+        $this->route = sprintf('/view/content/%s/full/1/%s', $content->id, $content->contentInfo->getMainLocation()->id);
     }
 
     public function verifyIsLoaded(): void
     {
         $this->subItemList->verifyIsLoaded();
         $this->rightMenu->verifyIsLoaded();
+
+        Assert::assertContains(
+            trim(str_replace('/', ' ', $this->locationPath)),
+            $this->breadcrumb->getBreadcrumb(),
+            'Breadcrumb shows invalid path'
+        );
+
+        Assert::assertEquals(
+            $this->expectedContentName,
+            $this->getHTMLPage()->find($this->getSelector('pageTitle'))->getText()
+        );
 
         Assert::assertEquals(
             $this->expectedContentType,
@@ -183,8 +219,6 @@ class ContentViewPage extends Page
 
     protected function getRoute(): string
     {
-        // TODO: resolve IDs from location path
-
-        return '/view/content';
+        return $this->route;
     }
 }

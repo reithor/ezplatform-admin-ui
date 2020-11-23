@@ -8,6 +8,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Page\Page;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SimpleTable;
@@ -15,31 +16,15 @@ use PHPUnit\Framework\Assert;
 
 class LanguagePage extends Page
 {
-    /** @var string Name by which Page is recognised */
-    public const PAGE_NAME = 'Language';
-    /** @var string */
-    private $languageName;
-
     /**
      * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList
      */
     public $adminList;
 
-    public function __construct(OldBrowserContext $context, string $languageName)
-    {
-        parent::__construct($context);
-        $this->adminList = ElementFactory::createElement($this->context, AdminList::ELEMENT_NAME, self::PAGE_NAME . ' information', SimpleTable::ELEMENT_NAME);
-        $this->languageName = $languageName;
-        $this->siteAccess = 'admin';
-        $this->route = '/language/view';
-        $this->pageTitle = sprintf('Language "%s"', $languageName);
-        $this->pageTitleLocator = '.ez-header h1';
-    }
-
-    public function verifyElements(): void
-    {
-        $this->adminList->verifyVisibility();
-    }
+    /**
+     * @var string
+     */
+    private $expectedLanguageName;
 
     public function verifyItemAttribute(string $label, string $value): void
     {
@@ -52,21 +37,33 @@ class LanguagePage extends Page
 
     protected function getRoute(): string
     {
-        // TODO: Implement getRoute() method.
-    }
-
-    public function verifyIsLoaded(): void
-    {
-        // TODO: Implement verifyIsLoaded() method.
+        return '/language/view'; //TODO: load language
     }
 
     public function getName(): string
     {
-        // TODO: Implement getName() method.
+        return 'Language';
+    }
+
+    public function setExpectedLanguageName(string $languageName)
+    {
+        $this->expectedLanguageName = $languageName;
+    }
+
+    public function verifyIsLoaded(): void
+    {
+        Assert::assertEquals(
+            'Language',
+            $this->getHTMLPage()->find($this->getSelector('pageTitle'))->getText()
+        );
+
+        $this->adminList->verifyIsLoaded();
     }
 
     protected function specifySelectors(): array
     {
-        // TODO: Implement specifySelectors() method.
+        return [
+            new CSSSelector('pageTitle', '.ez-header h1'),
+        ];
     }
 }

@@ -7,6 +7,7 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use Behat\Mink\Session;
+use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
@@ -50,9 +51,9 @@ class RolePage extends Page
      */
     private $tableNavigationTab;
 
-    public function __construct(Session $session, MinkParameters $minkParameters, TableNavigationTab $tableNavigationTab, Dialog $dialog)
+    public function __construct(Browser $browser, TableNavigationTab $tableNavigationTab, Dialog $dialog)
     {
-        parent::__construct($session, $minkParameters);
+        parent::__construct($browser);
         $this->tableNavigationTab = $tableNavigationTab;
         $this->dialog = $dialog;
     }
@@ -192,7 +193,7 @@ class RolePage extends Page
 
     public function specifySelectors(): array
     {
-        // TODO: Implement specifySelectors() method.
+        return [];
     }
 
     public function verifyIsLoaded(): void

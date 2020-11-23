@@ -1,0 +1,50 @@
+imports:
+  - { resource: services/behat/fields.yaml }
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: true
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\DateAndTimePopup: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Notification: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Breadcrumb: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Pagination: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\ContentField: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\DraftConflictDialog: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\UpperMenu: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\UserNotificationPopup: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\ContentTypePicker: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\LanguagePicker: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\SubitemsList: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\LeftMenu: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\TableNavigationTab: ~
+
+  #tables
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SubitemsGridList: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SubItemsTable: ~

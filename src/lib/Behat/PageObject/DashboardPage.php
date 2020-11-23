@@ -7,6 +7,8 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use Behat\Mink\Session;
+use eZ\Publish\Core\MVC\Symfony\SiteAccess\Router;
+use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Selector\CSSSelector;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\TableNavigationTab;
@@ -24,9 +26,9 @@ class DashboardPage extends Page
      */
     private $tableNavigationTab;
 
-    public function __construct(Session $session, MinkParameters $minkParameters, TableNavigationTab $tableNavigationTab)
+    public function __construct(Browser $browser, TableNavigationTab $tableNavigationTab)
     {
-        parent::__construct($session, $minkParameters);
+        parent::__construct($browser);
         $this->tableNavigationTab = $tableNavigationTab;
     }
 
@@ -55,7 +57,7 @@ class DashboardPage extends Page
 
     public function verifyIsLoaded(): void
     {
-        Assert::assertEquals('My dashboard', $this->getHTMLPage()->find($this->getSelector('pageTitle')));
+        Assert::assertEquals('My dashboard', $this->getHTMLPage()->find($this->getSelector('pageTitle'))->getText());
 
         Assert::assertNotNull($this->context->getElementByText('My content', $this->fields['tableSelector'], $this->fields['tableTitle']));
         $this->tableNavigationTab->verifyIsLoaded();

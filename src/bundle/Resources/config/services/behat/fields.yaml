@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: true
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\TextLine:
+    tags:
+      - ezplatform.behat.admin_ui.field

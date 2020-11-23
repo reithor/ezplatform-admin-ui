@@ -10,20 +10,31 @@ use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Selector\CSSSelector;
 use PHPUnit\Framework\Assert;
 
-abstract class EzFieldElement extends Component
+abstract class FieldTypeComponent extends Component
 {
+    /**
+     * @var CSSSelector
+     */
+    protected $parentSelector;
+
     abstract public function setValue(array $parameters): void;
 
     abstract public function getValue(): array;
 
     abstract public function verifyValueInItemView(array $values): void;
 
-    public function verifyValue(array $value): void
+    public function setParentContainer(CSSSelector $selector): void
+    {
+        $this->parentSelector = $selector;
+    }
+
+    abstract function getFieldTypeIdentifier(): string;
+
+    public function verifyValue($value): void
     {
         Assert::assertEquals(
             $value['value'],
-            $this->getValue()[0],
-            sprintf('Field %s has wrong value', $value['label'])
+            $this->getValue()[0]
         );
     }
 
@@ -33,5 +44,9 @@ abstract class EzFieldElement extends Component
             new CSSSelector('fieldLabel','.ez-field-edit__label-wrapper'),
             new CSSSelector('fieldData','.ez-field-edit__data'),
         ];
+    }
+
+    public function verifyIsLoaded(): void
+    {
     }
 }

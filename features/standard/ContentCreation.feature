@@ -1,29 +1,29 @@
+@richtext
 Feature: Content items creation
   As an administrator
-  In order to menage content to my site
+  In order to manage content to my site
   I want to create, edit, copy and move content items.
 
   Background:
-    Given I am logged as "admin"
-    And I go to "Content structure" in "Content" tab
+      Given I open Login page in admin SiteAccess
+      And I am logged as admin
+      And I'm on Content view Page for "root"
 
-  @javascript @common
+  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaWeb @IbexaCommerce @test
   Scenario: Content can be previewed during creation
-    When I start creating a new content "Article"
+    When I start creating a new content "Folder"
     And I set content fields
-      | label | value              |
-      | Title | Test Article       |
-    And I set article main content field to "Test article intro"
+      | label | value     |
+      | Name  | Test Name |
     And I click on the edit action bar button "Preview"
-    And I go to "tablet" view in "Test Article" preview
-    And I go to "mobile" view in "Test Article" preview
-    And I go to "desktop" view in "Test Article" preview
-    And I go back from content "Test Article" preview
-    Then I should be on "Content Update" "Test Article" page
+    And I go to "tablet" preview
+    And I go to "mobile" preview
+    And I go to "desktop" preview
+    And I go back from content preview
+    Then I should be on Content Update page for "Test Name"
     And content fields are set
-      | label | value        |
-      | Title | Test Article |
-    And article main content field is set to "Test article intro"
+      | label | value     |
+      | Name  | Test Name |
 
   @javascript @common
   Scenario: Content can be published

@@ -8,7 +8,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
 
-abstract class NonEditableField extends EzFieldElement
+abstract class NonEditableField extends FieldTypeComponent
 {
     public const EXPECTED_NON_EDITABLE_TEXT = 'This Field Type is not editable';
 

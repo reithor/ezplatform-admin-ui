@@ -9,7 +9,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use PHPUnit\Framework\Assert;
 
-class Authors extends EzFieldElement
+class Authors extends FieldTypeComponent
 {
     /** @var string Name by which Element is recognised */
     public const ELEMENT_NAME = 'Authors';

@@ -7,14 +7,11 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use DateTime;
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
-use EzSystems\Behat\Browser\Element\Element;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\Time;
+use EzSystems\Behat\Browser\Component\Component;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 
-class DateAndTimePopup extends Element
+class DateAndTimePopup extends Component
 {
-    public const ELEMENT_NAME = 'Date and time popup';
-
     private const DATETIME_FORMAT = 'd/m/Y';
 
     private const SETTING_SCRIPT_FORMAT = "document.querySelector('%s %s')._flatpickr.setDate('%s', true, '%s')";
@@ -32,23 +29,21 @@ class DateAndTimePopup extends Element
                 fi._flatpickr.config.onChange = onChangeNew;
             }';
 
-    public function __construct(OldBrowserContext $context, bool $isInline = false, $containerSelector = '')
-    {
-        parent::__construct($context);
-        $this->fields = [
-            'containerSelector' => $containerSelector,
-            'calendarSelector' => $isInline ? '.flatpickr-calendar' : '.flatpickr-calendar.inline',
-            'flatpickrSelector' => '.flatpickr-input',
-            'dateSet' => '.date-set',
-        ];
-    }
+    /**
+     * @var bool
+     */
+    private $isInline;
+    /**
+     * @var CSSSelector
+     */
+    private $parentSelector;
 
     /**
      * @param DateTime $date Date to set
      */
     public function setDate(DateTime $date, string $dateFormat = self::DATETIME_FORMAT): void
     {
-        $this->context->getSession()->executeScript(sprintf(self::ADD_CALLBACK_TO_DATEPICKER_SCRIPT_FORMAT, $this->fields['containerSelector']));
+        $this->session->executeScript(sprintf(self::ADD_CALLBACK_TO_DATEPICKER_SCRIPT_FORMAT, $this->fields['containerSelector']));
 
         $dateScript = sprintf(self::SETTING_SCRIPT_FORMAT, $this->fields['containerSelector'], $this->fields['flatpickrSelector'], $date->format($dateFormat), $dateFormat);
         $this->context->getSession()->getDriver()->executeScript($dateScript);
@@ -62,20 +57,46 @@ class DateAndTimePopup extends Element
      */
     public function setTime(string $hour, string $minute): void
     {
-        $isTimeOnly = $this->context->isElementVisible('.flatpickr-calendar.noCalendar');
+        $isTimeOnly = $this->getHTMLPage()->findAll($this->getSelector('timeOnly'))->any();
 
         if (!$isTimeOnly) {
             // get current date as it's not possible to set time without setting date
             $currentDateScript = sprintf('document.querySelector("%s %s")._flatpickr.selectedDates[0].toLocaleString()',
-                $this->fields['containerSelector'],
-                $this->fields['flatpickrSelector']);
-            $currentDate = $this->context->getSession()->getDriver()->evaluateScript($currentDateScript);
+                $this->getSelector('containerSelector'),
+                $this->getSelector('flatpickrSelector'));
+            $currentDate = $this->session->getDriver()->evaluateScript($currentDateScript);
         }
 
         $valueToSet = $isTimeOnly ? sprintf('%s:%s:00', $hour, $minute) : sprintf('%s, %s:%s:00', explode(',', $currentDate)[0], $hour, $minute);
         $format = $isTimeOnly ? 'H:i:S' : 'm/d/Y, H:i:S';
 
-        $timeScript = sprintf(self::SETTING_SCRIPT_FORMAT, $this->fields['containerSelector'], $this->fields['flatpickrSelector'], $valueToSet, $format);
-        $this->context->getSession()->getDriver()->executeScript($timeScript);
+        $timeScript = sprintf(self::SETTING_SCRIPT_FORMAT, $this->parentSelector, $this->fields['flatpickrSelector'], $valueToSet, $format);
+        $this->session->getDriver()->executeScript($timeScript);
+    }
+
+    public function shouldBeInline(bool $isLine): void
+    {
+        $this->isInline = $isLine;
+    }
+
+    public function setParentSelector(CSSSelector $selector)
+    {
+        $this->parentSelector = $selector;
+    }
+
+    public function verifyIsLoaded(): void
+    {
+        // TODO: Implement verifyIsLoaded() method.
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('calendarSelectorInline','.flatpickr-calendar.inline'),
+            new CSSSelector('calendarSelector', '.flatpickr-calendar'),
+            new CSSSelector('flatpickrSelector', '.flatpickr-input'),
+            new CSSSelector('dateSet', '.date-set'),
+            new CSSSelector('timeOnly', '.flatpickr-calendar.noCalendar'),
+        ];
     }
 }

@@ -6,25 +6,28 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables;
 
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 
 class SubitemsGridList extends ItemsList
 {
-    public const ELEMENT_NAME = 'Subitems grid list';
-
-    public function __construct(OldBrowserContext $context, string $containerLocator)
-    {
-        parent::__construct($context, $containerLocator);
-        $this->fields['listElement'] = $containerLocator . ' .c-grid-view-item';
-    }
-
     public function clickListElement(string $name): void
     {
-        $this->context->getElementByText($name, $this->fields['listElement'])->click();
+        $this->getHTMLPage()->findAll($this->getSelector('listElement'))->getByText($name)->click();
     }
 
     public function canBeSorted(): bool
     {
         return false;
+    }
+
+    public function verifyIsLoaded(): void
+    {
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('listElement', '.c-grid-view-item'),
+        ];
     }
 }

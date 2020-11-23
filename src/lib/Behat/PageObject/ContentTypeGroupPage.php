@@ -7,6 +7,7 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use Behat\Mink\Session;
+use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Selector\CSSSelector;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
@@ -21,9 +22,9 @@ class ContentTypeGroupPage extends Page
     /** @var string */
     protected $expectedName;
 
-    public function __construct(Session $session, MinkParameters $minkParameters, AdminList $adminList)
+    public function __construct(Browser $browser, AdminList $adminList)
     {
-        parent::__construct($session, $minkParameters);
+        parent::__construct($browser);
         $this->adminList = $adminList;
     }
 
