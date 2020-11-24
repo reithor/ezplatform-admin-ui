@@ -11,6 +11,7 @@ use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\Behat\Browser\Element\Element;
+use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Selector\CSSSelector;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SubitemsGridList;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SubItemsTable;

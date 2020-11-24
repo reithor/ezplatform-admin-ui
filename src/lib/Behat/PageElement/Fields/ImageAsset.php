@@ -49,7 +49,7 @@ class ImageAsset extends Image
     public function selectFromRepository(string $path): void
     {
         $this->getHTMLPage()
-            ->find(CSSSelector::combine($this->parentSelector, $this->getSelector('selectFromRepoButton')))
+            ->find(CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('selectFromRepoButton')))
             ->click();
         $this->universalDiscoveryWidget->verifyIsLoaded();
         $this->universalDiscoveryWidget->selectContent($path);

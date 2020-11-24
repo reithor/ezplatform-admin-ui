@@ -17,7 +17,7 @@ class UpperMenu extends Component
 {
     public function goToTab(string $tabName): void
     {
-        $this->context->getElementByText($tabName, $this->fields['menuButton'])->click();
+        $this->getHTMLPage()->findAll($this->getSelector('menuButton'))->getByText($tabName)->click();
     }
 
     public function goToDashboard(): void
@@ -27,11 +27,7 @@ class UpperMenu extends Component
 
     public function goToSubTab(string $tabName): void
     {
-        $this->context->waitUntil(5, function () use ($tabName) {
-            return $this->context->getElementByText($tabName, $this->fields['submenuButton']) !== null;
-        });
-
-        $this->context->getElementByText($tabName, $this->fields['submenuButton'])->click();
+        $this->getHTMLPage()->findAll($this->getSelector('submenuButton'))->getByText($tabName)->click();
     }
 
     public function getNotificationsCount(): int
@@ -42,7 +38,7 @@ class UpperMenu extends Component
     public function chooseFromUserDropdown(string $option): void
     {
         $this->getHTMLPage()->find($this->getSelector('userSettingsToggle'))->click();
-        $this->context->getElementByText($option, $this->fields['userSettingsItem'])->click();
+        $this->getHTMLPage()->findAll($this->getSelector('userSettingsItem'))->getByText($option)->click();
     }
 
     public function verifyIsLoaded(): void

@@ -8,6 +8,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use DateTime;
 use EzSystems\Behat\Browser\Component\Component;
+use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Selector\CSSSelector;
 use PHPUnit\Framework\Assert;
 
@@ -39,25 +40,31 @@ class DateAndTimePopup extends Component
      */
     private $parentSelector;
 
+    public function __construct(Browser $browser)
+    {
+        parent::__construct($browser);
+        $this->parentSelector = CSSSelector::empty();
+    }
+
     /**
      * @param DateTime $date Date to set
      */
     public function setDate(DateTime $date, string $dateFormat = self::DATETIME_FORMAT): void
     {
-        $this->session->executeScript(
+        $this->browser->getSession()->executeScript(
             sprintf(
                 self::ADD_CALLBACK_TO_DATEPICKER_SCRIPT_FORMAT,
-                $this->getSelector('containerSelector')->getSelector()
+                $this->parentSelector->getSelector()
             ));
 
         $dateScript = sprintf(
             self::SETTING_SCRIPT_FORMAT,
-            $this->getSelector('containerSelector')->getSelector(),
+            $this->parentSelector->getSelector(),
             $this->getSelector('flatpickrSelector')->getSelector(),
             $date->format($dateFormat),
             $dateFormat
         );
-        $this->session->getDriver()->executeScript($dateScript);
+        $this->browser->getSession()->getDriver()->executeScript($dateScript);
 
         Assert::assertTrue(
             $this->getHTMLPage()
@@ -77,10 +84,10 @@ class DateAndTimePopup extends Component
         if (!$isTimeOnly) {
             // get current date as it's not possible to set time without setting date
             $currentDateScript = sprintf('document.querySelector("%s %s")._flatpickr.selectedDates[0].toLocaleString()',
-                $this->getSelector('containerSelector')->getSelector(),
+                $this->parentSelector->getSelector(),
                 $this->getSelector('flatpickrSelector')->getSelector()
             );
-            $currentDate = $this->session->getDriver()->evaluateScript($currentDateScript);
+            $currentDate = $this->browser->getSession()->getDriver()->evaluateScript($currentDateScript);
         }
 
         $valueToSet = $isTimeOnly ? sprintf('%s:%s:00', $hour, $minute) : sprintf('%s, %s:%s:00', explode(',', $currentDate)[0], $hour, $minute);
@@ -88,13 +95,13 @@ class DateAndTimePopup extends Component
 
         $timeScript = sprintf(
             self::SETTING_SCRIPT_FORMAT,
-            $this->parentSelector,
-            $this->getSelector('flatpickrSelector'),
+            $this->parentSelector->getSelector(),
+            $this->getSelector('flatpickrSelector')->getSelector(),
             $valueToSet,
             $format
         );
 
-        $this->session->getDriver()->executeScript($timeScript);
+        $this->browser->getSession()->getDriver()->executeScript($timeScript);
     }
 
     public function shouldBeInline(bool $isLine): void

@@ -36,7 +36,7 @@ class ContentQuery extends NonEditableField
     {
         return array_merge(
             parent::specifySelectors(),
-            new CSSSelector('queryResultItem', 'p a'),
+            [new CSSSelector('queryResultItem', 'p a')],
         );
     }
 

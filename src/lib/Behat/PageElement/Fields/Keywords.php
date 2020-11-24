@@ -48,6 +48,7 @@ SCRIPT;
 
         $actualValues = $this->getHTMLPage()
             ->findAll(CSSSelector::combine(
+                "%s %s",
                 $this->parentSelector,
                 $this->getSelector('keywordItem')))
             ->map(static function (NodeElement $element) {

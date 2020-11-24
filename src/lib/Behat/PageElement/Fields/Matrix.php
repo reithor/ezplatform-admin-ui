@@ -6,7 +6,7 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use Behat\Mink\Element\NodeElement;
+use EzSystems\Behat\Browser\Element\NodeElement;
 use EzSystems\Behat\Browser\Selector\CSSSelector;
 use EzSystems\Behat\Browser\Selector\SelectorInterface;
 use PHPUnit\Framework\Assert;

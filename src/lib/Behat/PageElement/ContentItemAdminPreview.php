@@ -6,8 +6,8 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
-use Behat\Mink\Session;
 use EzSystems\Behat\Browser\Component\Component;
+use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Selector\CSSSelector;
 
 class ContentItemAdminPreview extends Component

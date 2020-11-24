@@ -70,4 +70,11 @@ class DateAndTime extends FieldTypeComponent
     {
         return 'ezdatetime';
     }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('fieldInput', '.flatpickr-input.ez-data-source__input'),
+        ];
+    }
 }

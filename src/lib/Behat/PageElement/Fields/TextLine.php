@@ -6,13 +6,18 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use Behat\Mink\Session;
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Selector\CSSSelector;
-use PHPUnit\Framework\Assert;
 
 class TextLine extends FieldTypeComponent
 {
+    public function setValue(array $parameters): void
+    {
+        $fieldSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('fieldInput'));
+
+        $value = array_values($parameters)[0];
+        $this->getHTMLPage()->find($fieldSelector)->setValue($value);
+    }
+
     public function specifySelectors(): array
     {
         return [
