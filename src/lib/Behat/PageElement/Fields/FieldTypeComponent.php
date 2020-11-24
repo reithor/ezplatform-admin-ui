@@ -10,40 +10,50 @@ use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Selector\CSSSelector;
 use PHPUnit\Framework\Assert;
 
-abstract class FieldTypeComponent extends Component
+abstract class FieldTypeComponent extends Component implements FieldTypeComponentInterface
 {
     /**
      * @var CSSSelector
      */
     protected $parentSelector;
 
-    abstract public function setValue(array $parameters): void;
+    public function setValue(array $parameters): void
+    {
+        $fieldSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('fieldInput'));
 
-    abstract public function getValue(): array;
+        $value = $parameters['value'];
+        $this->getHTMLPage()->find($fieldSelector)->setValue($value);
+    }
 
-    abstract public function verifyValueInItemView(array $values): void;
+    public function getValue(): array
+    {
+        $fieldSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('fieldInput'));
+        $value = $this->getHTMLPage()->find($fieldSelector)->getValue();
 
+        return [$value];
+    }
+
+    public function verifyValueInItemView(array $values): void
+    {
+        Assert::assertEquals(
+            $values['value'],
+            $this->getHTMLPage()->find($this->parentSelector)->getText(),
+            'Field has wrong value'
+        );
+    }
     public function setParentContainer(CSSSelector $selector): void
     {
         $this->parentSelector = $selector;
     }
 
-    abstract function getFieldTypeIdentifier(): string;
+    abstract public function getFieldTypeIdentifier(): string;
 
-    public function verifyValue($value): void
+    public function verifyValueInEditView(array $value): void
     {
         Assert::assertEquals(
             $value['value'],
             $this->getValue()[0]
         );
-    }
-
-    public function specifySelectors(): array
-    {
-        return [
-            new CSSSelector('fieldLabel','.ez-field-edit__label-wrapper'),
-            new CSSSelector('fieldData','.ez-field-edit__data'),
-        ];
     }
 
     public function verifyIsLoaded(): void

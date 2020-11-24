@@ -6,15 +6,13 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
+use EzSystems\Behat\Browser\Element\NodeElement;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use PHPUnit\Framework\Assert;
-use Behat\Mink\Element\NodeElement;
 use Exception;
 
 class RichText extends FieldTypeComponent
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'Rich text';
     private $setAlloyEditorValueScript = 'CKEDITOR.instances.%s.setData(\'%s\')';
     private $insertAlloyEditorValueScript = 'CKEDITOR.instances.%s.insertText(\'%s\')';
     private $executeAlloyEditorScript = 'CKEDITOR.instances.%s.execCommand(\'%s\')';
@@ -22,28 +20,12 @@ class RichText extends FieldTypeComponent
     protected const ALLOWED_STYLE_OPTIONS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'pre'];
     protected const ALLOWED_MOVE_OPTIONS = ['up', 'down'];
 
-    public function __construct(OldBrowserContext $context, string $locator, string $label)
-    {
-        parent::__construct($context, $locator, $label);
-        $this->fields['fieldInput'] = '.ez-data-source__richtext';
-        $this->fields['textarea'] = $this->fields['fieldContainer'] . ' textarea';
-        $this->fields['embedInlineButton'] = '.ez-btn-ae--embed-inline';
-        $this->fields['embedButton'] = '.ez-btn-ae--embed';
-        $this->fields['addButton'] = '.ae-button-add';
-        $this->fields['embedTitle'] = '.cke_widget_ezembed .ez-embed-content__title';
-        $this->fields['embedInlineTitle'] = '.cke_widget_ezembedinline .ez-embed-content__title';
-        $this->fields['unorderedListButton'] = '.ez-btn-ae--unordered-list';
-        $this->fields['unorderedListElement'] = '.ez-data-source__richtext ul li';
-        $this->fields['styleDropdown'] = '.ae-toolbar-element';
-        $this->fields['blockStyle'] = '.ae-listbox li %s';
-        $this->fields['moveButton'] = '.ez-btn-ae--move-%s';
-        $this->fields['toolbarButton'] = '.ae-toolbar .ez-btn-ae';
-    }
-
     public function setValue(array $parameters): void
     {
         $this->getFieldInput();
-        $this->context->getSession()->getDriver()->executeScript(sprintf($this->setAlloyEditorValueScript, $this->richtextId, $parameters['value']));
+        $this->browser->getSession()->getDriver()->executeScript(
+            sprintf($this->setAlloyEditorValueScript, $this->richtextId, $parameters['value'])
+        );
     }
 
     public function getValue(): array
@@ -51,15 +33,6 @@ class RichText extends FieldTypeComponent
         $fieldInput = $this->getFieldInput();
 
         return [$fieldInput->getText()];
-    }
-
-    public function verifyValueInItemView(array $values): void
-    {
-        Assert::assertEquals(
-            $values['value'],
-            $this->getHTMLPage()->find($this->getSelector('fieldContainer'))->getText(),
-            'Field has wrong value'
-        );
     }
 
     public function openElementsToolbar(): void
@@ -76,30 +49,47 @@ class RichText extends FieldTypeComponent
         }
 
         $this->getHTMLPage()->find($this->getSelector('styleDropdown'))->click();
-        $this->context->findElement(sprintf($this->fields['blockStyle'], $style))->click();
+
+        $blockStyleSelector = CSSSelector::combine(
+            $this->getSelector('blockstyle')->getSelector(),
+            new CSSSelector('', $style),
+        );
+
+        $this->getHTMLPage()->find($blockStyleSelector)->click();
     }
 
     public function insertNewLine(): void
     {
         $this->getFieldInput();
-        $this->context->getSession()->getDriver()->executeScript(sprintf($this->executeAlloyEditorScript, $this->richtextId, 'enter'));
+        $this->browser->getSession()->getDriver()->executeScript(
+            sprintf($this->executeAlloyEditorScript, $this->richtextId, 'enter')
+        );
     }
 
     public function insertLine($value, $style = ''): void
     {
         $this->getFieldInput();
-        $this->context->getSession()->getDriver()->executeScript(sprintf($this->insertAlloyEditorValueScript, $this->richtextId, $value));
+        $this->browser->getSession()->getDriver()->executeScript(
+            sprintf($this->insertAlloyEditorValueScript, $this->richtextId, $value)
+        );
 
-        if ($style !== '') {
-            $this->changeStyle($style);
-            Assert::assertContains(sprintf('%s%s</%s>', $value, '<br>', $style), $this->context->findElement(sprintf('%s %s', $this->fields['fieldInput'], $style))->getOuterHtml());
+        if ($style === '') {
+            return;
         }
+
+        $this->changeStyle($style);
+        $selector = CSSSelector::combine(
+            '%s %s', $this->getSelector('fieldInput'), new CSSSelector('', $style)
+        );
+        Assert::assertContains(
+            sprintf('%s%s</%s>', $value, '<br>', $style),
+            $this->getHTMLPage()->find($selector)->getOuterHtml()
+        );
     }
 
     private function getFieldInput(): NodeElement
     {
         $fieldInput = $this->getHTMLPage()->find($this->getSelector('fieldInput'));
-        Assert::assertNotNull($fieldInput, sprintf('Input for field %s not found.', $this->label));
         $this->richtextId = $fieldInput->getAttribute('id');
 
         return $fieldInput;
@@ -119,7 +109,7 @@ class RichText extends FieldTypeComponent
             }
         }
 
-        $actualListElements = $this->context->findAllElements($this->fields['unorderedListElement']);
+        $actualListElements = $this->getHTMLPage()->findAll($this->getSelector('unorderedListElement'));
         $listElementsText = [];
         foreach ($actualListElements as $actualListElement) {
             $listElementsText[] = $actualListElement->getText();
@@ -154,6 +144,33 @@ class RichText extends FieldTypeComponent
             throw new Exception(sprintf('Unsupported direction: %s', $direction));
         }
 
-        $this->context->findElement(sprintf($this->fields['moveButton'], $direction))->click();
+        $moveSelector = CSSSelector::combine(
+            $this->getSelector('moveButton'), new CSSSelector('', $direction)
+        );
+        $this->getHTMLPage()->find($moveSelector)->click();
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('fieldInput', '.ez-data-source__richtext'),
+            new CSSSelector('textarea', 'textarea'),
+            new CSSSelector('embedInlineButton', '.ez-btn-ae--embed-inline'),
+            new CSSSelector('embedButton', '.ez-btn-ae--embed'),
+            new CSSSelector('addButton', '.ae-button-add'),
+            new CSSSelector('embedTitle', '.cke_widget_ezembed .ez-embed-content__title'),
+            new CSSSelector('embedInlineTitle', '.cke_widget_ezembedinline .ez-embed-content__title'),
+            new CSSSelector('unorderedListButton', '.ez-btn-ae--unordered-list'),
+            new CSSSelector('unorderedListElement', '.ez-data-source__richtext ul li'),
+            new CSSSelector('styleDropdown', '.ae-toolbar-element'),
+            new CSSSelector('blockStyle', '.ae-listbox li %s'),
+            new CSSSelector('moveButton', '.ez-btn-ae--move-%s'),
+            new CSSSelector('toolbarButton', '.ae-toolbar .ez-btn-ae'),
+        ];
+    }
+
+    public function getFieldTypeIdentifier(): string
+    {
+        return 'ezrichtext';
     }
 }

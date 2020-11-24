@@ -90,13 +90,14 @@ class ContentUpdateItemPage extends Page
 
     public function getField(string $fieldName): FieldTypeComponent
     {
-        $fieldLocator = new CSSSelector('fieldLocator', sprintf($this->getSelector('nthField')->getSelector(), $this->getFieldPosition($fieldName)));
+        $fieldLocator = new CSSSelector('', sprintf($this->getSelector('nthField')->getSelector(), $this->getFieldPosition($fieldName)));
         $fieldtypeIdentifier = $this->getFieldtypeIdentifier($fieldLocator, $fieldName);
 
         foreach ($this->fieldTypeComponents as $fieldTypeComponent)
         {
             if ($fieldTypeComponent->getFieldTypeIdentifier() === $fieldtypeIdentifier) {
                 $fieldTypeComponent->setParentContainer($fieldLocator);
+
                 return $fieldTypeComponent;
             }
         }
@@ -121,7 +122,7 @@ class ContentUpdateItemPage extends Page
 
     public function verifyFieldHasValue(string $label, array $fieldData): void
     {
-        $this->getField($label)->verifyValue($fieldData);
+        $this->getField($label)->verifyValueInEditView($fieldData);
     }
 
     private function getFieldtypeIdentifier(CSSSelector $fieldLocator, string $fieldName): string

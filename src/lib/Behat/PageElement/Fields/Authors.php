@@ -6,63 +6,48 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use PHPUnit\Framework\Assert;
 
 class Authors extends FieldTypeComponent
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'Authors';
-
-    public function __construct(OldBrowserContext $context, string $locator, string $label)
-    {
-        parent::__construct($context, $locator, $label);
-        $this->fields['nameFieldInput'] = '.ez-data-source__field--name input';
-        $this->fields['emailFieldInput'] = '.ez-data-source__field--email input';
-        $this->fields['fieldValueInContentItemView'] = '.ez-content-field-value';
-    }
-
     public function setValue(array $parameters): void
     {
-        $fieldInput = $this->context->findElement(
-            sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['nameFieldInput'])
-        );
+        $name = $parameters['name'];
+        $email = $parameters['email'];
 
-        $fieldInput->setValue('');
-        $fieldInput->setValue($parameters['name']);
+        $nameSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('nameFieldInput'));
+        $emailSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('emailFieldInput'));
 
-        $fieldInput = $this->context->findElement(
-            sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['emailFieldInput'])
-        );
-
-        $fieldInput->setValue('');
-        $fieldInput->setValue($parameters['email']);
+        $this->getHTMLPage()->find($nameSelector)->setValue($name);
+        $this->getHTMLPage()->find($emailSelector)->setValue($email);
     }
 
     public function getValue(): array
     {
-        $nameInput = $this->context->findElement(
-            sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['nameFieldInput'])
-        );
+        $nameSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('nameFieldInput'));
+        $emailSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('emailFieldInput'));
 
-        $emailInput = $this->context->findElement(
-            sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['emailFieldInput'])
-        );
-
-        return ['name' => $nameInput->getValue(), 'email' => $emailInput->getValue()];
+        return [
+            'name' => $this->getHTMLPage()->find($nameSelector)->getValue(),
+            'email' => $this->getHTMLPage()->find($emailSelector)->getValue(),
+        ];
     }
 
-    public function verifyValue(array $value): void
+    public function verifyValueInEditView(array $value): void
     {
+        $expectedName = $value['name'];
+        $expectedEmail = $value['email'];
+
         $actualFieldValues = $this->getValue();
         Assert::assertEquals(
-            $value['name'],
+            $expectedName,
             $actualFieldValues['name'],
             sprintf('Field %s has wrong value', $value['label'])
         );
 
         Assert::assertEquals(
-            $value['email'],
+            $expectedEmail,
             $actualFieldValues['email'],
             sprintf('Field %s has wrong value', $value['label'])
         );
@@ -72,8 +57,22 @@ class Authors extends FieldTypeComponent
     {
         Assert::assertEquals(
             sprintf('%s <%s>', $values['name'], $values['email']),
-            $this->getHTMLPage()->find($this->getSelector('fieldContainer'))->getText(),
+            $this->getHTMLPage()->find($this->parentSelector)->getText(),
             'Field has wrong value'
         );
+    }
+
+    public function getFieldTypeIdentifier(): string
+    {
+        return 'ezauthor';
+    }
+
+    public function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('nameFieldInput', '.ez-data-source__field--name input'),
+            new CSSSelector('emailFieldInput', '.ez-data-source__field--email input'),
+            new CSSSelector('fieldValueInContentItemView', '.ez-content-field-value'),
+        ];
     }
 }

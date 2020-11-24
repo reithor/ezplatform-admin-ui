@@ -6,41 +6,66 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Factory\ElementFactory;
+use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Notification;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
 use PHPUnit\Framework\Assert;
 
 class ImageAsset extends Image
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'Image Asset';
+    /**
+     * @var UniversalDiscoveryWidget
+     */
+    private $universalDiscoveryWidget;
+    /**
+     * @var Notification
+     */
+    private $notification;
+
+    public function __construct(Browser $browser, UniversalDiscoveryWidget $universalDiscoveryWidget, Notification $notification)
+    {
+        parent::__construct($browser);
+        $this->universalDiscoveryWidget = $universalDiscoveryWidget;
+        $this->notification = $notification;
+    }
 
     private const IMAGE_ASSET_NOTIFICATION_MESSAGE = 'The image has been published and can now be reused';
 
     public function setValue(array $parameters): void
     {
-        $notification = ElementFactory::createElement($this->context, Notification::ELEMENT_NAME);
-
         // close notification about new draft created successfully if it's still visible
-        if ($notification->isVisible()) {
-            $notification->verifyAlertSuccess();
-            $notification->closeAlert();
+        if ($this->notification->isVisible()) {
+            $this->notification->verifyAlertSuccess();
+            $this->notification->closeAlert();
         }
 
         parent::setValue($parameters);
 
-        $imageAssetNotification = ElementFactory::createElement($this->context, Notification::ELEMENT_NAME);
-        $imageAssetNotification->verifyAlertSuccess();
-        Assert::assertEquals(self::IMAGE_ASSET_NOTIFICATION_MESSAGE, $imageAssetNotification->getMessage());
+        $this->notification->verifyAlertSuccess();
+        Assert::assertEquals(self::IMAGE_ASSET_NOTIFICATION_MESSAGE, $this->notification->getMessage());
     }
 
     public function selectFromRepository(string $path): void
     {
-        $this->context->findElement(sprintf('%s .ez-data-source__btn-select', $this->fields['fieldContainer']))->click();
-        $udw = ElementFactory::createElement($this->context, UniversalDiscoveryWidget::ELEMENT_NAME);
-        $udw->verifyVisibility();
-        $udw->selectContent($path);
-        $udw->confirm();
+        $this->getHTMLPage()
+            ->find(CSSSelector::combine($this->parentSelector, $this->getSelector('selectFromRepoButton')))
+            ->click();
+        $this->universalDiscoveryWidget->verifyIsLoaded();
+        $this->universalDiscoveryWidget->selectContent($path);
+        $this->universalDiscoveryWidget->confirm();
+    }
+
+    public function specifySelectors(): array
+    {
+        return array_merge(
+            parent::specifySelectors(),
+            [new CSSSelector('selectFromRepoButton', '.ez-data-source__btn-select'),]
+        );
+    }
+
+    public function getFieldTypeIdentifier(): string
+    {
+        return 'ezimageasset';
     }
 }

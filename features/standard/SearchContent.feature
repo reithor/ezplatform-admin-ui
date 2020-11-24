@@ -2,7 +2,7 @@ Feature: Searching for a Content item
   As an administrator
   I want to search for Content items.
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaWeb @IbexaCommerce @needsWork
+  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce @needsWork
   Scenario: Content can be searched for
     Given I create "folder" Content items in root in "eng-GB"
       | name              | short_name          |

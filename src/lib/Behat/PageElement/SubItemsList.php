@@ -28,9 +28,9 @@ class SubitemsList extends Component
     /** @var SubitemsGridList */
     protected $gridList;
 
-    public function __construct(Session $session, SubitemsGridList $gridList, SubItemsTable $table)
+    public function __construct(Browser $browser, SubitemsGridList $gridList, SubItemsTable $table)
     {
-        parent::__construct($session);
+        parent::__construct($browser);
         $this->table = $table;
         $this->gridList = $gridList;
     }

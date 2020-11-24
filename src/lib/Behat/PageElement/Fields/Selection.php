@@ -6,48 +6,38 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
-use PHPUnit\Framework\Assert;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 
 class Selection extends FieldTypeComponent
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'Selection';
-
-    public function __construct(OldBrowserContext $context, string $locator, string $label)
-    {
-        parent::__construct($context, $locator, $label);
-        $this->fields['selectBar'] = '.ez-custom-dropdown__selection-info';
-        $this->fields['selectOption'] = '.ez-custom-dropdown__item';
-        $this->fields['specificOption'] = '.ez-custom-dropdown__item:nth-child(%s)';
-    }
-
     public function setValue(array $parameters): void
     {
-        $this->context->findElement(sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['selectBar']))->click();
+        $value = $parameters['value'];
 
-        $index = $this->context->getElementPositionByText($parameters['value'], $this->fields['selectOption']);
-
-        $this->context->findElement(sprintf($this->fields['specificOption'], $index))->click();
+        $fieldSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('selectBar'));
+        $this->getHTMLPage()->find($fieldSelector)->click();
+        $this->getHTMLPage()->findAll($this->getSelector('selectOption'))->getByText($value)->click();
     }
 
     public function getValue(): array
     {
-        $fieldInput = $this->context->findElement(
-            sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['selectBar'])
-        );
+        $fieldSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('selectBar'));
 
-        Assert::assertNotNull($fieldInput, sprintf('Input for field %s not found.', $this->label));
 
-        return [$fieldInput->getValue()];
+        return [$this->getHTMLPage()->find($fieldSelector)->getValue()];
     }
 
-    public function verifyValueInItemView(array $values): void
+    public function getFieldTypeIdentifier(): string
     {
-        Assert::assertEquals(
-            $values['value'],
-            $this->getHTMLPage()->find($this->getSelector('fieldContainer'))->getText(),
-            'Field has wrong value'
-        );
+        return 'ezselection';
+    }
+
+    public function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('selectBar', '.ez-custom-dropdown__selection-info'),
+            new CSSSelector('selectOption', '.ez-custom-dropdown__item'),
+            new CSSSelector('specificOption', '.ez-custom-dropdown__item:nth-child(%s)'),
+        ];
     }
 }

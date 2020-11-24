@@ -6,19 +6,13 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use Behat\Mink\Element\NodeElement;
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
+use EzSystems\Behat\Browser\Element\NodeElement;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use PHPUnit\Framework\Assert;
 
 class ContentQuery extends NonEditableField
 {
     public const ELEMENT_NAME = 'Content query';
-
-    public function __construct(OldBrowserContext $context, string $locator, string $label)
-    {
-        parent::__construct($context, $locator, $label);
-        $this->fields['queryResultItem'] = 'p a';
-    }
 
     public function verifyValueInItemView(array $values): void
     {
@@ -31,10 +25,23 @@ class ContentQuery extends NonEditableField
 
     private function getValueInItemView(): array
     {
-        $items = $this->context->findAllElements(sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['queryResultItem']));
+        $itemSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('queryResultItem'));
 
-        return array_map(function (NodeElement $element) {
+        return $this->getHTMLPage()->findAll($itemSelector)->map(function (NodeElement $element) {
             return $element->getText();
-        }, $items);
+        });
+    }
+
+    public function specifySelectors(): array
+    {
+        return array_merge(
+            parent::specifySelectors(),
+            new CSSSelector('queryResultItem', 'p a'),
+        );
+    }
+
+    public function getFieldTypeIdentifier(): string
+    {
+        return 'ezcontentquery';
     }
 }

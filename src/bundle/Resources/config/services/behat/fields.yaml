@@ -4,6 +4,53 @@ services:
     autoconfigure: true
     public: true
 
-  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\TextLine:
-    tags:
-      - ezplatform.behat.admin_ui.field
+
+  _instanceof:
+    EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\FieldTypeComponentInterface:
+      tags: [ 'ezplatform.behat.admin_ui.field' ]
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\TextLine: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\Selection: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\MapLocation: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\Authors: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\Checkbox: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\Country: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\Date: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\DateAndTime: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\ContentQuery: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\EmailAddress: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\File: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\FloatField: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\Image: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\ImageAsset: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\Integer: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\ISBN: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\Keywords: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\TextBlock: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\URL: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\Time: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\RichText: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\Matrix: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\Media: ~

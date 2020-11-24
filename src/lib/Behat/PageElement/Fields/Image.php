@@ -6,43 +6,18 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use PHPUnit\Framework\Assert;
 
 class Image extends FieldTypeComponent
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'Image';
-
-    public function __construct(OldBrowserContext $context, string $locator, string $label)
-    {
-        parent::__construct($context, $locator, $label);
-        $this->fields['fieldInput'] = 'input[type=file]';
-        $this->fields['image'] = '.ez-field-preview__image-wrapper .ez-field-preview__image img';
-    }
-
     public function setValue(array $parameters): void
     {
-        $fieldInput = $this->context->findElement(
-            sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['fieldInput'])
+        $fieldSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('fieldInput'));
+
+        $this->getHTMLPage()->find($fieldSelector)->attachFile(
+            $this->browser->getRemoteFileUploadPath($parameters['value'])
         );
-
-        Assert::assertNotNull($fieldInput, sprintf('Input for field %s not found.', $this->label));
-
-        $remotePath = $this->context->uploadFileToRemoteSpace($parameters['value']);
-
-        $fieldInput->attachFile($remotePath);
-    }
-
-    public function getValue(): array
-    {
-        $fieldInput = $this->context->findElement(
-            sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['fieldInput'])
-        );
-
-        Assert::assertNotNull($fieldInput, sprintf('Input for field %s not found.', $this->label));
-
-        return [$fieldInput->getValue()];
     }
 
     public function verifyValueInItemView(array $values): void
@@ -51,14 +26,29 @@ class Image extends FieldTypeComponent
 
         Assert::assertContains(
             $filename,
-            $this->getHTMLPage()->find($this->getSelector('fieldContainer'))->getText(),
+            $this->getHTMLPage()->find($this->parentSelector)->getText(),
             'Image has wrong file name'
         );
 
+        $fileFieldSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('image'));
+
         Assert::assertContains(
             $filename,
-            $this->context->findElement(sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['image']))->getAttribute('src'),
+            $this->getHTMLPage()->find($fileFieldSelector)->getAttribute('src'),
             'Image has wrong source'
         );
+    }
+
+    public function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('fieldInput', 'input[type=file]'),
+            new CSSSelector('image', '.ez-field-preview__image-wrapper .ez-field-preview__image img'),
+        ];
+    }
+
+    public function getFieldTypeIdentifier(): string
+    {
+        return 'ezimage';
     }
 }

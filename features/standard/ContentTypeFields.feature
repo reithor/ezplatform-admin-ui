@@ -3,14 +3,15 @@ Feature: Content fields setting and editing
   In order to manage content on my site
   I want to set, edit, copy and move content items.
 
-  @javascript @common @admin
+  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce @test
   Scenario Outline: Create content item with given field
     Given I create a "<fieldName> CT" Content Type in "Content" with "<fieldInternalName>" identifier
       | Field Type  | Name        | Identifier          | Required | Searchable | Translatable | Settings       |
       | <fieldName> | Field       | <fieldInternalName> | no      | no	      | yes          | <fieldSettings>  |
       | Text line   | Name        | name	            | no      | yes	      | yes          |                  |
-    And I am logged as admin
-      And I go to "Content structure" in "Content" tab
+      And I open Login page in admin SiteAccess
+      And I am logged as admin
+      And I'm on Content view Page for root
     When I start creating a new content "<fieldName> CT"
       And I set content fields
         | label    | <label1>    | <label2> | <label3> |
@@ -18,19 +19,20 @@ Feature: Content fields setting and editing
         | Name     | <fieldName> |          |          |
       And I click on the edit action bar button "Publish"
     Then success notification that "Content published." appears
-      And I should be on content item page "<contentItemName>" of type "<fieldName> CT" in root path
+      And I'm on Content view Page for "<contentItemName>"
       And content attributes equal
-        | label    | <label1> | <label2> | <label3> |
-        | Field    | <value1> | <value2> | <value3> |
+          | label    | <label1> | <label2> | <label3> |
+          | Field    | <value1> | <value2> | <value3> |
 
     Examples:
       | fieldInternalName    | fieldName                    | fieldSettings                                                         |  label1   | value1                                                                    | label2     | value2                | label3  | value3      | contentItemName           |
-      | ezselection          | Selection                    | is_multiple:false,options:A first-Bielefeld-TestValue-Turtles-Zombies | value     | TestValue                                                                 |            |                       |         |             | TestValue                 |
-      | ezgmaplocation       | Map location                 |                                                                       | latitude  | 34.1                                                                      | longitude  | -118.2                | address | Los Angeles | Los Angeles            |
+      #      | ezstring             | Text line                    |                                                                       | value     | Lorem ipsum                                                               |            |                       |         |             | Lorem ipsum               |
+#      | ezselection          | Selection                    | is_multiple:false,options:A first-Bielefeld-TestValue-Turtles-Zombies | value     | TestValue                                                                 |            |                       |         |             | TestValue                 |
+#      | ezgmaplocation       | Map location                 |                                                                       | latitude  | 34.1                                                                      | longitude  | -118.2                | address | Los Angeles | Los Angeles            |
       | ezauthor             | Authors                      |                                                                       | name      | Test Name                                                                 | email      | email@example.com     |         |             | Test Name                 |
       | ezboolean            | Checkbox                     |                                                                       | value     | true                                                                      |            |                       |         |             | 1                         |
-      | ezobjectrelation     | Content relation (single)    |                                                                       | value     | Media/Images                                                              |            |                       |         |             | Images                    |
-      | ezobjectrelationlist | Content relations (multiple) |                                                                       | firstItem | Media/Images                                                              | secondItem | Media/Files           |         |             | Images Files              |
+#      //| ezobjectrelation     | Content relation (single)    |                                                                       | value     | Media/Images                                                              |            |                       |         |             | Images                    |
+#      //| ezobjectrelationlist | Content relations (multiple) |                                                                       | firstItem | Media/Images                                                              | secondItem | Media/Files           |         |             | Images Files              |
       | ezcountry            | Country                      |                                                                       | value     | Angola                                                                    |            |                       |         |             | Angola                    |
       | ezdate               | Date                         |                                                                       | value     | 11/23/2019                                                                |            |                       |         |             | Saturday 23 November 2019 |
       | ezdatetime           | Date and time                |                                                                       | date      | 11/23/2019                                                                | time       | 14:45                 |         |             | Sat 2019-23-11 14:45:00   |
@@ -39,9 +41,8 @@ Feature: Content fields setting and editing
       | ezisbn               | ISBN                         |                                                                       | value     | 978-3-16-148410-0                                                         |            |                       |         |             | 978-3-16-148410-0         |
       | ezinteger            | Integer                      |                                                                       | value     | 1111                                                                      |            |                       |         |             | 1111                      |
       | ezkeyword            | Keywords                     |                                                                       | value     | first keyword, second                                                     |            |                       |         |             | first keyword, second     |
-      | ezrichtext           | Rich text                    |                                                                       | value     | Lorem ipsum dolor sit                                                     |            |                       |         |             | Lorem ipsum dolor sit     |
+#      | ezrichtext           | Rich text                    |                                                                       | value     | Lorem ipsum dolor sit                                                     |            |                       |         |             | Lorem ipsum dolor sit     |
       | eztext               | Text block                   |                                                                       | value     | Lorem ipsum dolor                                                         |            |                       |         |             | Lorem ipsum dolor         |
-      | ezstring             | Text line                    |                                                                       | value     | Lorem ipsum                                                               |            |                       |         |             | Lorem ipsum               |
       | eztime               | Time                         |                                                                       | value     | 14:45                                                                     |            |                       |         |             | 2:45:00 pm                |
       | ezurl                | URL                          |                                                                       | text      | Test URL                                                                  | url        | http://www.google.com |         |             | Test URL                  |
       | ezmedia              | Media                        |                                                                       | value     | video1.mp4.zip                                                            |            |                       |         |             | video1.mp4                |
@@ -131,8 +132,8 @@ Feature: Content fields setting and editing
     Then success notification that "Content published." appears
     And I should be on content item page "<fieldName>" of type "<fieldName> CT" in root path
     And content attributes equal
-      | label    | <label1> | fieldType   |
-      | Field    | <value1> | <fieldName> |
+      | label    | <label1> | fieldTypeIdentifier   |
+      | Field    | <value1> | <fieldInternalName> |
     Examples:
       | fieldInternalName | fieldName     | fieldSettings                                                                                                  | label1 | value1                  |
       | ezcontentquery    | Content query | QueryType-Folders under media,ContentType-folder,ItemsPerPage-100,Parameters-contentTypeId:folder;locationId:43| value  | Images,Files,Multimedia |
@@ -151,5 +152,5 @@ Feature: Content fields setting and editing
     Then success notification that "Content published." appears
     And I should be on content item page "New Content query" of type "Content query CT" in root path
     And content attributes equal
-      | label    | value                  | fieldType     |
-      | Field    | Images,Files,Multimedia | Content query |
+      | label    | value                  | fieldTypeIdentifier     |
+      | Field    | Images,Files,Multimedia | ezcontentquery |

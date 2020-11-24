@@ -57,6 +57,7 @@ class NavigationContext implements Context
 
     /**
      * @Given I open :pageName page in admin SiteAccess
+     * @Given I open the :pageName page in admin SiteAccess
      */
     public function openPage(string $pageName): void
     {
@@ -182,7 +183,7 @@ class NavigationContext implements Context
     }
 
     /**
-     * @Given I should be on Content Update page for :contentItemName
+     * @Given I should be on Content update page for :contentItemName
      */
     public function iShouldBeOnContentUpdatePageForItem(string $contentItemName)
     {

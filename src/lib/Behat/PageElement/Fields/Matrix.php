@@ -7,31 +7,17 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
 use Behat\Mink\Element\NodeElement;
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Selector\SelectorInterface;
 use PHPUnit\Framework\Assert;
 
 class Matrix extends FieldTypeComponent
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'Matrix';
-
-    public function __construct(OldBrowserContext $context, string $locator, string $label)
-    {
-        parent::__construct($context, $locator, $label);
-        $this->fields['matrixCellSelectorFormat'] = '[name="ezplatform_content_forms_content_edit[fieldsData][ezmatrix][value][entries][%d][%s]"]';
-        $this->fields['row'] = '.ez-table__matrix-entry';
-        $this->fields['addRowButton'] = '.ez-btn--add-matrix-entry';
-        $this->fields['viewModeTableHeaders'] = '.ez-content-field-value thead th';
-        $this->fields['viewModeTableRow'] = '.ez-content-field-value tbody tr';
-        $this->fields['editModeTableHeaders'] = '.ez-table thead th[data-identifier]';
-        $this->fields['editModeTableRow'] = '.ez-table tr.ez-table__matrix-entry';
-    }
-
     public function setValue(array $parameters): void
     {
         $matrixValues = $this->parseParameters($parameters);
 
-        $availableRows = count($this->context->findAllElements($this->fields['row']));
+        $availableRows = count($this->getHTMLPage()->findAll($this->getSelector('row')));
         $rowsToSet = count($matrixValues);
 
         if ($rowsToSet > $availableRows) {
@@ -47,12 +33,12 @@ class Matrix extends FieldTypeComponent
 
     public function getValue(): array
     {
-        return [$this->getParsedTableValue($this->fields['editModeTableHeaders'], $this->fields['editModeTableRow'])];
+        return [$this->getParsedTableValue($this->getSelector('editModeTableHeaders'), $this->getSelector('editModeTableRow'))];
     }
 
     public function verifyValueInItemView(array $expectedValue): void
     {
-        $parsedTable = $this->getParsedTableValue($this->fields['viewModeTableHeaders'], $this->fields['viewModeTableRow']);
+        $parsedTable = $this->getParsedTableValue($this->getSelector('viewModeTableHeaders'), $this->getSelector('viewModeTableRow'));
 
         Assert::assertEquals($expectedValue['value'], $parsedTable);
     }
@@ -85,28 +71,54 @@ class Matrix extends FieldTypeComponent
         }
     }
 
-    private function internalSetValue(int $rowIndex, string $column, $value)
+    private function internalSetValue(int $rowIndex, string $column, $value): void
     {
-        $this->context->findElement(sprintf($this->fields['matrixCellSelectorFormat'], $rowIndex, $column))->setValue($value);
+        $matrixCellSelector = CSSSelector::combine(
+            $this->getSelector('matrixCellSelectorFormat')->getSelector(),
+            new CSSSelector('', $rowIndex),
+            new CSSSelector('', $column),
+        );
+
+        $this->getHTMLPage()->find($matrixCellSelector)->setValue($value);
     }
 
-    private function getParsedTableValue($headerSelector, $rowSelector)
+    private function getParsedTableValue(SelectorInterface $headerSelector, SelectorInterface $rowSelector): string
     {
         $parsedTable = '';
 
-        $headerElements = $this->context->findAllElements($headerSelector);
-        $headers = array_map(function (NodeElement $element) { return $element->getText(); }, $headerElements);
+        $headers = $this->getHTMLPage()->findAll($headerSelector)->map(function (NodeElement $element) {
+            return $element->getText();
+        });
 
         $parsedTable .= implode(':', $headers);
 
-        $rows = $this->context->findAllElements($rowSelector);
+        $rows = $this->getHTMLPage()->findAll($rowSelector);
         foreach ($rows as $row) {
             $parsedTable .= ',';
-            $cells = $row->findAll('css', 'td');
-            $cellValues = array_map(function (NodeElement $element) { return $element->getText();}, $cells);
+            $cellValues = $row
+                ->findAll(new CSSSelector('', 'td'))
+                ->map(function (NodeElement $element) { return $element->getText();});
             $parsedTable .= implode(':', $cellValues);
         }
 
         return $parsedTable;
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('matrixCellSelectorFormat', '[name="ezplatform_content_forms_content_edit[fieldsData][ezmatrix][value][entries][%d][%s]"]'),
+            new CSSSelector('row', '.ez-table__matrix-entry'),
+            new CSSSelector('addRowButton', '.ez-btn--add-matrix-entry'),
+            new CSSSelector('viewModeTableHeaders', '.ez-content-field-value thead th'),
+            new CSSSelector('viewModeTableRow', '.ez-content-field-value tbody tr'),
+            new CSSSelector('editModeTableHeaders', '.ez-table thead th[data-identifier]'),
+            new CSSSelector('editModeTableRow', '.ez-table tr.ez-table__matrix-entry'),
+        ];
+    }
+
+    public function getFieldTypeIdentifier(): string
+    {
+        return 'ezmatrix';
     }
 }

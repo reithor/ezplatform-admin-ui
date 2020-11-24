@@ -6,43 +6,17 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use PHPUnit\Framework\Assert;
 
 class File extends FieldTypeComponent
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'File';
-
-    public function __construct(OldBrowserContext $context, string $locator, string $label)
-    {
-        parent::__construct($context, $locator, $label);
-        $this->fields['fieldInput'] = 'input[type=file]';
-        $this->fields['file'] = '.ezbinaryfile-field a';
-    }
-
     public function setValue(array $parameters): void
     {
-        $fieldInput = $this->context->findElement(
-            sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['fieldInput'])
+        $fieldSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('fieldInput'));
+        $this->getHTMLPage()->find($fieldSelector)->attachFile(
+            $this->browser->getRemoteFileUploadPath($parameters['value'])
         );
-
-        Assert::assertNotNull($fieldInput, sprintf('Input for field %s not found.', $this->label));
-
-        $remotePath = $this->context->uploadFileToRemoteSpace($parameters['value']);
-
-        $fieldInput->attachFile($remotePath);
-    }
-
-    public function getValue(): array
-    {
-        $fieldInput = $this->context->findElement(
-            sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['fieldInput'])
-        );
-
-        Assert::assertNotNull($fieldInput, sprintf('Input for field %s not found.', $this->label));
-
-        return [$fieldInput->getValue()];
     }
 
     public function verifyValueInItemView(array $values): void
@@ -51,14 +25,29 @@ class File extends FieldTypeComponent
 
         Assert::assertContains(
             $filename,
-            $this->getHTMLPage()->find($this->getSelector('fieldContainer'))->getText(),
+            $this->getHTMLPage()->find($this->parentSelector)->getText(),
             'Image has wrong file name'
         );
 
+        $fileFieldSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('file'));
+
         Assert::assertContains(
             $filename,
-            $this->context->findElement(sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['file']))->getAttribute('href'),
-            'Image has wrong source'
+            $this->getHTMLPage()->find($fileFieldSelector)->getAttribute('href'),
+            'File has wrong href'
         );
+    }
+
+    public function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('fieldInput', 'input[type=file]'),
+            new CSSSelector('file', '.ezbinaryfile-field a'),
+        ];
+    }
+
+    public function getFieldTypeIdentifier(): string
+    {
+        return 'ezbinaryfile';
     }
 }

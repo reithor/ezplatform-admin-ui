@@ -6,28 +6,29 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\ContentRelationTable;
+use Behat\Mink\Session;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
 use PHPUnit\Framework\Assert;
 
 class ContentRelationSingle extends FieldTypeComponent
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'Content relation (single)';
+    /**
+     * @var UniversalDiscoveryWidget
+     */
+    private $universalDiscoveryWidget;
 
-    public const VIEW_PATTERN = '/Single relation:[\w\/,: ]* %s [\w \/,:]*/';
-
-    /** @var ContentRelationTable */
-    public $contentRelationTable;
-
-    public function __construct(OldBrowserContext $context, string $locator, string $label)
+    public function specifySelectors(): array
     {
-        parent::__construct($context, $locator, $label);
-        $this->fields['selectContent'] = '.ez-relations__cta-btn-label';
+        return [
+            new CSSSelector('selectContent', '.ez-relations__cta-btn-label'),
+        ];
+    }
 
-        $this->contentRelationTable = ElementFactory::createElement($context, ContentRelationTable::ELEMENT_NAME, $this->fields['fieldContainer']);
+    public function __construct(Browser $browser, UniversalDiscoveryWidget $universalDiscoveryWidget)
+    {
+        parent::__construct($browser);
+        $this->universalDiscoveryWidget = $universalDiscoveryWidget;
     }
 
     public function setValue(array $parameters): void
@@ -49,9 +50,8 @@ class ContentRelationSingle extends FieldTypeComponent
 
         $selectContent->click();
 
-        $UDW = ElementFactory::createElement($this->context, UniversalDiscoveryWidget::ELEMENT_NAME);
-        $UDW->selectContent($parameters['value']);
-        $UDW->confirm();
+        $this->universalDiscoveryWidget->selectContent($parameters['value']);
+        $this->universalDiscoveryWidget->confirm();
     }
 
     public function removeActualRelation(): void
@@ -77,8 +77,10 @@ class ContentRelationSingle extends FieldTypeComponent
         $explodedValue = explode('/', $values['value']);
         $value = $explodedValue[count($explodedValue) - 1];
 
+        $viewPatternRegex = '/Single relation:[\w\/,: ]* %s [\w \/,:]*/';
+
         Assert::assertRegExp(
-            sprintf(self::VIEW_PATTERN, $value),
+            sprintf($viewPatternRegex, $value),
             $this->getHTMLPage()->find($this->getSelector('fieldContainer'))->getText(),
             'Field has wrong value'
         );
@@ -86,6 +88,13 @@ class ContentRelationSingle extends FieldTypeComponent
 
     public function isRelationEmpty(): bool
     {
-        return $this->context->isElementVisible(sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['selectContent']));
+        $selectSelector = CSSSelector::combine($this->parentSelector, $this->getSelector('selectContent'));
+
+        return $this->getHTMLPage()->findAll($selectSelector)->any();
+    }
+
+    public function getFieldTypeIdentifier(): string
+    {
+        return 'ezobjectrelation';
     }
 }

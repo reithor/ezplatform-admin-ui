@@ -111,18 +111,11 @@ class ContentViewContext implements Context
     public function contentAttributesEqual(TableNode $parameters): void
     {
         foreach ($parameters->getHash() as $fieldData) {
-            Assert::assertEquals($fieldData, $this->contentViewPage->getFieldValue($fieldData['label']));
+            $fieldLabel = $fieldData['label'];
+            $fieldTypeIdentifier = $fieldData['fieldTypeIdentifier'] ?? null;
+            $expectedFieldValues = $fieldData;
+            $this->contentViewPage->verifyFieldHasValues($fieldLabel, $expectedFieldValues, $fieldTypeIdentifier);
         }
-    }
-
-    /**
-     * @Then article main content field equals :intro
-     */
-    public function articleMainContentFieldEquals(string $intro): void
-    {
-//        $fieldName = EnvironmentConstants::get('ARTICLE_MAIN_FIELD_NAME');
-        $fieldData['label'] = 'tesr';
-        Assert::assertEquals($intro, $this->contentViewPage->getFieldValue($fieldData['label']));
     }
 
     /**

@@ -12,7 +12,7 @@ use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Selector\CSSSelector;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Breadcrumb;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\ContentField;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\ContentItemAdminPreview;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\ContentTypePicker;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\LanguagePicker;
@@ -48,9 +48,7 @@ class ContentViewPage extends Page
      */
     private $languagePicker;
     /**
-     * @var ContentField
-     */
-    private $contentField;
+
     /**
      * @var string
      */
@@ -68,6 +66,10 @@ class ContentViewPage extends Page
      * @var Breadcrumb
      */
     private $breadcrumb;
+    /**
+     * @var ContentItemAdminPreview
+     */
+    private $contentItemAdminPreview;
 
     public function __construct(
         Browser $browser,
@@ -76,10 +78,10 @@ class ContentViewPage extends Page
         ContentTypePicker $contentTypePicker,
         ContentUpdateItemPage $contentUpdatePage,
         LanguagePicker $languagePicker,
-        ContentField $contentField,
         Dialog $dialog,
         ContentFacade $contentFacade,
-        Breadcrumb $breadcrumb
+        Breadcrumb $breadcrumb,
+        ContentItemAdminPreview $contentItemAdminPreview
     )
     {
         parent::__construct($browser);
@@ -90,10 +92,10 @@ class ContentViewPage extends Page
         $this->contentTypePicker = $contentTypePicker;
         $this->contentUpdatePage = $contentUpdatePage;
         $this->languagePicker = $languagePicker;
-        $this->contentField = $contentField;
         $this->dialog = $dialog;
         $this->contentFacade = $contentFacade;
         $this->breadcrumb = $breadcrumb;
+        $this->contentItemAdminPreview = $contentItemAdminPreview;
     }
 
     public function startCreatingContent(string $contentTypeName): ContentUpdateItemPage
@@ -104,11 +106,6 @@ class ContentViewPage extends Page
         $this->contentUpdatePage->verifyIsLoaded();
 
         return $this->contentUpdatePage;
-    }
-
-    public function getFieldValue(string $fieldLabel)
-    {
-        $this->contentField->getFieldValue($fieldLabel);
     }
 
     public function goToSubItem(string $contentName, string $contentType): void
@@ -165,7 +162,7 @@ class ContentViewPage extends Page
         $this->rightMenu->verifyIsLoaded();
 
         Assert::assertContains(
-            trim(str_replace('/', ' ', $this->locationPath)),
+            $this->expectedContentName,
             $this->breadcrumb->getBreadcrumb(),
             'Breadcrumb shows invalid path'
         );
@@ -207,6 +204,11 @@ class ContentViewPage extends Page
     {
         $this->rightMenu->clickButton('Send to Trash');
         $this->dialog->confirm();
+    }
+
+    public function verifyFieldHasValues(string $fieldLabel, array $expectedFieldValues, ?string $fieldTypeIdentifier)
+    {
+        $this->contentItemAdminPreview->verifyFieldHasValues($fieldLabel, $expectedFieldValues, $fieldTypeIdentifier);
     }
 
     protected function specifySelectors(): array

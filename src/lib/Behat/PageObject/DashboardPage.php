@@ -17,7 +17,6 @@ use PHPUnit\Framework\Assert;
 
 class DashboardPage extends Page
 {
-
     public const TABLE_CONTAINER = '#ez-tab-list-content-dashboard-my .tab-pane.active';
 
     public $dashboardTable;

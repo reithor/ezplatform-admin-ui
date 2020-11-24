@@ -7,7 +7,7 @@ Feature: Trash management
     Given I open Login page in admin SiteAccess
     And I am logged as admin
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaWeb @IbexaCommerce @needsWork
+  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce @needsWork
   Scenario: Trash can be emptied
     And I create "Folder" Content items in root in "eng-GB"
       | name      | short_name |
@@ -21,7 +21,7 @@ Feature: Trash management
     When I empty the trash
     Then trash is empty
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaWeb @IbexaCommerce @needsWork
+  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce @needsWork
   Scenario: Content can be moved to trash
     And I create "Folder" Content items in root in "eng-GB"
       | name      | short_name |
@@ -35,7 +35,7 @@ Feature: Trash management
     And I open "Trash" page in admin SiteAccess
     And there is a "Folder" "FolderToTrashManually" on Trash list
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaWeb @IbexaCommerce @needsWork
+  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce @needsWork
   Scenario: Element in trash can be deleted
     And I create "Folder" Content items in root in "eng-GB"
       | name      | short_name |
@@ -52,7 +52,7 @@ Feature: Trash management
     Then success notification that "Deleted selected item(s) from Trash." appears
     And there is no "Folder" "Folder1" on Trash list
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaWeb @IbexaCommerce
+  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
   Scenario: Element in trash can be restored
     And I create "Folder" Content items in root in "eng-GB"
       | name      | short_name |
@@ -70,7 +70,7 @@ Feature: Trash management
     And there is no "Folder" "RestoreFromTrash" on Trash list
     And there exists Content view Page for "TrashTest/RestoreFromTrash"
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaWeb @IbexaCommerce
+  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
   Scenario: Element in trash can be restored under new location
     And I create "Folder" Content items in root in "eng-GB"
       | name      | short_name |

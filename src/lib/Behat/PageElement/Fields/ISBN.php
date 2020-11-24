@@ -7,48 +7,20 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use PHPUnit\Framework\Assert;
 
 class ISBN extends FieldTypeComponent
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'ISBN';
-
-    public function __construct(OldBrowserContext $context, string $locator, string $label)
+    public function getFieldTypeIdentifier(): string
     {
-        parent::__construct($context, $locator, $label);
-        $this->fields['fieldInput'] = 'input';
+        return 'ezisbn';
     }
 
-    public function setValue(array $parameters): void
+    public function specifySelectors(): array
     {
-        $fieldInput = $this->context->findElement(
-            sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['fieldInput'])
-        );
-
-        Assert::assertNotNull($fieldInput, sprintf('Input for field %s not found.', $this->label));
-
-        $fieldInput->setValue('');
-        $fieldInput->setValue($parameters['value']);
-    }
-
-    public function getValue(): array
-    {
-        $fieldInput = $this->context->findElement(
-            sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['fieldInput'])
-        );
-
-        Assert::assertNotNull($fieldInput, sprintf('Input for field %s not found.', $this->label));
-
-        return [$fieldInput->getValue()];
-    }
-
-    public function verifyValueInItemView(array $values): void
-    {
-        Assert::assertEquals(
-            $values['value'],
-            $this->getHTMLPage()->find($this->getSelector('fieldContainer'))->getText(),
-            'Field has wrong value'
-        );
+        return [
+            new CSSSelector('fieldInput', 'input'),
+        ];
     }
 }

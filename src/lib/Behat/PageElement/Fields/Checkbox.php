@@ -6,59 +6,49 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use PHPUnit\Framework\Assert;
 
 class Checkbox extends FieldTypeComponent
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'Checkbox';
-
-    public function __construct(OldBrowserContext $context, string $locator, string $label)
-    {
-        parent::__construct($context, $locator, $label);
-        $this->fields['fieldInput'] = '.ez-data-source__indicator';
-        $this->fields['checkbox'] = '.ez-data-source__label';
-        $this->fields['checked'] = '.is-checked';
-    }
-
     public function setValue(array $parameters): void
     {
-        $fieldInput = $this->context->findElement(
-            sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['fieldInput'])
-        );
-
-        Assert::assertNotNull($fieldInput, sprintf('Input for field %s not found.', $this->label));
+        $fieldSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('fieldInput'));
 
         if ($this->getValue() !== $parameters['value']) {
-            $fieldInput->click();
+            $this->getHTMLPage()->find($fieldSelector)->click();
         }
     }
 
     public function getValue(): array
     {
-        $fieldInput = $this->context->findElement(
-            sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['fieldInput'])
-        );
-
-        Assert::assertNotNull($fieldInput, sprintf('Input for field %s not found.', $this->label));
+        $fieldSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('fieldInput'));
 
         return [
-            filter_var(
-                $this->context->findElement(
-                    sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['checkbox'])
-                )->hasClass($this->fields['checked']),
-                FILTER_VALIDATE_BOOLEAN
-            ),
+            $this->getHTMLPage()->find($fieldSelector)->hasClass($this->getSelector('checked')->getSelector())
         ];
     }
 
     public function verifyValueInItemView(array $values): void
     {
         Assert::assertEquals(
-            filter_var($values['value'], FILTER_VALIDATE_BOOLEAN),
-            $this->getHTMLPage()->find($this->getSelector('fieldContainer'))->getText() === 'Yes',
+            'Yes',
+            $this->getHTMLPage()->find($this->parentSelector)->getText(),
             'Field has wrong value'
         );
+    }
+
+    public function getFieldTypeIdentifier(): string
+    {
+        return 'ezboolean';
+    }
+
+    public function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('fieldInput', '.ez-data-source__indicator'),
+            new CSSSelector('checkbox', '.ez-data-source__label'),
+            new CSSSelector('checked', '.is-checked'),
+        ];
     }
 }

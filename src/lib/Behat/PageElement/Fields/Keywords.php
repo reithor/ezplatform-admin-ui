@@ -6,8 +6,8 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use Behat\Mink\Element\NodeElement;
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
+use EzSystems\Behat\Browser\Element\NodeElement;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use PHPUnit\Framework\Assert;
 
 class Keywords extends FieldTypeComponent
@@ -31,47 +31,28 @@ var list = tags.map(function (item) {
 taggify.updateTags(list);
 SCRIPT;
 
-    public function __construct(OldBrowserContext $context, string $locator, string $label)
-    {
-        parent::__construct($context, $locator, $label);
-        $this->fields['fieldInput'] = 'input';
-        $this->fields['keywordItem'] = '.ez-keyword__item';
-    }
-
     public function setValue(array $parameters): void
     {
-        $fieldInput = $this->context->findElement(
-            sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['fieldInput'])
-        );
-        Assert::assertNotNull($fieldInput, sprintf('Input for field %s not found.', $this->label));
-
         $parsedValue = implode(',', array_map(
-            function (string $element) {
+            static function (string $element) {
                 return sprintf('"%s"', trim($element));
             }, explode(',', $parameters['value'])
         ));
 
-        $this->context->getSession()->getDriver()->executeScript(sprintf($this->setKeywordsValueScript, $parsedValue));
-    }
-
-    public function getValue(): array
-    {
-        $fieldInput = $this->context->findElement(
-            sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['fieldInput'])
-        );
-
-        Assert::assertNotNull($fieldInput, sprintf('Input for field %s not found.', $this->label));
-
-        return [$fieldInput->getValue()];
+        $this->browser->getSession()->getDriver()->executeScript(sprintf($this->setKeywordsValueScript, $parsedValue));
     }
 
     public function verifyValueInItemView(array $values): void
     {
         $expectedValues = $this->parseValueString($values['value']);
 
-        $actualValues = array_map(function (NodeElement $element) {
-            return $element->getText();
-        }, $this->context->findAllElements(sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['keywordItem'])));
+        $actualValues = $this->getHTMLPage()
+            ->findAll(CSSSelector::combine(
+                $this->parentSelector,
+                $this->getSelector('keywordItem')))
+            ->map(static function (NodeElement $element) {
+                return $element->getText();
+            });
         sort($actualValues);
 
         Assert::assertEquals($expectedValues, $actualValues);
@@ -88,5 +69,18 @@ SCRIPT;
         sort($parsedValues);
 
         return $parsedValues;
+    }
+
+    public function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('fieldInput', 'input'),
+            new CSSSelector('keywordItem', '.ez-keyword__item'),
+        ];
+    }
+
+    public function getFieldTypeIdentifier(): string
+    {
+        return 'ezkeyword';
     }
 }

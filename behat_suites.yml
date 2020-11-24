@@ -28,7 +28,7 @@ ezplatform:
                 # - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\SystemInfoContext
                 # - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\SectionsContext
                 # - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\ObjectStatesContext
-                # - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\DashboardContext
+                - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\DashboardContext
                 - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\SearchContext
 
         personas:

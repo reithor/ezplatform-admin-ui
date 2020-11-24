@@ -6,54 +6,43 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
+use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\DateAndTimePopup;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
 use PHPUnit\Framework\Assert;
 
 class Time extends FieldTypeComponent
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'Time';
-
-    private const VIEW_TIME_FORMAT = 'g:i A';
     private const VALUE_TIME_FORMAT = 'G:i';
 
-    public function __construct(OldBrowserContext $context, string $locator, string $label)
+    /**
+     * @var DateAndTimePopup
+     */
+    private $dateAndTimePopup;
+
+    public function __construct(Browser $browser, DateAndTimePopup $dateAndTimePopup)
     {
-        parent::__construct($context, $locator, $label);
-        $this->fields['fieldInput'] = '.ez-data-source__input-wrapper input';
+        parent::__construct($browser);
+        $this->dateAndTimePopup = $dateAndTimePopup;
     }
 
     public function setValue(array $parameters): void
     {
-        $fieldInput = $this->context->findElement(sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['fieldInput']));
-        Assert::assertNotNull($fieldInput, sprintf('Input for field %s not found.', $this->label));
-        $fieldInput->click();
+        $fieldSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('fieldInput'));
+
+        $this->getHTMLPage()->find($fieldSelector)->click();
 
         $time = explode(':', $parameters['value']);
 
-        $dateAndTimePopup = ElementFactory::createElement($this->context, DateAndTimePopup::ELEMENT_NAME);
-        $dateAndTimePopup->setTime($time[0], $time[1]);
+        $this->dateAndTimePopup->setTime($time[0], $time[1]);
 
         // This click is closing the date and time picker, to finally ensure that value is set up.
-        $this->getHTMLPage()->find($this->getSelector('fieldContainer'))->click();
+        $this->getHTMLPage()->find($this->parentSelector)->click();
 
         $expectedTimeValue = date_format(date_create($parameters['value']), self::VALUE_TIME_FORMAT);
-        $actualTimeValue = date_format(date_create($this->context->findElement(sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['fieldInput']))->getValue()), self::VALUE_TIME_FORMAT);
+        $actualTimeValue = date_format(date_create($this->getHTMLPage()->find($fieldSelector)->getValue()), self::VALUE_TIME_FORMAT);
 
         Assert::assertEquals($expectedTimeValue, $actualTimeValue);
-    }
-
-    public function getValue(): array
-    {
-        $fieldInput = $this->context->findElement(
-            sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['fieldInput'])
-        );
-
-        Assert::assertNotNull($fieldInput, sprintf('Input for field %s not found.', $this->label));
-
-        return [$fieldInput->getText()];
     }
 
     public function verifyValueInItemView(array $values): void
@@ -65,5 +54,17 @@ class Time extends FieldTypeComponent
             $actualTimeValue,
             'Field has wrong value'
         );
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('fieldInput', '.ez-data-source__input-wrapper input'),
+        ];
+    }
+
+    public function getFieldTypeIdentifier(): string
+    {
+        return 'eztime';
     }
 }

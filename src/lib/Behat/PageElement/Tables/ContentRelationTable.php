@@ -19,7 +19,7 @@
 //        parent::__construct($context, $containerLocator);
 //        $this->fields['horizontalHeaders'] = $this->fields['list'] . ' thead tr:nth-child(2) th';
 //        $this->fields['listElement'] = $this->fields['list'] . ' .ez-relations__item-name';
-//        $this->fields['checkboxInput'] = ' input[type=checkbox]';
+//        new CSSSelector('checkboxInput', ' input[type=checkbox]),
 //        $this->fields['removeRelations'] = $this->fields['list'] . ' .ez-relations__table-action--remove';
 //        $this->fields['addRelation'] = $this->fields['list'] . ' .ez-relations__table-action--create';
 //    }

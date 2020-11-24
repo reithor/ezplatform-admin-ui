@@ -6,28 +6,25 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
+use Behat\Mink\Session;
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\ContentRelationTable;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
 use PHPUnit\Framework\Assert;
 
 class ContentRelationMultiple extends FieldTypeComponent
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'Content relations (multiple)';
+    /**
+     * @var UniversalDiscoveryWidget
+     */
+    private $universalDiscoveryWidget;
 
-    public const VIEW_PATTERN = '/Multiple relations:[\w\/,: ]* %s [\w \/,:]*/';
-
-    /** @var ContentRelationTable */
-    public $contentRelationTable;
-
-    public function __construct(OldBrowserContext $context, string $locator, string $label)
+    public function __construct(Browser $browser, UniversalDiscoveryWidget $universalDiscoveryWidget)
     {
-        parent::__construct($context, $locator, $label);
-        $this->fields['selectContent'] = '.ez-relations__cta-btn-label';
-
-        $this->contentRelationTable = ElementFactory::createElement($context, ContentRelationTable::ELEMENT_NAME, $this->fields['fieldContainer']);
+        parent::__construct($browser);
+        $this->universalDiscoveryWidget = $universalDiscoveryWidget;
     }
 
     public function setValue(array $parameters): void
@@ -67,7 +64,8 @@ class ContentRelationMultiple extends FieldTypeComponent
     private function startAddingRelations()
     {
         if ($this->isRelationEmpty()) {
-            $this->context->findElement(sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['selectContent']))->click();
+            $selectSelector = CSSSelector::combine($this->parentSelector, $this->getSelector('selectContent'));
+            $this->getHTMLPage()->find($selectSelector)->click();
         } else {
             $this->contentRelationTable->clickPlusButton();
         }
@@ -75,23 +73,20 @@ class ContentRelationMultiple extends FieldTypeComponent
 
     private function selectRelationsAndConfirm($items, $paths)
     {
-        $UDW = ElementFactory::createElement($this->context, UniversalDiscoveryWidget::ELEMENT_NAME);
         $itemsToSet = array_keys($items);
         foreach ($itemsToSet as $itemToSet) {
-            $UDW->selectContent($paths[$itemToSet]);
+            $this->universalDiscoveryWidget->selectContent($paths[$itemToSet]);
         }
-        $UDW->confirm();
+        $this->universalDiscoveryWidget->confirm();
     }
 
     public function getValue(): array
     {
-        $fieldInput = $this->context->findElement(
-            sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['selectContent'])
-        );
+        $selectSelector = CSSSelector::combine($this->parentSelector, $this->getSelector('selectContent'));
 
-        Assert::assertNotNull($fieldInput, sprintf('Input for field %s not found.', $this->label));
-
-        return [$fieldInput->getText()];
+        return [
+            $this->getHTMLPage()->find($selectSelector)->getValue()
+        ];
     }
 
     public function verifyValueInItemView(array $values): void
@@ -101,13 +96,14 @@ class ContentRelationMultiple extends FieldTypeComponent
         $explodedValue = explode('/', $values['secondItem']);
         $secondValue = $explodedValue[count($explodedValue) - 1];
 
+        $viewPatternRegex = '/Multiple relations:[\w\/,: ]* %s [\w \/,:]*/';
         Assert::assertRegExp(
-            sprintf(self::VIEW_PATTERN, $firstValue),
+            sprintf($viewPatternRegex, $firstValue),
             $this->getHTMLPage()->find($this->getSelector('fieldContainer'))->getText(),
             'Field has wrong value'
         );
         Assert::assertRegExp(
-            sprintf(self::VIEW_PATTERN, $secondValue),
+            sprintf($viewPatternRegex, $secondValue),
             $this->getHTMLPage()->find($this->getSelector('fieldContainer'))->getText(),
             'Field has wrong value'
         );
@@ -115,6 +111,20 @@ class ContentRelationMultiple extends FieldTypeComponent
 
     public function isRelationEmpty(): bool
     {
-        return $this->context->isElementVisible(sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['selectContent']));
+        $selectSelector = CSSSelector::combine($this->parentSelector, $this->getSelector('selectContent'));
+
+        return $this->getHTMLPage()->findAll($selectSelector)->any();
+    }
+
+    public function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('selectContent', '.ez-relations__cta-btn-label'),
+        ];
+    }
+
+    public function getFieldTypeIdentifier(): string
+    {
+        return 'ezobjectrelationlist';
     }
 }

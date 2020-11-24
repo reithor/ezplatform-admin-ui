@@ -18,9 +18,9 @@
 //    {
 //        parent::__construct($context, $containerLocator);
 //        $this->fields['horizontalHeaders'] = $this->fields['list'] . ' thead th';
-//        $this->fields['tableTrash'] = '[name=trash_item_restore]';
+//        new CSSSelector('tableTrash', '[name=trash_item_restore]),
 //        $this->fields['listElement'] = $this->fields['list'] . ' tbody .ez-table__cell--after-icon';
-//        $this->fields['checkboxInput'] = ' input';
+//        new CSSSelector('checkboxInput', ' input),
 //    }
 //
 //    public function verifyVisibility(): void

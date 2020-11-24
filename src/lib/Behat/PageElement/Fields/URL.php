@@ -6,21 +6,11 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 use PHPUnit\Framework\Assert;
 
 class URL extends FieldTypeComponent
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'URL';
-
-    public function __construct(OldBrowserContext $context, string $locator, string $label)
-    {
-        parent::__construct($context, $locator, $label);
-        $this->fields['url'] = '#ezplatform_content_forms_content_edit_fieldsData_ezurl_value_link';
-        $this->fields['text'] = '#ezplatform_content_forms_content_edit_fieldsData_ezurl_value_text';
-    }
-
     public function setValue(array $parameters): void
     {
         $this->setSpecificFieldValue('url', $parameters['url']);
@@ -29,14 +19,11 @@ class URL extends FieldTypeComponent
 
     public function setSpecificFieldValue(string $coordinateName, string $value): void
     {
-        $fieldInput = $this->context->findElement(
-            sprintf('%s %s', $this->fields['fieldContainer'], $this->fields[$coordinateName])
+        $fieldSelector = CSSSelector::combine(
+            "%s %s", $this->parentSelector, $this->getSelector($coordinateName)
         );
 
-        Assert::assertNotNull($fieldInput, sprintf('Input %s for field %s not found.', $coordinateName, $this->label));
-
-        $fieldInput->setValue('');
-        $fieldInput->setValue($value);
+        $this->getHTMLPage()->find($fieldSelector)->setValue($value);
     }
 
     public function getValue(): array
@@ -49,16 +36,14 @@ class URL extends FieldTypeComponent
 
     public function getSpecificFieldValue(string $coordinateName): string
     {
-        $fieldInput = $this->context->findElement(
-            sprintf('%s %s', $this->fields['fieldContainer'], $this->fields[$coordinateName])
+        $fieldSelector = CSSSelector::combine(
+            "%s %s", $this->parentSelector, $this->getSelector($coordinateName)
         );
 
-        Assert::assertNotNull($fieldInput, sprintf('Input %s for field %s not found.', $coordinateName, $this->label));
-
-        return $fieldInput->getValue();
+        return $this->getHTMLPage()->find($fieldSelector)->getValue();
     }
 
-    public function verifyValue(array $value): void
+    public function verifyValueInEditView(array $value): void
     {
         Assert::assertEquals(
             $value['url'],
@@ -76,13 +61,28 @@ class URL extends FieldTypeComponent
     {
         Assert::assertEquals(
             $values['text'],
-            $this->getHTMLPage()->find($this->getSelector('fieldContainer'))->getText(),
+            $this->getHTMLPage()->find($this->parentSelector)->getText(),
             'Field has wrong value'
         );
+
+        $urlSelector = CSSSelector::combine("%s %s", $this->parentSelector, new CSSSelector('', 'a'));
         Assert::assertEquals(
             $values['url'],
-            $this->context->findElement(sprintf('%s %s', $this->fields['fieldContainer'], 'a'))->getAttribute('href'),
+            $this->getHTMLPage()->find($urlSelector)->getAttribute('href'),
             'Field has wrong value'
         );
+    }
+
+    protected function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('url', '#ezplatform_content_forms_content_edit_fieldsData_ezurl_value_link'),
+            new CSSSelector('text', '#ezplatform_content_forms_content_edit_fieldsData_ezurl_value_text'),
+        ];
+    }
+
+    public function getFieldTypeIdentifier(): string
+    {
+        return 'ezurl';
     }
 }

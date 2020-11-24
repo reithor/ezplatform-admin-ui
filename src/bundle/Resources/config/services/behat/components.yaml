@@ -23,7 +23,9 @@ services:
 
   EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget: ~
 
-  EzSystems\EzPlatformAdminUi\Behat\PageElement\ContentField: ~
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\ContentItemAdminPreview:
+    arguments:
+      $fieldTypeComponents: !tagged_iterator ezplatform.behat.admin_ui.field
 
   EzSystems\EzPlatformAdminUi\Behat\PageElement\DraftConflictDialog: ~
 

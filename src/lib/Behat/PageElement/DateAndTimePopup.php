@@ -9,6 +9,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 use DateTime;
 use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Selector\CSSSelector;
+use PHPUnit\Framework\Assert;
 
 class DateAndTimePopup extends Component
 {
@@ -43,12 +44,26 @@ class DateAndTimePopup extends Component
      */
     public function setDate(DateTime $date, string $dateFormat = self::DATETIME_FORMAT): void
     {
-        $this->session->executeScript(sprintf(self::ADD_CALLBACK_TO_DATEPICKER_SCRIPT_FORMAT, $this->fields['containerSelector']));
+        $this->session->executeScript(
+            sprintf(
+                self::ADD_CALLBACK_TO_DATEPICKER_SCRIPT_FORMAT,
+                $this->getSelector('containerSelector')->getSelector()
+            ));
 
-        $dateScript = sprintf(self::SETTING_SCRIPT_FORMAT, $this->fields['containerSelector'], $this->fields['flatpickrSelector'], $date->format($dateFormat), $dateFormat);
-        $this->context->getSession()->getDriver()->executeScript($dateScript);
+        $dateScript = sprintf(
+            self::SETTING_SCRIPT_FORMAT,
+            $this->getSelector('containerSelector')->getSelector(),
+            $this->getSelector('flatpickrSelector')->getSelector(),
+            $date->format($dateFormat),
+            $dateFormat
+        );
+        $this->session->getDriver()->executeScript($dateScript);
 
-        Assert::assertTrue($this->getHTMLPage()->find($this->getSelector('dateSet'))->isVisible());
+        Assert::assertTrue(
+            $this->getHTMLPage()
+                ->find($this->getSelector('dateSet'))
+                ->isVisible()
+        );
     }
 
     /**
@@ -62,15 +77,23 @@ class DateAndTimePopup extends Component
         if (!$isTimeOnly) {
             // get current date as it's not possible to set time without setting date
             $currentDateScript = sprintf('document.querySelector("%s %s")._flatpickr.selectedDates[0].toLocaleString()',
-                $this->getSelector('containerSelector'),
-                $this->getSelector('flatpickrSelector'));
+                $this->getSelector('containerSelector')->getSelector(),
+                $this->getSelector('flatpickrSelector')->getSelector()
+            );
             $currentDate = $this->session->getDriver()->evaluateScript($currentDateScript);
         }
 
         $valueToSet = $isTimeOnly ? sprintf('%s:%s:00', $hour, $minute) : sprintf('%s, %s:%s:00', explode(',', $currentDate)[0], $hour, $minute);
         $format = $isTimeOnly ? 'H:i:S' : 'm/d/Y, H:i:S';
 
-        $timeScript = sprintf(self::SETTING_SCRIPT_FORMAT, $this->parentSelector, $this->fields['flatpickrSelector'], $valueToSet, $format);
+        $timeScript = sprintf(
+            self::SETTING_SCRIPT_FORMAT,
+            $this->parentSelector,
+            $this->getSelector('flatpickrSelector'),
+            $valueToSet,
+            $format
+        );
+
         $this->session->getDriver()->executeScript($timeScript);
     }
 

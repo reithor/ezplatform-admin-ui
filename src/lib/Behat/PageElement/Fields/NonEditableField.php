@@ -6,25 +6,33 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
+use eZ\Publish\API\Repository\Exceptions\NotImplementedException;
+use EzSystems\Behat\Browser\Selector\CSSSelector;
 
 abstract class NonEditableField extends FieldTypeComponent
 {
     public const EXPECTED_NON_EDITABLE_TEXT = 'This Field Type is not editable';
 
-    public function __construct(OldBrowserContext $context, string $locator, string $label)
-    {
-        parent::__construct($context, $locator, $label);
-        $this->fields['valueSelector'] = sprintf('%s %s', $this->fields['fieldContainer'], '.non-editable');
-    }
-
     public function setValue(array $parameters): void
     {
-        throw new \Exception('Field is not editable!');
+        throw new NotImplementedException('Field is not editable!');
     }
 
     public function getValue(): array
     {
-        return [$this->getHTMLPage()->find($this->getSelector('valueSelector'))->getText()];
+        $valueSelector = CSSSelector::combine(
+            "%s %s",
+            $this->parentSelector,
+            $this->getSelector('valueSelector')
+        );
+
+        return [$this->getHTMLPage()->find($valueSelector)->getText()];
+    }
+
+    public function specifySelectors(): array
+    {
+        return [
+            new CSSSelector('valueSelector', '.non-editable'),
+        ];
     }
 }
