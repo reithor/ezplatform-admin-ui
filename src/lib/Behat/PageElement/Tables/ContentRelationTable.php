@@ -19,7 +19,7 @@
 //        parent::__construct($context, $containerLocator);
 //        $this->fields['horizontalHeaders'] = $this->fields['list'] . ' thead tr:nth-child(2) th';
 //        $this->fields['listElement'] = $this->fields['list'] . ' .ez-relations__item-name';
-//        new CSSSelector('checkboxInput', ' input[type=checkbox]),
+//        new CSSLocator('checkboxInput', ' input[type=checkbox]),
 //        $this->fields['removeRelations'] = $this->fields['list'] . ' .ez-relations__table-action--remove';
 //        $this->fields['addRelation'] = $this->fields['list'] . ' .ez-relations__table-action--create';
 //    }
@@ -81,7 +81,7 @@
 //     */
 //    public function clickTrashIcon(): void
 //    {
-//        $this->getHTMLPage()->find($this->getSelector('removeRelations'))->click();
+//        $this->getHTMLPage()->find($this->getLocator('removeRelations'))->click();
 //    }
 //
 //    /**
@@ -89,6 +89,6 @@
 //     */
 //    public function clickPlusButton(): void
 //    {
-//        $this->getHTMLPage()->find($this->getSelector('addRelation'))->click();
+//        $this->getHTMLPage()->find($this->getLocator('addRelation'))->click();
 //    }
 //}

@@ -6,7 +6,7 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use PHPUnit\Framework\Assert;
 
 class Authors extends FieldTypeComponent
@@ -16,8 +16,8 @@ class Authors extends FieldTypeComponent
         $name = $parameters['name'];
         $email = $parameters['email'];
 
-        $nameSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('nameFieldInput'));
-        $emailSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('emailFieldInput'));
+        $nameSelector = $this->parentSelector->withDescendant($this->getLocator('nameFieldInput'));
+        $emailSelector = $this->parentSelector->withDescendant($this->getLocator('emailFieldInput'));
 
         $this->getHTMLPage()->find($nameSelector)->setValue($name);
         $this->getHTMLPage()->find($emailSelector)->setValue($email);
@@ -25,8 +25,8 @@ class Authors extends FieldTypeComponent
 
     public function getValue(): array
     {
-        $nameSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('nameFieldInput'));
-        $emailSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('emailFieldInput'));
+        $nameSelector = $this->parentSelector->withDescendant($this->getLocator('nameFieldInput'));
+        $emailSelector = $this->parentSelector->withDescendant($this->getLocator('emailFieldInput'));
 
         return [
             'name' => $this->getHTMLPage()->find($nameSelector)->getValue(),
@@ -67,12 +67,12 @@ class Authors extends FieldTypeComponent
         return 'ezauthor';
     }
 
-    public function specifySelectors(): array
+    public function specifyLocators(): array
     {
         return [
-            new CSSSelector('nameFieldInput', '.ez-data-source__field--name input'),
-            new CSSSelector('emailFieldInput', '.ez-data-source__field--email input'),
-            new CSSSelector('fieldValueInContentItemView', '.ez-content-field-value'),
+            new CSSLocator('nameFieldInput', '.ez-data-source__field--name input'),
+            new CSSLocator('emailFieldInput', '.ez-data-source__field--email input'),
+            new CSSLocator('fieldValueInContentItemView', '.ez-content-field-value'),
         ];
     }
 }

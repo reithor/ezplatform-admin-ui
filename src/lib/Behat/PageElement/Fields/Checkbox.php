@@ -6,14 +6,14 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use PHPUnit\Framework\Assert;
 
 class Checkbox extends FieldTypeComponent
 {
     public function setValue(array $parameters): void
     {
-        $fieldSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('fieldInput'));
+        $fieldSelector = $this->parentSelector->withDescendant($this->getLocator('fieldInput'));
 
         if ($this->getValue() !== $parameters['value']) {
             $this->getHTMLPage()->find($fieldSelector)->click();
@@ -22,10 +22,10 @@ class Checkbox extends FieldTypeComponent
 
     public function getValue(): array
     {
-        $fieldSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('fieldInput'));
+        $fieldSelector = $this->parentSelector->withDescendant($this->getLocator('fieldInput'));
 
         return [
-            $this->getHTMLPage()->find($fieldSelector)->hasClass($this->getSelector('checked')->getSelector())
+            $this->getHTMLPage()->find($fieldSelector)->hasClass($this->getLocator('checked')->getSelector())
         ];
     }
 
@@ -43,12 +43,12 @@ class Checkbox extends FieldTypeComponent
         return 'ezboolean';
     }
 
-    public function specifySelectors(): array
+    public function specifyLocators(): array
     {
         return [
-            new CSSSelector('fieldInput', '.ez-data-source__indicator'),
-            new CSSSelector('checkbox', '.ez-data-source__label'),
-            new CSSSelector('checked', '.is-checked'),
+            new CSSLocator('fieldInput', '.ez-data-source__indicator'),
+            new CSSLocator('checkbox', '.ez-data-source__label'),
+            new CSSLocator('checked', '.is-checked'),
         ];
     }
 }

@@ -9,7 +9,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 use DateTime;
 use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Page\Browser;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use PHPUnit\Framework\Assert;
 
 class DateAndTimePopup extends Component
@@ -36,14 +36,14 @@ class DateAndTimePopup extends Component
      */
     private $isInline;
     /**
-     * @var CSSSelector
+     * @var CSSLocator
      */
     private $parentSelector;
 
     public function __construct(Browser $browser)
     {
         parent::__construct($browser);
-        $this->parentSelector = CSSSelector::empty();
+        $this->parentSelector = CSSLocator::empty();
     }
 
     /**
@@ -60,7 +60,7 @@ class DateAndTimePopup extends Component
         $dateScript = sprintf(
             self::SETTING_SCRIPT_FORMAT,
             $this->parentSelector->getSelector(),
-            $this->getSelector('flatpickrSelector')->getSelector(),
+            $this->getLocator('flatpickrSelector')->getSelector(),
             $date->format($dateFormat),
             $dateFormat
         );
@@ -68,7 +68,7 @@ class DateAndTimePopup extends Component
 
         Assert::assertTrue(
             $this->getHTMLPage()
-                ->find($this->getSelector('dateSet'))
+                ->find($this->getLocator('dateSet'))
                 ->isVisible()
         );
     }
@@ -79,13 +79,13 @@ class DateAndTimePopup extends Component
      */
     public function setTime(string $hour, string $minute): void
     {
-        $isTimeOnly = $this->getHTMLPage()->findAll($this->getSelector('timeOnly'))->any();
+        $isTimeOnly = $this->getHTMLPage()->findAll($this->getLocator('timeOnly'))->any();
 
         if (!$isTimeOnly) {
             // get current date as it's not possible to set time without setting date
             $currentDateScript = sprintf('document.querySelector("%s %s")._flatpickr.selectedDates[0].toLocaleString()',
                 $this->parentSelector->getSelector(),
-                $this->getSelector('flatpickrSelector')->getSelector()
+                $this->getLocator('flatpickrSelector')->getSelector()
             );
             $currentDate = $this->browser->getSession()->getDriver()->evaluateScript($currentDateScript);
         }
@@ -96,7 +96,7 @@ class DateAndTimePopup extends Component
         $timeScript = sprintf(
             self::SETTING_SCRIPT_FORMAT,
             $this->parentSelector->getSelector(),
-            $this->getSelector('flatpickrSelector')->getSelector(),
+            $this->getLocator('flatpickrSelector')->getSelector(),
             $valueToSet,
             $format
         );
@@ -109,7 +109,7 @@ class DateAndTimePopup extends Component
         $this->isInline = $isLine;
     }
 
-    public function setParentSelector(CSSSelector $selector)
+    public function setParentSelector(CSSLocator $selector)
     {
         $this->parentSelector = $selector;
     }
@@ -119,14 +119,14 @@ class DateAndTimePopup extends Component
         // TODO: Implement verifyIsLoaded() method.
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-            new CSSSelector('calendarSelectorInline','.flatpickr-calendar.inline'),
-            new CSSSelector('calendarSelector', '.flatpickr-calendar'),
-            new CSSSelector('flatpickrSelector', '.flatpickr-input'),
-            new CSSSelector('dateSet', '.date-set'),
-            new CSSSelector('timeOnly', '.flatpickr-calendar.noCalendar'),
+            new CSSLocator('calendarSelectorInline','.flatpickr-calendar.inline'),
+            new CSSLocator('calendarSelector', '.flatpickr-calendar'),
+            new CSSLocator('flatpickrSelector', '.flatpickr-input'),
+            new CSSLocator('dateSet', '.date-set'),
+            new CSSLocator('timeOnly', '.flatpickr-calendar.noCalendar'),
         ];
     }
 }

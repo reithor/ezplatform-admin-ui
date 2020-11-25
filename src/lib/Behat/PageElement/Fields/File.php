@@ -6,14 +6,14 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use PHPUnit\Framework\Assert;
 
 class File extends FieldTypeComponent
 {
     public function setValue(array $parameters): void
     {
-        $fieldSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('fieldInput'));
+        $fieldSelector = $this->parentSelector->withDescendant($this->getLocator('fieldInput'));
         $this->getHTMLPage()->find($fieldSelector)->attachFile(
             $this->browser->getRemoteFileUploadPath($parameters['value'])
         );
@@ -29,7 +29,7 @@ class File extends FieldTypeComponent
             'Image has wrong file name'
         );
 
-        $fileFieldSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('file'));
+        $fileFieldSelector = $this->parentSelector->withDescendant($this->getLocator('file'));
 
         Assert::assertContains(
             $filename,
@@ -38,11 +38,11 @@ class File extends FieldTypeComponent
         );
     }
 
-    public function specifySelectors(): array
+    public function specifyLocators(): array
     {
         return [
-            new CSSSelector('fieldInput', 'input[type=file]'),
-            new CSSSelector('file', '.ezbinaryfile-field a'),
+            new CSSLocator('fieldInput', 'input[type=file]'),
+            new CSSLocator('file', '.ezbinaryfile-field a'),
         ];
     }
 

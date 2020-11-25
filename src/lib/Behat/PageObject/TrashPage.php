@@ -9,7 +9,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 use Behat\Mink\Session;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
@@ -64,7 +64,7 @@ class TrashPage extends Page
 
     public function restoreSelectedNewLocation(string $pathToContent)
     {
-        $this->getHTMLPage()->find($this->getSelector('restoreUnderNewLocationButton'))->click();
+        $this->getHTMLPage()->find($this->getLocator('restoreUnderNewLocationButton'))->click();
         $this->universalDiscoveryWidget->verifyIsLoaded();
         $this->universalDiscoveryWidget->selectContent($pathToContent);
         $this->universalDiscoveryWidget->confirm();
@@ -78,7 +78,7 @@ class TrashPage extends Page
 
     public function deleteSelectedItems()
     {
-        $this->getHTMLPage()->find($this->getSelector('trashButton'))->click();
+        $this->getHTMLPage()->find($this->getLocator('trashButton'))->click();
 
 
         $this->trashTable->clickTrashButton();
@@ -93,7 +93,7 @@ class TrashPage extends Page
 
     public function restoreSelectedItems()
     {
-        $this->getHTMLPage()->find($this->getSelector('restoreButton'))->click();
+        $this->getHTMLPage()->find($this->getLocator('restoreButton'))->click();
     }
 
     protected function getRoute(): string
@@ -105,7 +105,7 @@ class TrashPage extends Page
     {
         Assert::assertEquals(
             'Trash',
-            $this->getHTMLPage()->find($this->getSelector('pageTitle'))->getText()
+            $this->getHTMLPage()->find($this->getLocator('pageTitle'))->getText()
         );
     }
 
@@ -114,13 +114,13 @@ class TrashPage extends Page
         return 'Trash';
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-            new CSSSelector('pageTitle', '.ez-page-title h1'),
-            new CSSSelector('restoreButton', '[name=trash_item_restore]'),
-            new CSSSelector('trashButton', '[id=delete-trash-items]'),
-            new CSSSelector('restoreUnderNewLocationButton', '[id=trash_item_restore_location_select_content]'),
+            new CSSLocator('pageTitle', '.ez-page-title h1'),
+            new CSSLocator('restoreButton', '[name=trash_item_restore]'),
+            new CSSLocator('trashButton', '[id=delete-trash-items]'),
+            new CSSLocator('restoreUnderNewLocationButton', '[id=trash_item_restore_location_select_content]'),
             ];
     }
 }

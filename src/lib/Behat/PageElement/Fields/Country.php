@@ -6,17 +6,17 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use PHPUnit\Framework\Assert;
 
 class Country extends FieldTypeComponent
 {
     public function setValue(array $parameters): void
     {
-        $this->getHTMLPage()->find($this->getSelector('dropdownSelector'))->click();
-        Assert::assertTrue($this->getHTMLPage()->find($this->getSelector('dropdownExpanded'))->isVisible());
-        $this->getHTMLPage()->findAll($this->getSelector('dropdownItem'))->getByText($parameters['value'])->click();
-        $this->getHTMLPage()->find($this->getSelector('dropdownSelector'))->click();
+        $this->getHTMLPage()->find($this->getLocator('dropdownSelector'))->click();
+        Assert::assertTrue($this->getHTMLPage()->find($this->getLocator('dropdownExpanded'))->isVisible());
+        $this->getHTMLPage()->findAll($this->getLocator('dropdownItem'))->getByText($parameters['value'])->click();
+        $this->getHTMLPage()->find($this->getLocator('dropdownSelector'))->click();
     }
 
     public function getFieldTypeIdentifier(): string
@@ -24,13 +24,13 @@ class Country extends FieldTypeComponent
         return 'ezcountry';
     }
 
-    public function specifySelectors(): array
+    public function specifyLocators(): array
     {
         return [
-            new CSSSelector('fieldInput', 'select'),
-            new CSSSelector('dropdownSelector', '.ez-custom-dropdown__selection-info'),
-            new CSSSelector('dropdownExpanded', '.ez-custom-dropdown__selection-info:not(.ez-custom-dropdown__items--hidden)'),
-            new CSSSelector('dropdownItem', '.ez-custom-dropdown__item'),
+            new CSSLocator('fieldInput', 'select'),
+            new CSSLocator('dropdownSelector', '.ez-custom-dropdown__selection-info'),
+            new CSSLocator('dropdownExpanded', '.ez-custom-dropdown__selection-info:not(.ez-custom-dropdown__items--hidden)'),
+            new CSSLocator('dropdownItem', '.ez-custom-dropdown__item'),
         ];
     }
 }

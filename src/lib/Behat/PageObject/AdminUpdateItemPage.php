@@ -8,7 +8,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
 use PHPUnit\Framework\Assert;
 
@@ -46,7 +46,7 @@ class AdminUpdateItemPage extends Page
 
     public function clickButton(string $label, int $indexOfButton = 0): void
     {
-        $formButtons = $this->context->findAllElements($this->fields['button'], $this->getHTMLPage()->find($this->getSelector('mainFormSection')));
+        $formButtons = $this->context->findAllElements($this->fields['button'], $this->getHTMLPage()->find($this->getLocator('mainFormSection')));
         $filteredButtons = array_values(array_filter($formButtons, function ($element) use ($label) { return $element->getText() === $label; }));
 
         $filteredButtons[$indexOfButton]->click();
@@ -55,16 +55,16 @@ class AdminUpdateItemPage extends Page
     public function verifyIsLoaded(): void
     {
         $this->rightMenu->verifyIsLoaded();
-        Assert::assertTrue($this->getHTMLPage()->find($this->getSelector('formElement'))->isVisible());
+        Assert::assertTrue($this->getHTMLPage()->find($this->getLocator('formElement'))->isVisible());
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-            new CSSSelector('formElement', '.form-group'),
-            new CSSSelector('mainFormSection', 'form'),
-            new CSSSelector('closeButton', '.ez-content-edit-container__close'),
-            new CSSSelector('button', 'button'),
+            new CSSLocator('formElement', '.form-group'),
+            new CSSLocator('mainFormSection', 'form'),
+            new CSSLocator('closeButton', '.ez-content-edit-container__close'),
+            new CSSLocator('button', 'button'),
         ];
     }
 }

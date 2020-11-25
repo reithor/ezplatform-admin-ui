@@ -8,7 +8,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Element\NodeElement;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use PHPUnit\Framework\Assert;
 
 class UniversalDiscoveryWidget extends Component
@@ -35,7 +35,7 @@ class UniversalDiscoveryWidget extends Component
 
     public function confirm(): void
     {
-        $this->getHTMLPage()->find($this->getSelector('confirmButton'))->click();
+        $this->getHTMLPage()->find($this->getLocator('confirmButton'))->click();
         $this->getHTMLPage()->setTimeout(self::SHORT_TIMEOUT)->waitUntil(function () {
             return !$this->isVisible();
         });
@@ -43,7 +43,7 @@ class UniversalDiscoveryWidget extends Component
 
     public function cancel(): void
     {
-        $this->getHTMLPage()->find($this->getSelector('cancelButton'))->click();
+        $this->getHTMLPage()->find($this->getLocator('cancelButton'))->click();
         $this->getHTMLPage()->setTimeout(self::SHORT_TIMEOUT)->waitUntil(function () {
             return !$this->isVisible();
         });
@@ -53,7 +53,7 @@ class UniversalDiscoveryWidget extends Component
     {
         return $this->getHTMLPage()
             ->setTimeout(self::SHORT_TIMEOUT)
-            ->findAll($this->getSelector('mainWindow'))
+            ->findAll($this->getLocator('mainWindow'))
             ->any();
     }
 
@@ -61,25 +61,25 @@ class UniversalDiscoveryWidget extends Component
     {
         return $this->getHTMLPage()
             ->setTimeout(self::SHORT_TIMEOUT)
-            ->findAll($this->getSelector('multiSelectAddButton'))
+            ->findAll($this->getLocator('multiSelectAddButton'))
             ->any();
     }
 
     protected function addItemToMultiSelection(string $itemName, int $level): void
     {
-        $currentSelectedItemSelector = new CSSSelector('', sprintf($this->getSelector('treeLevelSelectedFormat')->getSelector(), $level));
+        $currentSelectedItemSelector = new CSSLocator('', sprintf($this->getLocator('treeLevelSelectedFormat')->getSelector(), $level));
         $this->getHTMLPage()->findAll($currentSelectedItemSelector)->getByText($itemName)->mouseOver();
 
-        $addItemSelector = new CSSSelector('', sprintf($this->getSelector('currentlySelectedAddItemButtonFormat')->getSelector(), $level));
+        $addItemSelector = new CSSLocator('', sprintf($this->getLocator('currentlySelectedAddItemButtonFormat')->getSelector(), $level));
         $this->getHTMLPage()->find($addItemSelector)->click();
 
-        $addedItemSelector = new CSSSelector('', sprintf($this->getSelector('currentlySelectedItemAddedFormat')->getSelector(), $level));
+        $addedItemSelector = new CSSLocator('', sprintf($this->getLocator('currentlySelectedItemAddedFormat')->getSelector(), $level));
         Assert::assertTrue($this->getHTMLPage()->find($addedItemSelector)->isVisible());
     }
 
     protected function selectTreeBranch(string $itemName, int $level): void
     {
-        $treeLevelSelector = new CSSSelector('', sprintf($this->getSelector('treeLevelFormat')->getSelector(), $level));
+        $treeLevelSelector = new CSSLocator('', sprintf($this->getLocator('treeLevelFormat')->getSelector(), $level));
 
         Assert::assertTrue($this->getHTMLPage()->setTimeout(self::LONG_TIMEOUT)->find($treeLevelSelector)->isVisible());
 
@@ -98,11 +98,11 @@ class UniversalDiscoveryWidget extends Component
             $currentItems = $this->getItemsFromLevel($level + 1);
         }
 
-        $treeElementsSelector = new CSSSelector('', sprintf($this->getSelector('treeLevelElementsFormat')->getSelector(), $level));
+        $treeElementsSelector = new CSSLocator('', sprintf($this->getLocator('treeLevelElementsFormat')->getSelector(), $level));
         $this->getHTMLPage()->findAll($treeElementsSelector)->getByText($itemName)->click();
         Assert::assertTrue(
             $this->getHTMLPage()->findAll(
-                new CSSSelector('', sprintf($this->getSelector('treeLevelSelectedFormat')->getSelector(), $level))
+                new CSSLocator('', sprintf($this->getLocator('treeLevelSelectedFormat')->getSelector(), $level))
             )->getByText($itemName)->isVisible()
         );
 
@@ -116,12 +116,12 @@ class UniversalDiscoveryWidget extends Component
 
     public function openPreview(): void
     {
-        $this->getHTMLPage()->find($this->getSelector('previewButton'))->click();
+        $this->getHTMLPage()->find($this->getLocator('previewButton'))->click();
     }
 
     protected function getItemsFromLevel(int $level): array
     {
-        $levelItemsSelector = new CSSSelector('css', sprintf($this->getSelector('treeLevelElementsFormat')->getSelector(), $level));
+        $levelItemsSelector = new CSSLocator('css', sprintf($this->getLocator('treeLevelElementsFormat')->getSelector(), $level));
 
         return $this->getHTMLPage()->findAll($levelItemsSelector)->map(
             function (NodeElement $element) {
@@ -132,9 +132,9 @@ class UniversalDiscoveryWidget extends Component
 
     private function getCurrentlySelectedItemName(int $level): ?string
     {
-        $selectedElementSelector = new CSSSelector(
+        $selectedElementSelector = new CSSLocator(
             'selectedElement',
-            sprintf($this->getSelector('treeLevelSelectedFormat')->getSelector(), $level)
+            sprintf($this->getLocator('treeLevelSelectedFormat')->getSelector(), $level)
         );
 
         $elements = $this->getHTMLPage()->setTimeout(self::SHORT_TIMEOUT)->findAll($selectedElementSelector);
@@ -147,9 +147,9 @@ class UniversalDiscoveryWidget extends Component
         return $this->getHTMLPage()->
             setTimeout(self::SHORT_TIMEOUT)->
             find(
-                new CSSSelector(
+                new CSSLocator(
                     'css',
-                    sprintf($this->getSelector('treeLevelElementsFormat')->getSelector(), $currentLevel + 1))
+                    sprintf($this->getLocator('treeLevelElementsFormat')->getSelector(), $currentLevel + 1))
             )->isVisible();
     }
 
@@ -157,7 +157,7 @@ class UniversalDiscoveryWidget extends Component
     {
         $expectedTabTitles = ['Browse', 'Bookmarks', 'Search'];
 
-        $tabs = $this->getHTMLPage()->findAll($this->getSelector('categoryTabSelector'));
+        $tabs = $this->getHTMLPage()->findAll($this->getLocator('categoryTabSelector'));
         $foundExpectedTitles = [];
         foreach ($tabs as $tab) {
             $tabText = $tab->getText();
@@ -174,25 +174,25 @@ class UniversalDiscoveryWidget extends Component
         return 'Universal discovery widget';
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
             // general selectors
-            new CSSSelector('confirmButton', '.c-selected-locations__confirm-button'),
-            new CSSSelector('categoryTabSelector', '.c-tab-selector__item'),
-            new CSSSelector('cancelButton', '.c-top-menu__cancel-btn'),
-            new CSSSelector('mainWindow', '.m-ud'),
-            new CSSSelector('selectedLocationsTab', '.c-selected-locations'),
+            new CSSLocator('confirmButton', '.c-selected-locations__confirm-button'),
+            new CSSLocator('categoryTabSelector', '.c-tab-selector__item'),
+            new CSSLocator('cancelButton', '.c-top-menu__cancel-btn'),
+            new CSSLocator('mainWindow', '.m-ud'),
+            new CSSLocator('selectedLocationsTab', '.c-selected-locations'),
             // selectors for path traversal
-            new CSSSelector('treeLevelFormat', '.c-finder-branch:nth-child(%d)'),
-            new CSSSelector('treeLevelElementsFormat', '.c-finder-branch:nth-of-type(%d) .c-finder-leaf'),
-            new CSSSelector('treeLevelSelectedFormat', '.c-finder-branch:nth-of-type(%d) .c-finder-leaf--marked'),
+            new CSSLocator('treeLevelFormat', '.c-finder-branch:nth-child(%d)'),
+            new CSSLocator('treeLevelElementsFormat', '.c-finder-branch:nth-of-type(%d) .c-finder-leaf'),
+            new CSSLocator('treeLevelSelectedFormat', '.c-finder-branch:nth-of-type(%d) .c-finder-leaf--marked'),
             // selectors for multiitem selection
-            new CSSSelector('multiSelectAddButton', '.c-toggle-selection-button'),
+            new CSSLocator('multiSelectAddButton', '.c-toggle-selection-button'),
             // itemActions
-            new CSSSelector('previewButton', '.c-content-meta-preview__preview-button'),
-            new CSSSelector('currentlySelectedItemAddedFormat', '.c-finder-branch:nth-of-type(%d) .c-finder-leaf--marked .c-toggle-selection-button.c-toggle-selection-button--selected'),
-            new CSSSelector('currentlySelectedAddItemButtonFormat', '.c-finder-branch:nth-of-type(%d) .c-finder-leaf--marked .c-toggle-selection-button.c-toggle-selection-button--selected'),
+            new CSSLocator('previewButton', '.c-content-meta-preview__preview-button'),
+            new CSSLocator('currentlySelectedItemAddedFormat', '.c-finder-branch:nth-of-type(%d) .c-finder-leaf--marked .c-toggle-selection-button.c-toggle-selection-button--selected'),
+            new CSSLocator('currentlySelectedAddItemButtonFormat', '.c-finder-branch:nth-of-type(%d) .c-finder-leaf--marked .c-toggle-selection-button.c-toggle-selection-button--selected'),
         ];
     }
 }

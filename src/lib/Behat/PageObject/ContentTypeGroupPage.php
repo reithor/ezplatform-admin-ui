@@ -9,7 +9,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 use Behat\Mink\Session;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
 use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
 use PHPUnit\Framework\Assert;
@@ -45,7 +45,7 @@ class ContentTypeGroupPage extends Page
 
     public function create(): void
     {
-        $this->getHTMLPage()->find($this->getSelector('createButton'))->click();
+        $this->getHTMLPage()->find($this->getLocator('createButton'))->click();
     }
 
     protected function getRoute(): string
@@ -58,11 +58,11 @@ class ContentTypeGroupPage extends Page
         $this->adminList->verifyIsLoaded();
         Assert::assertEquals(
             'Content',
-            $this->getHTMLPage()->find($this->getSelector('pageTitle'))->getText()
+            $this->getHTMLPage()->find($this->getLocator('pageTitle'))->getText()
         );
         Assert::assertEquals(
             sprintf("Content Types in '%s'", $this->expectedName),
-            $this->getHTMLPage()->find($this->getSelector('listHeader'))->getText()
+            $this->getHTMLPage()->find($this->getLocator('listHeader'))->getText()
         );
     }
     
@@ -75,12 +75,12 @@ class ContentTypeGroupPage extends Page
         return 'Content Type group';
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-            new CSSSelector('pageTitle',  '.ez-header h1'),
-            new CSSSelector('listHeader', '.ez-table-header .ez-table-header__headline, header .ez-table__headline, header h5'),
-            new CSSSelector('createButton', '.ez-icon-create'),
+            new CSSLocator('pageTitle',  '.ez-header h1'),
+            new CSSLocator('listHeader', '.ez-table-header .ez-table-header__headline, header .ez-table__headline, header h5'),
+            new CSSLocator('createButton', '.ez-icon-create'),
         ];
     }
 }

@@ -8,7 +8,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\FieldTypeComponent;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
 use PHPUnit\Framework\Assert;
@@ -42,12 +42,12 @@ class ContentUpdateItemPage extends Page
         if ($this->pageTitle) {
             Assert::assertEquals(
                 $this->pageTitle,
-                $this->getHTMLPage()->find($this->getSelector('pageTitle'))->getText()
+                $this->getHTMLPage()->find($this->getLocator('pageTitle'))->getText()
             );
         }
 
         $this->rightMenu->verifyIsLoaded();
-        Assert::assertTrue($this->getHTMLPage()->find($this->getSelector('formElement'))->isVisible());
+        Assert::assertTrue($this->getHTMLPage()->find($this->getLocator('formElement'))->isVisible());
     }
 
     public function setExpectedPageTitle(string $title)
@@ -67,19 +67,19 @@ class ContentUpdateItemPage extends Page
 
     public function close()
     {
-        $this->getHTMLPage()->find($this->getSelector('closeButton'))->click();
+        $this->getHTMLPage()->find($this->getLocator('closeButton'))->click();
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-            new CSSSelector('pageTitle', '.ez-content-edit-page-title__title'),
-            new CSSSelector('formElement', '[name=ezplatform_content_forms_content_edit]'),
-            new CSSSelector('closeButton', '.ez-content-edit-container__close'),
-            new CSSSelector('fieldLabel', '.ez-field-edit__label-wrapper label.ez-field-edit__label, .ez-field-edit__label-wrapper legend, .ez-card > .card-body > div > div > legend'),
-            new CSSSelector('nthField', '.ez-card .card-body > div > div:nth-of-type(%s)'),
-            new CSSSelector('noneditableFieldClass', 'ez-field-edit--eznoneditable'),
-            new CSSSelector('fieldOfType', '.ez-field-edit--%s'),
+            new CSSLocator('pageTitle', '.ez-content-edit-page-title__title'),
+            new CSSLocator('formElement', '[name=ezplatform_content_forms_content_edit]'),
+            new CSSLocator('closeButton', '.ez-content-edit-container__close'),
+            new CSSLocator('fieldLabel', '.ez-field-edit__label-wrapper label.ez-field-edit__label, .ez-field-edit__label-wrapper legend, .ez-card > .card-body > div > div > legend'),
+            new CSSLocator('nthField', '.ez-card .card-body > div > div:nth-of-type(%s)'),
+            new CSSLocator('noneditableFieldClass', 'ez-field-edit--eznoneditable'),
+            new CSSLocator('fieldOfType', '.ez-field-edit--%s'),
         ];
     }
 
@@ -90,7 +90,7 @@ class ContentUpdateItemPage extends Page
 
     public function getField(string $fieldName): FieldTypeComponent
     {
-        $fieldLocator = new CSSSelector('', sprintf($this->getSelector('nthField')->getSelector(), $this->getFieldPosition($fieldName)));
+        $fieldLocator = new CSSLocator('', sprintf($this->getLocator('nthField')->getSelector(), $this->getFieldPosition($fieldName)));
         $fieldtypeIdentifier = $this->getFieldtypeIdentifier($fieldLocator, $fieldName);
 
         foreach ($this->fieldTypeComponents as $fieldTypeComponent)
@@ -105,7 +105,7 @@ class ContentUpdateItemPage extends Page
 
     protected function getFieldPosition(string $fieldName): int
     {
-        $fieldElements = $this->getHTMLPage()->findAll($this->getSelector('fieldLabel'));
+        $fieldElements = $this->getHTMLPage()->findAll($this->getLocator('fieldLabel'));
         $fieldPosition = 1;
 
         foreach ($fieldElements as $fieldElement)
@@ -125,11 +125,11 @@ class ContentUpdateItemPage extends Page
         $this->getField($label)->verifyValueInEditView($fieldData);
     }
 
-    private function getFieldtypeIdentifier(CSSSelector $fieldLocator, string $fieldName): string
+    private function getFieldtypeIdentifier(CSSLocator $fieldLocator, string $fieldName): string
     {
         $isEditable = !$this->getHTMLPage()
             ->find($fieldLocator)
-            ->hasClass($this->getSelector('noneditableFieldClass')->getSelector());
+            ->hasClass($this->getLocator('noneditableFieldClass')->getSelector());
 
         if (!$isEditable) {
             return strtolower($fieldName);

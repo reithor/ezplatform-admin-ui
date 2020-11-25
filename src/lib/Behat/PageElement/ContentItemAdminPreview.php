@@ -8,7 +8,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Page\Browser;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 
 class ContentItemAdminPreview extends Component
 {
@@ -24,9 +24,9 @@ class ContentItemAdminPreview extends Component
     public function verifyFieldHasValues(string $fieldLabel, array $expectedValues, ?string $fieldTypeIdentifier)
     {
         $fieldPosition = $this->getFieldPosition($fieldLabel);
-        $nthFieldSelector = new CSSSelector('', sprintf($this->getSelector('nthFieldContainer')->getSelector(), $fieldPosition));
+        $nthFieldSelector = new CSSLocator('', sprintf($this->getLocator('nthFieldContainer')->getSelector(), $fieldPosition));
 
-        $fieldValueSelector = CSSSelector::combine("%s %s", $nthFieldSelector, $this->getSelector('fieldValue'));
+        $fieldValueSelector = $nthFieldSelector->withDescendant($this->getLocator('fieldValue'));
         $fieldTypeIdentifier = $fieldTypeIdentifier ?? $this->detectFieldTypeIdentifier($fieldValueSelector);
 
         foreach($this->fieldTypeComponents as $fieldTypeComponent)
@@ -44,7 +44,7 @@ class ContentItemAdminPreview extends Component
     {
         $searchText = sprintf("%s:", $fieldLabel);
 
-        $fields = $this->getHTMLPage()->findAll($this->getSelector('fieldName'));
+        $fields = $this->getHTMLPage()->findAll($this->getLocator('fieldName'));
 
         $fieldPosition = 1;
         foreach ($fields as $field) {
@@ -61,20 +61,20 @@ class ContentItemAdminPreview extends Component
     {
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-            new CSSSelector('nthFieldContainer', 'div.ez-content-field:nth-of-type(%s)'),
-            new CSSSelector('fieldName', '.ez-content-field-name'),
-            new CSSSelector('fieldValue', '.ez-content-field-value'),
-            new CSSSelector('fieldValueContainer', ':first-child'),
+            new CSSLocator('nthFieldContainer', 'div.ez-content-field:nth-of-type(%s)'),
+            new CSSLocator('fieldName', '.ez-content-field-name'),
+            new CSSLocator('fieldValue', '.ez-content-field-value'),
+            new CSSLocator('fieldValueContainer', ':first-child'),
         ];
     }
 
-    private function detectFieldTypeIdentifier(CSSSelector $fieldValueSelector)
+    private function detectFieldTypeIdentifier(CSSLocator $fieldValueSelector)
     {
         $fieldClass = $this->getHTMLPage()
-            ->find(CSSSelector::combine('%s %s', $fieldValueSelector, $this->getSelector('fieldValueContainer')))
+            ->find($fieldValueSelector->withDescendant($this->getLocator('fieldValueContainer')))
             ->getAttribute('class');
 
         if (strpos($fieldClass, 'ez-table') !== false) {

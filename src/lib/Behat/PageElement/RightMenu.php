@@ -7,29 +7,33 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\Browser\Component\Component;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use PHPUnit\Framework\Assert;
 
 class RightMenu extends Component
 {
     public function clickButton(string $buttonName): void
     {
-        $this->getHTMLPage()->findAll($this->getSelector('menuButton'))->getByText($buttonName)->click();
+        $this->getHTMLPage()
+            ->findAll($this->getLocator('menuButton'))
+            ->assert()->hasElements()
+            ->getByText($buttonName)
+            ->click();
     }
 
     public function isButtonActive(string $buttonName): bool
     {
-        return $this->getHTMLPage()->findAll($this->getSelector('menuButton'))->getByText($buttonName)->hasAttribute('disabled');
+        return $this->getHTMLPage()->findAll($this->getLocator('menuButton'))->getByText($buttonName)->hasAttribute('disabled');
     }
 
     public function isButtonVisible(string $buttonName): bool
     {
-        return $this->getHTMLPage()->findAll($this->getSelector('menuButton'))->hasByText($buttonName);
+        return $this->getHTMLPage()->findAll($this->getLocator('menuButton'))->hasByText($buttonName);
     }
 
     public function verifyIsLoaded(): void
     {
-        Assert::assertTrue($this->getHTMLPage()->find($this->getSelector('menuButton'))->isVisible());
+        Assert::assertTrue($this->getHTMLPage()->find($this->getLocator('menuButton'))->isVisible());
     }
 
     public function getName(): string
@@ -37,10 +41,10 @@ class RightMenu extends Component
         return 'Right menu';
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-             new CSSSelector('menuButton','.ez-context-menu .btn'),
+             new CSSLocator('menuButton','.ez-context-menu .btn'),
         ];
     }
 }

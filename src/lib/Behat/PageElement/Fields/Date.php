@@ -7,7 +7,7 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
 use EzSystems\Behat\Browser\Page\Browser;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\DateAndTimePopup;
 use PHPUnit\Framework\Assert;
 
@@ -27,7 +27,7 @@ class Date extends FieldTypeComponent
 
     public function setValue(array $parameters): void
     {
-        $fieldSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('fieldInput'));
+        $fieldSelector = $this->parentSelector->withDescendant($this->getLocator('fieldInput'));
 
         $this->getHTMLPage()->find($fieldSelector)->click();
         $this->dateAndTimePopup->setDate(date_create($parameters['value']), self::DATE_FORMAT);
@@ -35,7 +35,7 @@ class Date extends FieldTypeComponent
 
     public function getValue(): array
     {
-        $fieldSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('fieldInput'));
+        $fieldSelector = $this->parentSelector->withDescendant($this->getLocator('fieldInput'));
         $value = $this->getHTMLPage()->find($fieldSelector)->getText();
 
         return [$value];
@@ -52,10 +52,10 @@ class Date extends FieldTypeComponent
         );
     }
 
-    public function specifySelectors(): array
+    public function specifyLocators(): array
     {
         return [
-            new CSSSelector('fieldInput', 'input.flatpickr-input.ez-data-source__input'),
+            new CSSLocator('fieldInput', 'input.flatpickr-input.ez-data-source__input'),
         ];
     }
 

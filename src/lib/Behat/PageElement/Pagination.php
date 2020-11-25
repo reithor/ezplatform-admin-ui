@@ -9,18 +9,18 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Element\Element;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 
 class Pagination extends Component
 {
     public function isNextButtonActive(): bool
     {
-        return $this->getHTMLPage()->findAll($this->getSelector('nextButton'))->any();
+        return $this->getHTMLPage()->findAll($this->getLocator('nextButton'))->any();
     }
 
     public function clickNextButton(): void
     {
-        $this->getHTMLPage()->find($this->getSelector('nextButton'))->click();
+        $this->getHTMLPage()->find($this->getLocator('nextButton'))->click();
 //        $this->context->waitUntilElementDisappears($this->fields['spinner'], 10);
     }
 
@@ -29,11 +29,11 @@ class Pagination extends Component
 
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-            new CSSSelector('nextButton','.pagination .page-item.next:not(.disabled)'),
-            new CSSSelector('spinner','.m-sub-items__spinner-wrapper'),
+            new CSSLocator('nextButton','.pagination .page-item.next:not(.disabled)'),
+            new CSSLocator('spinner','.m-sub-items__spinner-wrapper'),
         ];
     }
 }

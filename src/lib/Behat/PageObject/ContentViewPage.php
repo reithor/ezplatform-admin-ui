@@ -10,7 +10,7 @@ use Behat\Mink\Session;
 use EzSystems\Behat\API\Facade\ContentFacade;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Breadcrumb;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\ContentItemAdminPreview;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\ContentTypePicker;
@@ -169,12 +169,12 @@ class ContentViewPage extends Page
 
         Assert::assertEquals(
             $this->expectedContentName,
-            $this->getHTMLPage()->find($this->getSelector('pageTitle'))->getText()
+            $this->getHTMLPage()->find($this->getLocator('pageTitle'))->getText()
         );
 
         Assert::assertEquals(
             $this->expectedContentType,
-            $this->getHTMLPage()->find($this->getSelector('contentType'))->getText()
+            $this->getHTMLPage()->find($this->getLocator('contentType'))->getText()
         );
     }
 
@@ -211,11 +211,11 @@ class ContentViewPage extends Page
         $this->contentItemAdminPreview->verifyFieldHasValues($fieldLabel, $expectedFieldValues, $fieldTypeIdentifier);
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-            new CSSSelector('pageTitle', '.ez-page-title h1'),
-            new CSSSelector('contentType', '.ez-page-title h4'),
+            new CSSLocator('pageTitle', '.ez-page-title h1'),
+            new CSSLocator('contentType', '.ez-page-title h4'),
         ];
     }
 

@@ -34,7 +34,7 @@
 //    {
 //        Assert::assertEquals(
 //            $header,
-//            $this->getHTMLPage()->find($this->getSelector('tableHeader'))->getText(),
+//            $this->getHTMLPage()->find($this->getLocator('tableHeader'))->getText(),
 //            'System info table "%s" has wrong header.'
 //        );
 //    }

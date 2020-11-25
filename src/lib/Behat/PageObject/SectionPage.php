@@ -7,7 +7,7 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use EzSystems\Behat\Browser\Page\Page;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use PHPUnit\Framework\Assert;
 
 class SectionPage extends Page
@@ -123,7 +123,7 @@ class SectionPage extends Page
     {
         Assert::assertEquals(
             'Section: %s',
-            $this->getHTMLPage()->find($this->getSelector('pageTitle'))->getText()
+            $this->getHTMLPage()->find($this->getLocator('pageTitle'))->getText()
         );
 
         $this->adminLists['Section information']->verifyVisibility();
@@ -135,10 +135,10 @@ class SectionPage extends Page
         return 'Section';
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-            new CSSSelector('pageTitle', '.ez-header h1'),
+            new CSSLocator('pageTitle', '.ez-header h1'),
         ];
     }
 }

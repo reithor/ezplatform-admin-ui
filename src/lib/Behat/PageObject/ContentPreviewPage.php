@@ -8,7 +8,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use ErrorException;
 use EzSystems\Behat\Browser\Page\Page;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use PHPUnit\Framework\Assert;
 
 class ContentPreviewPage extends Page
@@ -20,7 +20,7 @@ class ContentPreviewPage extends Page
 
     public function verifyIsLoaded(): void
     {
-        Assert::assertTrue($this->getHTMLPage()->find($this->getSelector('previewNav'))->isVisible());
+        Assert::assertTrue($this->getHTMLPage()->find($this->getLocator('previewNav'))->isVisible());
     }
 
     public function getName(): string
@@ -28,33 +28,33 @@ class ContentPreviewPage extends Page
         return 'Content preview';
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-            new CSSSelector('previewNav', '.ez-preview__nav'),
-            new CSSSelector('backToEdit', '.ez-preview__nav .ez-preview__item--back a'),
-            new CSSSelector('title', '.ez-preview__nav .ez-preview__item--description'),
-            new CSSSelector('desktop', '.ez-preview__nav .ez-preview__item--actions .ez-icon-desktop'),
-            new CSSSelector('tablet', '.ez-preview__nav .ez-preview__item--actions .ez-icon-tablet'),
-            new CSSSelector('mobile', '.ez-preview__nav .ez-preview__item--actions .ez-icon-mobile'),
-            new CSSSelector('selectedView', '.ez-preview__action--selected'),
+            new CSSLocator('previewNav', '.ez-preview__nav'),
+            new CSSLocator('backToEdit', '.ez-preview__nav .ez-preview__item--back a'),
+            new CSSLocator('title', '.ez-preview__nav .ez-preview__item--description'),
+            new CSSLocator('desktop', '.ez-preview__nav .ez-preview__item--actions .ez-icon-desktop'),
+            new CSSLocator('tablet', '.ez-preview__nav .ez-preview__item--actions .ez-icon-tablet'),
+            new CSSLocator('mobile', '.ez-preview__nav .ez-preview__item--actions .ez-icon-mobile'),
+            new CSSLocator('selectedView', '.ez-preview__action--selected'),
         ];
     }
 
     public function goBackToEditView(): void
     {
-        $this->getHTMLPage()->find($this->getSelector('backToEdit'))->click();
+        $this->getHTMLPage()->find($this->getLocator('backToEdit'))->click();
     }
 
     public function goToView(string $viewName): void
     {
         if ($viewName !== $this->getActiveViewName()) {
-            $this->getHTMLPage()->find($this->getSelector($viewName))->click();
+            $this->getHTMLPage()->find($this->getLocator($viewName))->click();
         }
     }
 
     public function getActiveViewName(): string
     {
-        return $this->getHTMLPage()->find($this->getSelector('selectedView'))->getAttribute('data-preview-mode');
+        return $this->getHTMLPage()->find($this->getLocator('selectedView'))->getAttribute('data-preview-mode');
     }
 }

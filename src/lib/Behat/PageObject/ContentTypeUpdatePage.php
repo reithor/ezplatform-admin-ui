@@ -5,7 +5,7 @@ namespace src\lib\Behat\PageObject;
 
 
 use EzSystems\Behat\API\ContentData\FieldTypeNameConverter;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\AdminUpdateItemPage;
 use PHPUnit\Framework\Assert;
 
@@ -55,16 +55,16 @@ class ContentTypeUpdatePage extends AdminUpdateItemPage
         }
     }
 
-    public function specifySelectors(): array
+    public function specifyLocators(): array
     {
-        return array_merge(parent::specifySelectors(), [
-            new CSSSelector('fieldTypesList', '#ezplatform_content_forms_contenttype_update_fieldTypeSelection'),
-            new CSSSelector('addFieldDefinition', 'ezplatform_content_forms_contenttype_update_addFieldDefinition'),
-            new CSSSelector('fieldDefinitionContainer', '.ez-card--toggle-group:nth-child(%s)'),
-            new CSSSelector('fieldDefinitionName', '.ez-card--toggle-group .ez-card__header .form-check-label'),
-            new CSSSelector('fieldBody', 'ez-card__body'),
-            new CSSSelector('fieldCollapsed', 'ez-card--collapsed'),
-            new CSSSelector('fieldDefinitionToggler', '.ez-card__body-display-toggler'),
+        return array_merge(parent::specifyLocators(), [
+            new CSSLocator('fieldTypesList', '#ezplatform_content_forms_contenttype_update_fieldTypeSelection'),
+            new CSSLocator('addFieldDefinition', 'ezplatform_content_forms_contenttype_update_addFieldDefinition'),
+            new CSSLocator('fieldDefinitionContainer', '.ez-card--toggle-group:nth-child(%s)'),
+            new CSSLocator('fieldDefinitionName', '.ez-card--toggle-group .ez-card__header .form-check-label'),
+            new CSSLocator('fieldBody', 'ez-card__body'),
+            new CSSLocator('fieldCollapsed', 'ez-card--collapsed'),
+            new CSSLocator('fieldDefinitionToggler', '.ez-card__body-display-toggler'),
         ]);
     }
 

@@ -9,7 +9,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 use Behat\Mink\Session;
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\ContentRelationTable;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
 use PHPUnit\Framework\Assert;
@@ -64,7 +64,7 @@ class ContentRelationMultiple extends FieldTypeComponent
     private function startAddingRelations()
     {
         if ($this->isRelationEmpty()) {
-            $selectSelector = CSSSelector::combine($this->parentSelector, $this->getSelector('selectContent'));
+            $selectSelector = $this->parentSelector->withDescendant($this->getLocator('selectContent'));
             $this->getHTMLPage()->find($selectSelector)->click();
         } else {
             $this->contentRelationTable->clickPlusButton();
@@ -82,7 +82,7 @@ class ContentRelationMultiple extends FieldTypeComponent
 
     public function getValue(): array
     {
-        $selectSelector = CSSSelector::combine($this->parentSelector, $this->getSelector('selectContent'));
+        $selectSelector = $this->parentSelector->withDescendant($this->getLocator('selectContent'));
 
         return [
             $this->getHTMLPage()->find($selectSelector)->getValue()
@@ -99,27 +99,27 @@ class ContentRelationMultiple extends FieldTypeComponent
         $viewPatternRegex = '/Multiple relations:[\w\/,: ]* %s [\w \/,:]*/';
         Assert::assertRegExp(
             sprintf($viewPatternRegex, $firstValue),
-            $this->getHTMLPage()->find($this->getSelector('fieldContainer'))->getText(),
+            $this->getHTMLPage()->find($this->getLocator('fieldContainer'))->getText(),
             'Field has wrong value'
         );
         Assert::assertRegExp(
             sprintf($viewPatternRegex, $secondValue),
-            $this->getHTMLPage()->find($this->getSelector('fieldContainer'))->getText(),
+            $this->getHTMLPage()->find($this->getLocator('fieldContainer'))->getText(),
             'Field has wrong value'
         );
     }
 
     public function isRelationEmpty(): bool
     {
-        $selectSelector = CSSSelector::combine($this->parentSelector, $this->getSelector('selectContent'));
+        $selectSelector = $this->parentSelector->withDescendant($this->getLocator('selectContent'));
 
         return $this->getHTMLPage()->findAll($selectSelector)->any();
     }
 
-    public function specifySelectors(): array
+    public function specifyLocators(): array
     {
         return [
-            new CSSSelector('selectContent', '.ez-relations__cta-btn-label'),
+            new CSSLocator('selectContent', '.ez-relations__cta-btn-label'),
         ];
     }
 

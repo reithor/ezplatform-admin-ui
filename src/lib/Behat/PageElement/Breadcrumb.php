@@ -8,7 +8,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Element\Element;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use PHPUnit\Framework\Assert;
 
 /** Element that describes breadcrumb */
@@ -16,22 +16,22 @@ class Breadcrumb extends Component
 {
     public function clickBreadcrumbItem(string $itemName): void
     {
-        $this->getHTMLPage()->findAll($this->getSelector('breadcrumbItemLink'))->getByText($itemName)->click();
+        $this->getHTMLPage()->findAll($this->getLocator('breadcrumbItemLink'))->getByText($itemName)->click();
     }
 
     public function getActiveName(): string
     {
-        return $this->getHTMLPage()->find($this->getSelector('activeBreadcrumb'))->getText();
+        return $this->getHTMLPage()->find($this->getLocator('activeBreadcrumb'))->getText();
     }
 
     public function getBreadcrumb(): string
     {
-        return $this->getHTMLPage()->find($this->getSelector('breadcrumb'))->getText();
+        return $this->getHTMLPage()->find($this->getLocator('breadcrumb'))->getText();
     }
 
     public function verifyIsLoaded(): void
     {
-        Assert::assertTrue($this->getHTMLPage()->find($this->getSelector('breadcrumbItem'))->isVisible());
+        Assert::assertTrue($this->getHTMLPage()->find($this->getLocator('breadcrumbItem'))->isVisible());
     }
 
     public function getName(): string
@@ -39,13 +39,13 @@ class Breadcrumb extends Component
         return 'Breadcrumb';
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-            new CSSSelector('breadcrumb', '.breadcrumb'),
-            new CSSSelector('breadcrumbItem', '.breadcrumb-item'),
-            new CSSSelector('breadcrumbItemLink', '.breadcrumb-item a'),
-            new CSSSelector('activeBreadcrumb', '.breadcrumb-item.active'),
+            new CSSLocator('breadcrumb', '.breadcrumb'),
+            new CSSLocator('breadcrumbItem', '.breadcrumb-item'),
+            new CSSLocator('breadcrumbItemLink', '.breadcrumb-item a'),
+            new CSSLocator('activeBreadcrumb', '.breadcrumb-item.active'),
         ];
     }
 }

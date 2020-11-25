@@ -6,13 +6,13 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables;
 
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 
 class SubitemsGridList extends ItemsList
 {
     public function clickListElement(string $name): void
     {
-        $this->getHTMLPage()->findAll($this->getSelector('listElement'))->getByText($name)->click();
+        $this->getHTMLPage()->findAll($this->getLocator('listElement'))->getByText($name)->click();
     }
 
     public function canBeSorted(): bool
@@ -24,10 +24,10 @@ class SubitemsGridList extends ItemsList
     {
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-            new CSSSelector('listElement', '.c-grid-view-item'),
+            new CSSLocator('listElement', '.c-grid-view-item'),
         ];
     }
 }

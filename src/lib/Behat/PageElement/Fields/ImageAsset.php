@@ -7,7 +7,7 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
 use EzSystems\Behat\Browser\Page\Browser;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Notification;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
 use PHPUnit\Framework\Assert;
@@ -49,18 +49,18 @@ class ImageAsset extends Image
     public function selectFromRepository(string $path): void
     {
         $this->getHTMLPage()
-            ->find(CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('selectFromRepoButton')))
+            ->find($this->parentSelector->withDescendant($this->getLocator('selectFromRepoButton')))
             ->click();
         $this->universalDiscoveryWidget->verifyIsLoaded();
         $this->universalDiscoveryWidget->selectContent($path);
         $this->universalDiscoveryWidget->confirm();
     }
 
-    public function specifySelectors(): array
+    public function specifyLocators(): array
     {
         return array_merge(
-            parent::specifySelectors(),
-            [new CSSSelector('selectFromRepoButton', '.ez-data-source__btn-select'),]
+            parent::specifyLocators(),
+            [new CSSLocator('selectFromRepoButton', '.ez-data-source__btn-select'),]
         );
     }
 

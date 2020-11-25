@@ -7,13 +7,11 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
 use EzSystems\Behat\Browser\Element\NodeElement;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use PHPUnit\Framework\Assert;
 
 class Keywords extends FieldTypeComponent
 {
-    /** @var string Name by which Element is recognised */
-    public const ELEMENT_NAME = 'Keywords';
     private $setKeywordsValueScript = <<<SCRIPT
 const SELECTOR_TAGGIFY = '.ez-data-source__taggify';
 const taggifyContainer = document.querySelector(SELECTOR_TAGGIFY);
@@ -47,10 +45,7 @@ SCRIPT;
         $expectedValues = $this->parseValueString($values['value']);
 
         $actualValues = $this->getHTMLPage()
-            ->findAll(CSSSelector::combine(
-                "%s %s",
-                $this->parentSelector,
-                $this->getSelector('keywordItem')))
+            ->findAll($this->parentSelector->withDescendant($this->getLocator('keywordItem')))
             ->map(static function (NodeElement $element) {
                 return $element->getText();
             });
@@ -72,11 +67,11 @@ SCRIPT;
         return $parsedValues;
     }
 
-    public function specifySelectors(): array
+    public function specifyLocators(): array
     {
         return [
-            new CSSSelector('fieldInput', 'input'),
-            new CSSSelector('keywordItem', '.ez-keyword__item'),
+            new CSSLocator('fieldInput', 'input'),
+            new CSSLocator('keywordItem', '.ez-keyword__item'),
         ];
     }
 

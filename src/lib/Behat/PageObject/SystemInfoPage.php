@@ -9,7 +9,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 use Behat\Mink\Session;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\TableNavigationTab;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SimpleTable;
@@ -82,10 +82,10 @@ class SystemInfoPage extends Page
         return 'System Information';
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-            new CSSSelector('pageTitle', '.ez-header h1'),
+            new CSSLocator('pageTitle', '.ez-header h1'),
         ];
     }
 }

@@ -6,7 +6,7 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use PHPUnit\Framework\Assert;
 
 class URL extends FieldTypeComponent
@@ -19,9 +19,7 @@ class URL extends FieldTypeComponent
 
     public function setSpecificFieldValue(string $coordinateName, string $value): void
     {
-        $fieldSelector = CSSSelector::combine(
-            "%s %s", $this->parentSelector, $this->getSelector($coordinateName)
-        );
+        $fieldSelector = $this->parentSelector->withDescendant($this->getLocator($coordinateName));
 
         $this->getHTMLPage()->find($fieldSelector)->setValue($value);
     }
@@ -36,9 +34,7 @@ class URL extends FieldTypeComponent
 
     public function getSpecificFieldValue(string $coordinateName): string
     {
-        $fieldSelector = CSSSelector::combine(
-            "%s %s", $this->parentSelector, $this->getSelector($coordinateName)
-        );
+        $fieldSelector = $this->parentSelector->withDescendant($this->getLocator($coordinateName));
 
         return $this->getHTMLPage()->find($fieldSelector)->getValue();
     }
@@ -65,7 +61,8 @@ class URL extends FieldTypeComponent
             'Field has wrong value'
         );
 
-        $urlSelector = CSSSelector::combine("%s %s", $this->parentSelector, new CSSSelector('', 'a'));
+        $urlSelector = $this->parentSelector->withDescendant(new CSSLocator('', 'a'));
+
         Assert::assertEquals(
             $values['url'],
             $this->getHTMLPage()->find($urlSelector)->getAttribute('href'),
@@ -73,11 +70,11 @@ class URL extends FieldTypeComponent
         );
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-            new CSSSelector('url', '#ezplatform_content_forms_content_edit_fieldsData_ezurl_value_link'),
-            new CSSSelector('text', '#ezplatform_content_forms_content_edit_fieldsData_ezurl_value_text'),
+            new CSSLocator('url', '#ezplatform_content_forms_content_edit_fieldsData_ezurl_value_link'),
+            new CSSLocator('text', '#ezplatform_content_forms_content_edit_fieldsData_ezurl_value_text'),
         ];
     }
 

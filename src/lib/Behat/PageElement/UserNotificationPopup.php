@@ -8,23 +8,23 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use Exception;
 use EzSystems\Behat\Browser\Component\Component;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use PHPUnit\Framework\Assert;
 
 class UserNotificationPopup extends Component
 {
     public function clickNotification(string $expectedType, string $expectedDescription)
     {
-        $notifications = $this->getHTMLPage()->findAll($this->getSelector('notificationItem'));
+        $notifications = $this->getHTMLPage()->findAll($this->getLocator('notificationItem'));
 
         foreach($notifications as $notification)
         {
-            $type = $notification->find($this->getSelector('notificationType'))->getText();
+            $type = $notification->find($this->getLocator('notificationType'))->getText();
             if ($type !== $expectedType){
                 continue;
             }
 
-            $description = $notification->find($this->getSelector('notificationDescription'))->getText();
+            $description = $notification->find($this->getLocator('notificationDescription'))->getText();
             if ($description !== $expectedDescription) {
                 continue;
             }
@@ -40,7 +40,7 @@ class UserNotificationPopup extends Component
     {
         Assert::assertContains(
             'Notifications',
-            $this->getHTMLPage()->find($this->getSelector('notificationsPopupTitle'))->getText()
+            $this->getHTMLPage()->find($this->getLocator('notificationsPopupTitle'))->getText()
         );
     }
 
@@ -49,13 +49,13 @@ class UserNotificationPopup extends Component
         return 'User notification popup';
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-            new CSSSelector('notificationsPopupTitle', '#view-notifications .modal-title'),
-            new CSSSelector('notificationItem', '.ez-notifications-modal__item'),
-            new CSSSelector('notificationType', '.ez-notifications-modal__type'),
-            new CSSSelector('notificationDescription', '.ez-notifications-modal__description'),
+            new CSSLocator('notificationsPopupTitle', '#view-notifications .modal-title'),
+            new CSSLocator('notificationItem', '.ez-notifications-modal__item'),
+            new CSSLocator('notificationType', '.ez-notifications-modal__type'),
+            new CSSLocator('notificationDescription', '.ez-notifications-modal__description'),
         ];
     }
 }

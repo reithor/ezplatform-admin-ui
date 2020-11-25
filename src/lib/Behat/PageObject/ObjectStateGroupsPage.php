@@ -9,7 +9,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\LinkedListTable;
 use PHPUnit\Framework\Assert;
@@ -44,7 +44,7 @@ class ObjectStateGroupsPage extends Page
     {
         Assert::assertEquals(
             'Object state groups',
-            $this->getHTMLPage()->find($this->getSelector('pageTitle'))->getText()
+            $this->getHTMLPage()->find($this->getLocator('pageTitle'))->getText()
         );
 
         $this->adminList->verifyIsLoaded();
@@ -55,10 +55,10 @@ class ObjectStateGroupsPage extends Page
         return 'Object state groups';
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-            new CSSSelector('pageTitle', '.ez-header h1'),
+            new CSSLocator('pageTitle', '.ez-header h1'),
         ];
     }
 }

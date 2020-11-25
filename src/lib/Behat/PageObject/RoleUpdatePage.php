@@ -6,7 +6,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 use Behat\Mink\Session;
 use Exception;
 use EzSystems\Behat\Browser\Page\Browser;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\AdminUpdateItemPage;
@@ -34,14 +34,14 @@ class RoleUpdatePage extends AdminUpdateItemPage
     {
         try
         {
-            $baseElement = $this->getHTMLPage()->findAll($this->getSelector('limitationField'))->getByChildElementText($this->getSelector('labelSelector'), $selectName);
-            $currentlySelectedElementsCount = count($baseElement->findAll($this->getSelector('limitationDropdownOptionRemove')));
+            $baseElement = $this->getHTMLPage()->findAll($this->getLocator('limitationField'))->getByChildElementText($this->getLocator('labelSelector'), $selectName);
+            $currentlySelectedElementsCount = count($baseElement->findAll($this->getLocator('limitationDropdownOptionRemove')));
 
             for ($i = 0; $i < $currentlySelectedElementsCount; ++$i) {
                 $this->
                     getHTMLPage()->
-                    findAll($this->getSelector('limitationField'))->getByChildElementText($this->getSelector('labelSelector'), $selectName)->
-                    find($this->getSelector('limitationDropdownOptionRemove'))->
+                    findAll($this->getLocator('limitationField'))->getByChildElementText($this->getLocator('labelSelector'), $selectName)->
+                    find($this->getLocator('limitationDropdownOptionRemove'))->
                     click();
             }
         }
@@ -50,28 +50,28 @@ class RoleUpdatePage extends AdminUpdateItemPage
         }
 
         $this->
-            getHTMLPage()->findAll($this->getSelector('limitationField'))->getByChildElementText($this->getSelector('labelSelector'), $selectName)->
-            find($this->getSelector('limitationDropdown'))->
+            getHTMLPage()->findAll($this->getLocator('limitationField'))->getByChildElementText($this->getLocator('labelSelector'), $selectName)->
+            find($this->getLocator('limitationDropdown'))->
             click();
 
         foreach ($values as $value) {
-            $this->getHTMLPage()->findAll($this->getSelector('limitationDropdownOption'))->getByText($value)->click();
+            $this->getHTMLPage()->findAll($this->getLocator('limitationDropdownOption'))->getByText($value)->click();
         }
 
         $this->
-            getHTMLPage()->findAll($this->getSelector('limitationField'))->getByChildElementText($this->getSelector('labelSelector'), $selectName)->
-            find($this->getSelector('limitationDropdown'))->
+            getHTMLPage()->findAll($this->getLocator('limitationField'))->getByChildElementText($this->getLocator('labelSelector'), $selectName)->
+            find($this->getLocator('limitationDropdown'))->
             click();
     }
 
-    public function specifySelectors(): array
+    public function specifyLocators(): array
     {
         return [
-            new CSSSelector('limitationField', '.ez-update-policy__action-wrapper'),
-            new CSSSelector('limitationDropdown', '.ez-custom-dropdown__selection-info'),
-            new CSSSelector('limitationDropdownOption', 'ul:not(.ez-custom-dropdown__items--hidden) .ez-custom-dropdown__item'),
-            new CSSSelector('limitationDropdownOptionRemove', '.ez-custom-dropdown__remove-selection'),
-            new CSSSelector('labelSelector', '.ez-label'),
+            new CSSLocator('limitationField', '.ez-update-policy__action-wrapper'),
+            new CSSLocator('limitationDropdown', '.ez-custom-dropdown__selection-info'),
+            new CSSLocator('limitationDropdownOption', 'ul:not(.ez-custom-dropdown__items--hidden) .ez-custom-dropdown__item'),
+            new CSSLocator('limitationDropdownOptionRemove', '.ez-custom-dropdown__remove-selection'),
+            new CSSLocator('labelSelector', '.ez-label'),
         ];
     }
 

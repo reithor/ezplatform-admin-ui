@@ -7,8 +7,8 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
 use EzSystems\Behat\Browser\Element\NodeElement;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
-use EzSystems\Behat\Browser\Selector\SelectorInterface;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Selector\LocatorInterface;
 use PHPUnit\Framework\Assert;
 
 class Matrix extends FieldTypeComponent
@@ -17,7 +17,7 @@ class Matrix extends FieldTypeComponent
     {
         $matrixValues = $this->parseParameters($parameters);
 
-        $availableRows = count($this->getHTMLPage()->findAll($this->getSelector('row')));
+        $availableRows = count($this->getHTMLPage()->findAll($this->getLocator('row')));
         $rowsToSet = count($matrixValues);
 
         if ($rowsToSet > $availableRows) {
@@ -33,12 +33,12 @@ class Matrix extends FieldTypeComponent
 
     public function getValue(): array
     {
-        return [$this->getParsedTableValue($this->getSelector('editModeTableHeaders'), $this->getSelector('editModeTableRow'))];
+        return [$this->getParsedTableValue($this->getLocator('editModeTableHeaders'), $this->getLocator('editModeTableRow'))];
     }
 
     public function verifyValueInItemView(array $expectedValue): void
     {
-        $parsedTable = $this->getParsedTableValue($this->getSelector('viewModeTableHeaders'), $this->getSelector('viewModeTableRow'));
+        $parsedTable = $this->getParsedTableValue($this->getLocator('viewModeTableHeaders'), $this->getLocator('viewModeTableRow'));
 
         Assert::assertEquals($expectedValue['value'], $parsedTable);
     }
@@ -67,22 +67,22 @@ class Matrix extends FieldTypeComponent
     private function addRows(int $numberOfRows): void
     {
         for ($i = 0; $i < $numberOfRows; ++$i) {
-            $this->getHTMLPage()->find($this->getSelector('addRowButton'))->click();
+            $this->getHTMLPage()->find($this->getLocator('addRowButton'))->click();
         }
     }
 
     private function internalSetValue(int $rowIndex, string $column, $value): void
     {
-        $matrixCellSelector = CSSSelector::combine(
-            $this->getSelector('matrixCellSelectorFormat')->getSelector(),
-            new CSSSelector('', $rowIndex),
-            new CSSSelector('', $column),
+        $matrixCellSelector = CSSLocator::combine(
+            $this->getLocator('matrixCellSelectorFormat')->getSelector(),
+            new CSSLocator('rowIndex', (string)$rowIndex),
+            new CSSLocator('columnIndex', $column),
         );
 
         $this->getHTMLPage()->find($matrixCellSelector)->setValue($value);
     }
 
-    private function getParsedTableValue(SelectorInterface $headerSelector, SelectorInterface $rowSelector): string
+    private function getParsedTableValue(LocatorInterface $headerSelector, LocatorInterface $rowSelector): string
     {
         $parsedTable = '';
 
@@ -96,7 +96,7 @@ class Matrix extends FieldTypeComponent
         foreach ($rows as $row) {
             $parsedTable .= ',';
             $cellValues = $row
-                ->findAll(new CSSSelector('', 'td'))
+                ->findAll(new CSSLocator('cell', 'td'))
                 ->map(function (NodeElement $element) { return $element->getText();});
             $parsedTable .= implode(':', $cellValues);
         }
@@ -104,16 +104,16 @@ class Matrix extends FieldTypeComponent
         return $parsedTable;
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-            new CSSSelector('matrixCellSelectorFormat', '[name="ezplatform_content_forms_content_edit[fieldsData][ezmatrix][value][entries][%d][%s]"]'),
-            new CSSSelector('row', '.ez-table__matrix-entry'),
-            new CSSSelector('addRowButton', '.ez-btn--add-matrix-entry'),
-            new CSSSelector('viewModeTableHeaders', '.ez-content-field-value thead th'),
-            new CSSSelector('viewModeTableRow', '.ez-content-field-value tbody tr'),
-            new CSSSelector('editModeTableHeaders', '.ez-table thead th[data-identifier]'),
-            new CSSSelector('editModeTableRow', '.ez-table tr.ez-table__matrix-entry'),
+            new CSSLocator('matrixCellSelectorFormat', '[name="ezplatform_content_forms_content_edit[fieldsData][ezmatrix][value][entries][%d][%s]"]'),
+            new CSSLocator('row', '.ez-table__matrix-entry'),
+            new CSSLocator('addRowButton', '.ez-btn--add-matrix-entry'),
+            new CSSLocator('viewModeTableHeaders', '.ez-content-field-value thead th'),
+            new CSSLocator('viewModeTableRow', '.ez-content-field-value tbody tr'),
+            new CSSLocator('editModeTableHeaders', '.ez-table thead th[data-identifier]'),
+            new CSSLocator('editModeTableRow', '.ez-table tr.ez-table__matrix-entry'),
         ];
     }
 

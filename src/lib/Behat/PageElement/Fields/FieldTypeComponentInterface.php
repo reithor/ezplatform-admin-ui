@@ -2,7 +2,7 @@
 
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 
 interface FieldTypeComponentInterface
 {
@@ -16,5 +16,5 @@ interface FieldTypeComponentInterface
 
     public function getFieldTypeIdentifier(): string;
 
-    public function setParentContainer(CSSSelector $selector): void;
+    public function setParentContainer(CSSLocator $selector): void;
 }

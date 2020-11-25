@@ -191,7 +191,7 @@ class RolePage extends Page
         return 'Role';
     }
 
-    public function specifySelectors(): array
+    public function specifyLocators(): array
     {
         return [];
     }

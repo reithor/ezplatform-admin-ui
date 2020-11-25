@@ -8,14 +8,14 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Element\NodeElement;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use PHPUnit\Framework\Assert;
 
 class TableNavigationTab extends Component
 {
     public function getActiveTabName(): string
     {
-        return $this->getHTMLPage()->find($this->getSelector('activeNavLink'))->getText();
+        return $this->getHTMLPage()->find($this->getLocator('activeNavLink'))->getText();
     }
 
     public function goToTab(string $tabName): void
@@ -24,7 +24,7 @@ class TableNavigationTab extends Component
             return;
         }
 
-        $this->getHTMLPage()->findAll($this->getSelector('navLink'))
+        $this->getHTMLPage()->findAll($this->getLocator('navLink'))
             ->filter(function(NodeElement $element) use ($tabName) {
                 return strpos($element->getText(), $tabName) !== false;
             })
@@ -34,14 +34,14 @@ class TableNavigationTab extends Component
 
     public function verifyIsLoaded(): void
     {
-        Assert::assertTrue($this->getHTMLPage()->find($this->getSelector('activeNavLink'))->isVisible());
+        Assert::assertTrue($this->getHTMLPage()->find($this->getLocator('activeNavLink'))->isVisible());
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-            new CSSSelector('activeNavLink','.ez-tabs .active'),
-            new CSSSelector('navLink','.ez-tabs .nav-link'),
+            new CSSLocator('activeNavLink','.ez-tabs .active'),
+            new CSSLocator('navLink','.ez-tabs .nav-link'),
         ];
     }
 }

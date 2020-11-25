@@ -8,7 +8,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Page\Page;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\DoubleHeaderTable;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
@@ -81,7 +81,7 @@ class ContentTypePage extends Page
     {
         Assert::assertEquals(
             sprintf('ContentType: %s', $this->expectedContentTypeName),
-            $this->getHTMLPage()->find($this->getSelector('pageTitle'))->getText()
+            $this->getHTMLPage()->find($this->getLocator('pageTitle'))->getText()
         );
 
         $this->contentTypeAdminList->verifyIsLoaded();
@@ -93,10 +93,10 @@ class ContentTypePage extends Page
         $this->expectedContentTypeName = $contentTypeName;
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-            new CSSSelector('pageTitle', '.ez-header h1'),
+            new CSSLocator('pageTitle', '.ez-header h1'),
         ];
     }
 }

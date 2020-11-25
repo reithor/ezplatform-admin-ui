@@ -6,22 +6,22 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 
 class TextLine extends FieldTypeComponent
 {
     public function setValue(array $parameters): void
     {
-        $fieldSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('fieldInput'));
+        $fieldSelector = $this->parentSelector->withDescendant($this->getLocator('fieldInput'));
 
         $value = array_values($parameters)[0];
         $this->getHTMLPage()->find($fieldSelector)->setValue($value);
     }
 
-    public function specifySelectors(): array
+    public function specifyLocators(): array
     {
         return [
-                new CSSSelector('fieldInput', 'input'),
+                new CSSLocator('fieldInput', 'input'),
             ];
     }
 

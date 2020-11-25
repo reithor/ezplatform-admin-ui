@@ -7,7 +7,7 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables;
 
 use Behat\Mink\Element\NodeElement;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Pagination;
 use PHPUnit\Framework\Assert;
 
@@ -79,7 +79,7 @@ class SubItemsTable extends Table
             return 0;
         }
 
-        $isElementNamePresentInTable = strpos($this->getHTMLPage()->find($this->getSelector('list'))->getText(), $name) !== false;
+        $isElementNamePresentInTable = strpos($this->getHTMLPage()->find($this->getLocator('list'))->getText(), $name) !== false;
         if (!$isElementNamePresentInTable) {
             return 0;
         }
@@ -153,17 +153,17 @@ class SubItemsTable extends Table
         return 'Subitems table';
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-            new CSSSelector('horizontalHeaders', '.ez-sil .m-sub-items__list .c-table-view__cell--head'),
-            new CSSSelector('listElement', '.ez-sil .m-sub-items__list .c-table-view-item__link'),
-            new CSSSelector('nthListElement', '.ez-sil .m-sub-items__list tr:nth-child(%d) .c-table-view-item__link'),
-            new CSSSelector('listElementType', '.ez-sil .m-sub-items__list tr:nth-child(%d) .c-table-view-item__cell--content-type'),
-            new CSSSelector('sortingOrderAscending', '.ez-sil .m-sub-items__list .c-table-view__cell--sorted-asc'),
-            new CSSSelector('sortingOrderDescending', '.ez-sil .m-sub-items__list .c-table-view__cell--sorted-desc'),
-            new CSSSelector('editButton', '.ez-sil .m-sub-items__list .c-table-view-item__btn--edit'),
-            new CSSSelector('noItems', '.ez-sil .m-sub-items__list .c-no-items'),
+            new CSSLocator('horizontalHeaders', '.ez-sil .m-sub-items__list .c-table-view__cell--head'),
+            new CSSLocator('listElement', '.ez-sil .m-sub-items__list .c-table-view-item__link'),
+            new CSSLocator('nthListElement', '.ez-sil .m-sub-items__list tr:nth-child(%d) .c-table-view-item__link'),
+            new CSSLocator('listElementType', '.ez-sil .m-sub-items__list tr:nth-child(%d) .c-table-view-item__cell--content-type'),
+            new CSSLocator('sortingOrderAscending', '.ez-sil .m-sub-items__list .c-table-view__cell--sorted-asc'),
+            new CSSLocator('sortingOrderDescending', '.ez-sil .m-sub-items__list .c-table-view__cell--sorted-desc'),
+            new CSSLocator('editButton', '.ez-sil .m-sub-items__list .c-table-view-item__btn--edit'),
+            new CSSLocator('noItems', '.ez-sil .m-sub-items__list .c-no-items'),
         ];
     }
 }

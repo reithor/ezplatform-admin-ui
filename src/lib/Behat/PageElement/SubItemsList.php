@@ -12,7 +12,7 @@ use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\Behat\Browser\Element\Element;
 use EzSystems\Behat\Browser\Page\Browser;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SubitemsGridList;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SubItemsTable;
 use PHPUnit\Framework\Assert;
@@ -54,7 +54,7 @@ class SubitemsList extends Component
 
     public function verifyIsLoaded(): void
     {
-        Assert::assertTrue($this->getHTMLPage()->find($this->getSelector('list'))->isVisible());
+        Assert::assertTrue($this->getHTMLPage()->find($this->getLocator('list'))->isVisible());
     }
 
     public function getName(): string
@@ -72,11 +72,11 @@ class SubitemsList extends Component
         return $this->table->isElementInTable($itemName);
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-            new CSSSelector('list', '.ez-sil'),
-            new CSSSelector('listTable', '.ez-sil .m-sub-items__list'),
+            new CSSLocator('list', '.ez-sil'),
+            new CSSLocator('listTable', '.ez-sil .m-sub-items__list'),
         ];
     }
 }

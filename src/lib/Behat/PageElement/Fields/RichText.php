@@ -7,7 +7,7 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
 use EzSystems\Behat\Browser\Element\NodeElement;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use PHPUnit\Framework\Assert;
 use Exception;
 
@@ -37,9 +37,9 @@ class RichText extends FieldTypeComponent
 
     public function openElementsToolbar(): void
     {
-        $this->getHTMLPage()->find($this->getSelector('addButton'))->click();
+        $this->getHTMLPage()->find($this->getLocator('addButton'))->click();
         usleep(200 * 1000); // wait until the transition animations ends
-        Assert::assertTrue($this->getHTMLPage()->find($this->getSelector('toolbarButton'))->isVisible());
+        Assert::assertTrue($this->getHTMLPage()->find($this->getLocator('toolbarButton'))->isVisible());
     }
 
     public function changeStyle(string $style): void
@@ -48,12 +48,9 @@ class RichText extends FieldTypeComponent
             throw new Exception(sprintf('Unsupported style: %s', $style));
         }
 
-        $this->getHTMLPage()->find($this->getSelector('styleDropdown'))->click();
+        $this->getHTMLPage()->find($this->getLocator('styleDropdown'))->click();
 
-        $blockStyleSelector = CSSSelector::combine(
-            $this->getSelector('blockstyle')->getSelector(),
-            new CSSSelector('', $style),
-        );
+        $blockStyleSelector = $this->getLocator('blockstyle')->withDescendant(new CSSLocator('style', $style));
 
         $this->getHTMLPage()->find($blockStyleSelector)->click();
     }
@@ -78,9 +75,8 @@ class RichText extends FieldTypeComponent
         }
 
         $this->changeStyle($style);
-        $selector = CSSSelector::combine(
-            '%s %s', $this->getSelector('fieldInput'), new CSSSelector('', $style)
-        );
+        $selector = $this->getLocator('fieldInput')->withDescendant(new CSSLocator('style', $style));
+
         Assert::assertContains(
             sprintf('%s%s</%s>', $value, '<br>', $style),
             $this->getHTMLPage()->find($selector)->getOuterHtml()
@@ -89,7 +85,7 @@ class RichText extends FieldTypeComponent
 
     private function getFieldInput(): NodeElement
     {
-        $fieldInput = $this->getHTMLPage()->find($this->getSelector('fieldInput'));
+        $fieldInput = $this->getHTMLPage()->find($this->getLocator('fieldInput'));
         $this->richtextId = $fieldInput->getAttribute('id');
 
         return $fieldInput;
@@ -99,7 +95,7 @@ class RichText extends FieldTypeComponent
     {
         $this->getFieldInput();
         $this->openElementsToolbar();
-        $this->getHTMLPage()->find($this->getSelector('unorderedListButton'))->click();
+        $this->getHTMLPage()->find($this->getLocator('unorderedListButton'))->click();
 
         foreach ($listElements as $listElement) {
             $this->insertLine($listElement);
@@ -109,7 +105,7 @@ class RichText extends FieldTypeComponent
             }
         }
 
-        $actualListElements = $this->getHTMLPage()->findAll($this->getSelector('unorderedListElement'));
+        $actualListElements = $this->getHTMLPage()->findAll($this->getLocator('unorderedListElement'));
         $listElementsText = [];
         foreach ($actualListElements as $actualListElement) {
             $listElementsText[] = $actualListElement->getText();
@@ -120,22 +116,22 @@ class RichText extends FieldTypeComponent
 
     public function clickEmbedInlineButton(): void
     {
-        $this->getHTMLPage()->find($this->getSelector('embedInlineButton'))->click();
+        $this->getHTMLPage()->find($this->getLocator('embedInlineButton'))->click();
     }
 
     public function clickEmbedButton(): void
     {
-        $this->getHTMLPage()->find($this->getSelector('embedButton'))->click();
+        $this->getHTMLPage()->find($this->getLocator('embedButton'))->click();
     }
 
     public function equalsEmbedInlineItem($itemName): bool
     {
-        return $itemName === $this->getHTMLPage()->find($this->getSelector('embedInlineTitle'))->getText();
+        return $itemName === $this->getHTMLPage()->find($this->getLocator('embedInlineTitle'))->getText();
     }
 
     public function equalsEmbedItem($itemName): bool
     {
-        return $itemName === $this->getHTMLPage()->find($this->getSelector('embedTitle'))->getText();
+        return $itemName === $this->getHTMLPage()->find($this->getLocator('embedTitle'))->getText();
     }
 
     public function moveElement($direction): void
@@ -144,28 +140,27 @@ class RichText extends FieldTypeComponent
             throw new Exception(sprintf('Unsupported direction: %s', $direction));
         }
 
-        $moveSelector = CSSSelector::combine(
-            $this->getSelector('moveButton'), new CSSSelector('', $direction)
-        );
+        $moveSelector = $this->getLocator('moveButton')->withDescendant(new CSSLocator('direction', $direction));
+
         $this->getHTMLPage()->find($moveSelector)->click();
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-            new CSSSelector('fieldInput', '.ez-data-source__richtext'),
-            new CSSSelector('textarea', 'textarea'),
-            new CSSSelector('embedInlineButton', '.ez-btn-ae--embed-inline'),
-            new CSSSelector('embedButton', '.ez-btn-ae--embed'),
-            new CSSSelector('addButton', '.ae-button-add'),
-            new CSSSelector('embedTitle', '.cke_widget_ezembed .ez-embed-content__title'),
-            new CSSSelector('embedInlineTitle', '.cke_widget_ezembedinline .ez-embed-content__title'),
-            new CSSSelector('unorderedListButton', '.ez-btn-ae--unordered-list'),
-            new CSSSelector('unorderedListElement', '.ez-data-source__richtext ul li'),
-            new CSSSelector('styleDropdown', '.ae-toolbar-element'),
-            new CSSSelector('blockStyle', '.ae-listbox li %s'),
-            new CSSSelector('moveButton', '.ez-btn-ae--move-%s'),
-            new CSSSelector('toolbarButton', '.ae-toolbar .ez-btn-ae'),
+            new CSSLocator('fieldInput', '.ez-data-source__richtext'),
+            new CSSLocator('textarea', 'textarea'),
+            new CSSLocator('embedInlineButton', '.ez-btn-ae--embed-inline'),
+            new CSSLocator('embedButton', '.ez-btn-ae--embed'),
+            new CSSLocator('addButton', '.ae-button-add'),
+            new CSSLocator('embedTitle', '.cke_widget_ezembed .ez-embed-content__title'),
+            new CSSLocator('embedInlineTitle', '.cke_widget_ezembedinline .ez-embed-content__title'),
+            new CSSLocator('unorderedListButton', '.ez-btn-ae--unordered-list'),
+            new CSSLocator('unorderedListElement', '.ez-data-source__richtext ul li'),
+            new CSSLocator('styleDropdown', '.ae-toolbar-element'),
+            new CSSLocator('blockStyle', '.ae-listbox li %s'),
+            new CSSLocator('moveButton', '.ez-btn-ae--move-%s'),
+            new CSSLocator('toolbarButton', '.ae-toolbar .ez-btn-ae'),
         ];
     }
 

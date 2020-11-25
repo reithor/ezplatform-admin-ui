@@ -18,14 +18,14 @@
 //    {
 //        parent::__construct($context, $containerLocator);
 //        $this->fields['horizontalHeaders'] = $this->fields['list'] . ' thead th';
-//        new CSSSelector('tableTrash', '[name=trash_item_restore]),
+//        new CSSLocator('tableTrash', '[name=trash_item_restore]),
 //        $this->fields['listElement'] = $this->fields['list'] . ' tbody .ez-table__cell--after-icon';
-//        new CSSSelector('checkboxInput', ' input),
+//        new CSSLocator('checkboxInput', ' input),
 //    }
 //
 //    public function verifyVisibility(): void
 //    {
-//        Assert::assertTrue($this->getHTMLPage()->find($this->getSelector('tableTrash'))->isVisible());
+//        Assert::assertTrue($this->getHTMLPage()->find($this->getLocator('tableTrash'))->isVisible());
 //    }
 //
 //    public function getTableCellValue(string $header, ?string $secondHeader = null): string

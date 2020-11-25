@@ -10,22 +10,22 @@ use Behat\Mink\Element\NodeElement;
 use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Element\Element;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use PHPUnit\Framework\Assert;
 
 class ContentTypePicker extends Component
 {
     public function select(string $contentTypeName): void
     {
-        $this->getHTMLPage()->find($this->getSelector('filterInput'))->setValue($contentTypeName);
-        $this->getHTMLPage()->findAll($this->getSelector('filteredItem'))->getByText($contentTypeName)->click();
+        $this->getHTMLPage()->find($this->getLocator('filterInput'))->setValue($contentTypeName);
+        $this->getHTMLPage()->findAll($this->getLocator('filteredItem'))->getByText($contentTypeName)->click();
     }
 
     public function verifyIsLoaded(): void
     {
-        $headerText = $this->getHTMLPage()->find($this->getSelector('headerSelector'))->getText();
+        $headerText = $this->getHTMLPage()->find($this->getLocator('headerSelector'))->getText();
         Assert::assertEquals('Create content', $headerText);
-        $this->getHTMLPage()->find($this->getSelector('filterInput'))->clear();
+        $this->getHTMLPage()->find($this->getLocator('filterInput'))->clear();
     }
 
     public function getName(): string
@@ -33,12 +33,12 @@ class ContentTypePicker extends Component
         return 'Content Type picker';
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-            new CSSSelector('filterInput','.ez-extra-actions__section-content--content-type .ez-instant-filter__input'),
-            new CSSSelector('filteredItem','.ez-extra-actions__section-content--content-type .ez-instant-filter__group-item:not([hidden])'),
-            new CSSSelector('headerSelector','.ez-extra-actions--create .ez-extra-actions__header'),
+            new CSSLocator('filterInput','.ez-extra-actions__section-content--content-type .ez-instant-filter__input'),
+            new CSSLocator('filteredItem','.ez-extra-actions__section-content--content-type .ez-instant-filter__group-item:not([hidden])'),
+            new CSSLocator('headerSelector','.ez-extra-actions--create .ez-extra-actions__header'),
         ];
     }
 }

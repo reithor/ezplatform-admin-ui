@@ -7,7 +7,7 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
 use EzSystems\Behat\Browser\Page\Browser;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\DateAndTimePopup;
 use PHPUnit\Framework\Assert;
 
@@ -28,7 +28,7 @@ class Time extends FieldTypeComponent
 
     public function setValue(array $parameters): void
     {
-        $fieldSelector = CSSSelector::combine("%s %s", $this->parentSelector, $this->getSelector('fieldInput'));
+        $fieldSelector = $this->parentSelector->withDescendant($this->getLocator('fieldInput'));
 
         $this->getHTMLPage()->find($fieldSelector)->click();
 
@@ -47,7 +47,7 @@ class Time extends FieldTypeComponent
 
     public function verifyValueInItemView(array $values): void
     {
-        $actualTimeValue = date_format(date_create($this->getHTMLPage()->find($this->getSelector('fieldContainer'))->getText()), self::VALUE_TIME_FORMAT);
+        $actualTimeValue = date_format(date_create($this->getHTMLPage()->find($this->getLocator('fieldContainer'))->getText()), self::VALUE_TIME_FORMAT);
         $expectedTimeValue = date_format(date_create($values['value']), self::VALUE_TIME_FORMAT);
         Assert::assertEquals(
             $expectedTimeValue,
@@ -56,10 +56,10 @@ class Time extends FieldTypeComponent
         );
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-            new CSSSelector('fieldInput', '.ez-data-source__input-wrapper input'),
+            new CSSLocator('fieldInput', '.ez-data-source__input-wrapper input'),
         ];
     }
 

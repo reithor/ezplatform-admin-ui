@@ -8,7 +8,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Element\NodeElement;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\Table;
 use PHPUnit\Framework\Assert;
 
@@ -22,7 +22,7 @@ class AdminList extends Component
 
     public function verifyIsLoaded(): void
     {
-        Assert::assertTrue($this->getHTMLPage()->find($this->getSelector('tableHeadline'))->isVisible());
+        Assert::assertTrue($this->getHTMLPage()->find($this->getLocator('tableHeadline'))->isVisible());
     }
 
     public function getName(): string
@@ -48,11 +48,11 @@ class AdminList extends Component
     {
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-            new CSSSelector('paginationNextButton', '.ez-pagination a.page-link[rel="next"]'),
-            new CSSSelector('tableHeadline', '.ez-table-header__headline'),
+            new CSSLocator('paginationNextButton', '.ez-pagination a.page-link[rel="next"]'),
+            new CSSLocator('tableHeadline', '.ez-table-header__headline'),
         ];
     }
 }

@@ -10,7 +10,7 @@ use Behat\Mink\Session;
 use eZ\Publish\Core\MVC\Symfony\SiteAccess\Router;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
-use EzSystems\Behat\Browser\Selector\CSSSelector;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\TableNavigationTab;
 use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
 use PHPUnit\Framework\Assert;
@@ -56,7 +56,7 @@ class DashboardPage extends Page
 
     public function verifyIsLoaded(): void
     {
-        Assert::assertEquals('My dashboard', $this->getHTMLPage()->find($this->getSelector('pageTitle'))->getText());
+        Assert::assertEquals('My dashboard', $this->getHTMLPage()->find($this->getLocator('pageTitle'))->getText());
 
         Assert::assertNotNull($this->context->getElementByText('My content', $this->fields['tableSelector'], $this->fields['tableTitle']));
         $this->tableNavigationTab->verifyIsLoaded();
@@ -68,13 +68,13 @@ class DashboardPage extends Page
         return 'Dashboard';
     }
 
-    protected function specifySelectors(): array
+    protected function specifyLocators(): array
     {
         return [
-                new CSSSelector('tableSelector', '.ez-card'),
-                new CSSSelector('tableTitle', '.ez-card__title'),
-                new CSSSelector('tableTabSelector', '.ez-tabs .nav-item'),
-                new CSSSelector('pageTitle', '.ez-header h1'),
+                new CSSLocator('tableSelector', '.ez-card'),
+                new CSSLocator('tableTitle', '.ez-card__title'),
+                new CSSLocator('tableTabSelector', '.ez-tabs .nav-item'),
+                new CSSLocator('pageTitle', '.ez-header h1'),
         ];
     }
 }
