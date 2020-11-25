@@ -8,7 +8,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use Exception;
 use EzSystems\Behat\Browser\Component\Component;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
 class UserNotificationPopup extends Component
@@ -52,10 +52,10 @@ class UserNotificationPopup extends Component
     protected function specifyLocators(): array
     {
         return [
-            new CSSLocator('notificationsPopupTitle', '#view-notifications .modal-title'),
-            new CSSLocator('notificationItem', '.ez-notifications-modal__item'),
-            new CSSLocator('notificationType', '.ez-notifications-modal__type'),
-            new CSSLocator('notificationDescription', '.ez-notifications-modal__description'),
+            new VisibleCSSLocator('notificationsPopupTitle', '#view-notifications .modal-title'),
+            new VisibleCSSLocator('notificationItem', '.ez-notifications-modal__item'),
+            new VisibleCSSLocator('notificationType', '.ez-notifications-modal__type'),
+            new VisibleCSSLocator('notificationDescription', '.ez-notifications-modal__description'),
         ];
     }
 }

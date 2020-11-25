@@ -7,7 +7,7 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\Browser\Component\Component;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
 class DraftConflictDialog extends Component
@@ -25,8 +25,8 @@ class DraftConflictDialog extends Component
     protected function specifyLocators(): array
     {
         return [
-            new CSSLocator('dialog', '.ez-modal--version-draft-conflict.show'),
-            new CSSLocator('addDraft', '.ez-btn--add-draft'),
+            new VisibleCSSLocator('dialog', '.ez-modal--version-draft-conflict.show'),
+            new VisibleCSSLocator('addDraft', '.ez-btn--add-draft'),
         ];
     }
 

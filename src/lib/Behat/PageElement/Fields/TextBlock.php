@@ -6,14 +6,14 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 
 class TextBlock extends FieldTypeComponent
 {
     public function specifyLocators(): array
     {
         return [
-            new CSSLocator('fieldInput', 'textarea'),
+            new VisibleCSSLocator('fieldInput', 'textarea'),
         ];
     }
 

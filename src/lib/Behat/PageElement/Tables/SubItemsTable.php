@@ -7,7 +7,7 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables;
 
 use Behat\Mink\Element\NodeElement;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Pagination;
 use PHPUnit\Framework\Assert;
 
@@ -156,14 +156,14 @@ class SubItemsTable extends Table
     protected function specifyLocators(): array
     {
         return [
-            new CSSLocator('horizontalHeaders', '.ez-sil .m-sub-items__list .c-table-view__cell--head'),
-            new CSSLocator('listElement', '.ez-sil .m-sub-items__list .c-table-view-item__link'),
-            new CSSLocator('nthListElement', '.ez-sil .m-sub-items__list tr:nth-child(%d) .c-table-view-item__link'),
-            new CSSLocator('listElementType', '.ez-sil .m-sub-items__list tr:nth-child(%d) .c-table-view-item__cell--content-type'),
-            new CSSLocator('sortingOrderAscending', '.ez-sil .m-sub-items__list .c-table-view__cell--sorted-asc'),
-            new CSSLocator('sortingOrderDescending', '.ez-sil .m-sub-items__list .c-table-view__cell--sorted-desc'),
-            new CSSLocator('editButton', '.ez-sil .m-sub-items__list .c-table-view-item__btn--edit'),
-            new CSSLocator('noItems', '.ez-sil .m-sub-items__list .c-no-items'),
+            new VisibleCSSLocator('horizontalHeaders', '.ez-sil .m-sub-items__list .c-table-view__cell--head'),
+            new VisibleCSSLocator('listElement', '.ez-sil .m-sub-items__list .c-table-view-item__link'),
+            new VisibleCSSLocator('nthListElement', '.ez-sil .m-sub-items__list tr:nth-child(%d) .c-table-view-item__link'),
+            new VisibleCSSLocator('listElementType', '.ez-sil .m-sub-items__list tr:nth-child(%d) .c-table-view-item__cell--content-type'),
+            new VisibleCSSLocator('sortingOrderAscending', '.ez-sil .m-sub-items__list .c-table-view__cell--sorted-asc'),
+            new VisibleCSSLocator('sortingOrderDescending', '.ez-sil .m-sub-items__list .c-table-view__cell--sorted-desc'),
+            new VisibleCSSLocator('editButton', '.ez-sil .m-sub-items__list .c-table-view-item__btn--edit'),
+            new VisibleCSSLocator('noItems', '.ez-sil .m-sub-items__list .c-no-items'),
         ];
     }
 }

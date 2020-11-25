@@ -7,8 +7,9 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\Browser\Component\Component;
-use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 
 class ContentItemAdminPreview extends Component
 {
@@ -24,7 +25,7 @@ class ContentItemAdminPreview extends Component
     public function verifyFieldHasValues(string $fieldLabel, array $expectedValues, ?string $fieldTypeIdentifier)
     {
         $fieldPosition = $this->getFieldPosition($fieldLabel);
-        $nthFieldSelector = new CSSLocator('', sprintf($this->getLocator('nthFieldContainer')->getSelector(), $fieldPosition));
+        $nthFieldSelector = new VisibleCSSLocator('', sprintf($this->getLocator('nthFieldContainer')->getSelector(), $fieldPosition));
 
         $fieldValueSelector = $nthFieldSelector->withDescendant($this->getLocator('fieldValue'));
         $fieldTypeIdentifier = $fieldTypeIdentifier ?? $this->detectFieldTypeIdentifier($fieldValueSelector);
@@ -32,7 +33,7 @@ class ContentItemAdminPreview extends Component
         foreach($this->fieldTypeComponents as $fieldTypeComponent)
         {
             if ($fieldTypeComponent->getFieldTypeIdentifier() === $fieldTypeIdentifier) {
-                $fieldTypeComponent->setParentContainer($fieldValueSelector);
+                $fieldTypeComponent->setParentLocator($fieldValueSelector);
                 $fieldTypeComponent->verifyValueInItemView($expectedValues);
 
                 return;
@@ -64,10 +65,10 @@ class ContentItemAdminPreview extends Component
     protected function specifyLocators(): array
     {
         return [
-            new CSSLocator('nthFieldContainer', 'div.ez-content-field:nth-of-type(%s)'),
-            new CSSLocator('fieldName', '.ez-content-field-name'),
-            new CSSLocator('fieldValue', '.ez-content-field-value'),
-            new CSSLocator('fieldValueContainer', ':first-child'),
+            new VisibleCSSLocator('nthFieldContainer', 'div.ez-content-field:nth-of-type(%s)'),
+            new VisibleCSSLocator('fieldName', '.ez-content-field-name'),
+            new VisibleCSSLocator('fieldValue', '.ez-content-field-value'),
+            new VisibleCSSLocator('fieldValueContainer', ':first-child'),
         ];
     }
 

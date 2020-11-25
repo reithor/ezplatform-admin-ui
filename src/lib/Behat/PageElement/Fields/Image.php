@@ -7,13 +7,14 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
 use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
 class Image extends FieldTypeComponent
 {
     public function setValue(array $parameters): void
     {
-        $fieldSelector = $this->parentSelector->withDescendant($this->getLocator('fieldInput'));
+        $fieldSelector = $this->getLocator('fieldInput')->withParent($this->parentLocator);
 
         $this->getHTMLPage()->find($fieldSelector)->attachFile(
             $this->browser->getRemoteFileUploadPath($parameters['value'])
@@ -26,11 +27,11 @@ class Image extends FieldTypeComponent
 
         Assert::assertContains(
             $filename,
-            $this->getHTMLPage()->find($this->parentSelector)->getText(),
+            $this->getHTMLPage()->find($this->parentLocator)->getText(),
             'Image has wrong file name'
         );
 
-        $fileFieldSelector = $this->parentSelector->withDescendant($this->getLocator('image'));
+        $fileFieldSelector = $this->parentLocator->withDescendant($this->getLocator('image'));
 
         Assert::assertContains(
             $filename,
@@ -43,7 +44,7 @@ class Image extends FieldTypeComponent
     {
         return [
             new CSSLocator('fieldInput', 'input[type=file]'),
-            new CSSLocator('image', '.ez-field-preview__image-wrapper .ez-field-preview__image img'),
+            new VisibleCSSLocator('image', '.ez-field-preview__image-wrapper .ez-field-preview__image img'),
         ];
     }
 

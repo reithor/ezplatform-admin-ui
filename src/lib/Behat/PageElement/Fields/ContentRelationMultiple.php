@@ -9,7 +9,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 use Behat\Mink\Session;
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\ContentRelationTable;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
 use PHPUnit\Framework\Assert;
@@ -64,7 +64,7 @@ class ContentRelationMultiple extends FieldTypeComponent
     private function startAddingRelations()
     {
         if ($this->isRelationEmpty()) {
-            $selectSelector = $this->parentSelector->withDescendant($this->getLocator('selectContent'));
+            $selectSelector = $this->parentLocator->withDescendant($this->getLocator('selectContent'));
             $this->getHTMLPage()->find($selectSelector)->click();
         } else {
             $this->contentRelationTable->clickPlusButton();
@@ -82,7 +82,7 @@ class ContentRelationMultiple extends FieldTypeComponent
 
     public function getValue(): array
     {
-        $selectSelector = $this->parentSelector->withDescendant($this->getLocator('selectContent'));
+        $selectSelector = $this->parentLocator->withDescendant($this->getLocator('selectContent'));
 
         return [
             $this->getHTMLPage()->find($selectSelector)->getValue()
@@ -111,7 +111,7 @@ class ContentRelationMultiple extends FieldTypeComponent
 
     public function isRelationEmpty(): bool
     {
-        $selectSelector = $this->parentSelector->withDescendant($this->getLocator('selectContent'));
+        $selectSelector = $this->parentLocator->withDescendant($this->getLocator('selectContent'));
 
         return $this->getHTMLPage()->findAll($selectSelector)->any();
     }
@@ -119,7 +119,7 @@ class ContentRelationMultiple extends FieldTypeComponent
     public function specifyLocators(): array
     {
         return [
-            new CSSLocator('selectContent', '.ez-relations__cta-btn-label'),
+            new VisibleCSSLocator('selectContent', '.ez-relations__cta-btn-label'),
         ];
     }
 

@@ -9,7 +9,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 use Behat\Mink\Session;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
@@ -117,10 +117,10 @@ class TrashPage extends Page
     protected function specifyLocators(): array
     {
         return [
-            new CSSLocator('pageTitle', '.ez-page-title h1'),
-            new CSSLocator('restoreButton', '[name=trash_item_restore]'),
-            new CSSLocator('trashButton', '[id=delete-trash-items]'),
-            new CSSLocator('restoreUnderNewLocationButton', '[id=trash_item_restore_location_select_content]'),
+            new VisibleCSSLocator('pageTitle', '.ez-page-title h1'),
+            new VisibleCSSLocator('restoreButton', '[name=trash_item_restore]'),
+            new VisibleCSSLocator('trashButton', '[id=delete-trash-items]'),
+            new VisibleCSSLocator('restoreUnderNewLocationButton', '[id=trash_item_restore_location_select_content]'),
             ];
     }
 }

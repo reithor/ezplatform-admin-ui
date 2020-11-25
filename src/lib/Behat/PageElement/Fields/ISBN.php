@@ -7,7 +7,7 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
 class ISBN extends FieldTypeComponent
@@ -20,7 +20,7 @@ class ISBN extends FieldTypeComponent
     public function specifyLocators(): array
     {
         return [
-            new CSSLocator('fieldInput', 'input'),
+            new VisibleCSSLocator('fieldInput', 'input'),
         ];
     }
 }

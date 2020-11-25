@@ -6,7 +6,7 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables;
 
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 
 class SubitemsGridList extends ItemsList
 {
@@ -27,7 +27,7 @@ class SubitemsGridList extends ItemsList
     protected function specifyLocators(): array
     {
         return [
-            new CSSLocator('listElement', '.c-grid-view-item'),
+            new VisibleCSSLocator('listElement', '.c-grid-view-item'),
         ];
     }
 }

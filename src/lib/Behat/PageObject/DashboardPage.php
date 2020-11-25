@@ -10,7 +10,7 @@ use Behat\Mink\Session;
 use eZ\Publish\Core\MVC\Symfony\SiteAccess\Router;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\TableNavigationTab;
 use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
 use PHPUnit\Framework\Assert;
@@ -71,10 +71,10 @@ class DashboardPage extends Page
     protected function specifyLocators(): array
     {
         return [
-                new CSSLocator('tableSelector', '.ez-card'),
-                new CSSLocator('tableTitle', '.ez-card__title'),
-                new CSSLocator('tableTabSelector', '.ez-tabs .nav-item'),
-                new CSSLocator('pageTitle', '.ez-header h1'),
+                new VisibleCSSLocator('tableSelector', '.ez-card'),
+                new VisibleCSSLocator('tableTitle', '.ez-card__title'),
+                new VisibleCSSLocator('tableTabSelector', '.ez-tabs .nav-item'),
+                new VisibleCSSLocator('pageTitle', '.ez-header h1'),
         ];
     }
 }

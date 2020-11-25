@@ -3,7 +3,7 @@ Feature: Content fields setting and editing
   In order to manage content on my site
   I want to set, edit, copy and move content items.
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce @test
+  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
   Scenario Outline: Create content item with given field
     Given I create a "<fieldName> CT" Content Type in "Content" with "<fieldInternalName>" identifier
       | Field Type  | Name        | Identifier          | Required | Searchable | Translatable | Settings       |
@@ -51,7 +51,7 @@ Feature: Content fields setting and editing
       | ezmatrix             | Matrix                       | Min_rows:2,Columns:col1-col2-col3                                     | value     | col1:col2:col3,Ala:miała:kota,Szpak:dziobał:bociana,Bociana:dziobał:szpak |            |                       |         |             | Matrix                    |
       | ezimageasset         | Image Asset                  |                                                                       | value     |  imageasset1.png.zip                                                      |            |                       |         |             | imageasset1.png           |
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce @test
+  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
   Scenario: Create an ImageAsset Content item and edit specified field
     Given I create "image" Content items in "/Media/Images/" in "eng-GB"
       | name             | image                                                        |

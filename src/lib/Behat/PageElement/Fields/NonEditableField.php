@@ -7,7 +7,7 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
 use eZ\Publish\API\Repository\Exceptions\NotImplementedException;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 
 abstract class NonEditableField extends FieldTypeComponent
 {
@@ -20,7 +20,7 @@ abstract class NonEditableField extends FieldTypeComponent
 
     public function getValue(): array
     {
-        $valueSelector = $this->parentSelector->withDescendant($this->getLocator('valueSelector'));
+        $valueSelector = $this->parentLocator->withDescendant($this->getLocator('valueSelector'));
 
         return [$this->getHTMLPage()->find($valueSelector)->getText()];
     }
@@ -28,7 +28,7 @@ abstract class NonEditableField extends FieldTypeComponent
     public function specifyLocators(): array
     {
         return [
-            new CSSLocator('valueSelector', '.non-editable'),
+            new VisibleCSSLocator('valueSelector', '.non-editable'),
         ];
     }
 }

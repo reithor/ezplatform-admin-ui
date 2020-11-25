@@ -12,7 +12,7 @@ use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\Behat\Browser\Element\Element;
 use EzSystems\Behat\Browser\Page\Browser;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SubitemsGridList;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SubItemsTable;
 use PHPUnit\Framework\Assert;
@@ -75,8 +75,8 @@ class SubitemsList extends Component
     protected function specifyLocators(): array
     {
         return [
-            new CSSLocator('list', '.ez-sil'),
-            new CSSLocator('listTable', '.ez-sil .m-sub-items__list'),
+            new VisibleCSSLocator('list', '.ez-sil'),
+            new VisibleCSSLocator('listTable', '.ez-sil .m-sub-items__list'),
         ];
     }
 }

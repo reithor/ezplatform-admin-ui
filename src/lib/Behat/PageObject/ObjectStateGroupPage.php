@@ -10,7 +10,7 @@ use Behat\Mink\Session;
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
@@ -141,7 +141,7 @@ class ObjectStateGroupPage extends Page
     protected function specifyLocators(): array
     {
         return [
-            new CSSLocator('pageTitle', '.ez-header h1'),
+            new VisibleCSSLocator('pageTitle', '.ez-header h1'),
         ];
     }
 }

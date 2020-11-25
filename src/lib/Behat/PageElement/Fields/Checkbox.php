@@ -6,14 +6,14 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
 class Checkbox extends FieldTypeComponent
 {
     public function setValue(array $parameters): void
     {
-        $fieldSelector = $this->parentSelector->withDescendant($this->getLocator('fieldInput'));
+        $fieldSelector = $this->parentLocator->withDescendant($this->getLocator('fieldInput'));
 
         if ($this->getValue() !== $parameters['value']) {
             $this->getHTMLPage()->find($fieldSelector)->click();
@@ -22,7 +22,7 @@ class Checkbox extends FieldTypeComponent
 
     public function getValue(): array
     {
-        $fieldSelector = $this->parentSelector->withDescendant($this->getLocator('fieldInput'));
+        $fieldSelector = $this->parentLocator->withDescendant($this->getLocator('fieldInput'));
 
         return [
             $this->getHTMLPage()->find($fieldSelector)->hasClass($this->getLocator('checked')->getSelector())
@@ -33,7 +33,7 @@ class Checkbox extends FieldTypeComponent
     {
         Assert::assertEquals(
             'Yes',
-            $this->getHTMLPage()->find($this->parentSelector)->getText(),
+            $this->getHTMLPage()->find($this->parentLocator)->getText(),
             'Field has wrong value'
         );
     }
@@ -46,9 +46,9 @@ class Checkbox extends FieldTypeComponent
     public function specifyLocators(): array
     {
         return [
-            new CSSLocator('fieldInput', '.ez-data-source__indicator'),
-            new CSSLocator('checkbox', '.ez-data-source__label'),
-            new CSSLocator('checked', '.is-checked'),
+            new VisibleCSSLocator('fieldInput', '.ez-data-source__indicator'),
+            new VisibleCSSLocator('checkbox', '.ez-data-source__label'),
+            new VisibleCSSLocator('checked', '.is-checked'),
         ];
     }
 }

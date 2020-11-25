@@ -8,7 +8,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Element\NodeElement;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
 class TableNavigationTab extends Component
@@ -40,8 +40,8 @@ class TableNavigationTab extends Component
     protected function specifyLocators(): array
     {
         return [
-            new CSSLocator('activeNavLink','.ez-tabs .active'),
-            new CSSLocator('navLink','.ez-tabs .nav-link'),
+            new VisibleCSSLocator('activeNavLink','.ez-tabs .active'),
+            new VisibleCSSLocator('navLink','.ez-tabs .nav-link'),
         ];
     }
 }

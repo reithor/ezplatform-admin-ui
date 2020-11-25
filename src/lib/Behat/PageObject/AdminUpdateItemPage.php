@@ -8,7 +8,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
 use PHPUnit\Framework\Assert;
 
@@ -61,10 +61,10 @@ class AdminUpdateItemPage extends Page
     protected function specifyLocators(): array
     {
         return [
-            new CSSLocator('formElement', '.form-group'),
-            new CSSLocator('mainFormSection', 'form'),
-            new CSSLocator('closeButton', '.ez-content-edit-container__close'),
-            new CSSLocator('button', 'button'),
+            new VisibleCSSLocator('formElement', '.form-group'),
+            new VisibleCSSLocator('mainFormSection', 'form'),
+            new VisibleCSSLocator('closeButton', '.ez-content-edit-container__close'),
+            new VisibleCSSLocator('button', 'button'),
         ];
     }
 }

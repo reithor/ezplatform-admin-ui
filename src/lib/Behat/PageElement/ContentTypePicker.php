@@ -10,7 +10,7 @@ use Behat\Mink\Element\NodeElement;
 use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Element\Element;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
 class ContentTypePicker extends Component
@@ -36,9 +36,9 @@ class ContentTypePicker extends Component
     protected function specifyLocators(): array
     {
         return [
-            new CSSLocator('filterInput','.ez-extra-actions__section-content--content-type .ez-instant-filter__input'),
-            new CSSLocator('filteredItem','.ez-extra-actions__section-content--content-type .ez-instant-filter__group-item:not([hidden])'),
-            new CSSLocator('headerSelector','.ez-extra-actions--create .ez-extra-actions__header'),
+            new VisibleCSSLocator('filterInput','.ez-extra-actions__section-content--content-type .ez-instant-filter__input'),
+            new VisibleCSSLocator('filteredItem','.ez-extra-actions__section-content--content-type .ez-instant-filter__group-item:not([hidden])'),
+            new VisibleCSSLocator('headerSelector','.ez-extra-actions--create .ez-extra-actions__header'),
         ];
     }
 }

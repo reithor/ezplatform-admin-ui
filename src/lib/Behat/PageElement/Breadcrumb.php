@@ -8,7 +8,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Element\Element;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
 /** Element that describes breadcrumb */
@@ -42,10 +42,10 @@ class Breadcrumb extends Component
     protected function specifyLocators(): array
     {
         return [
-            new CSSLocator('breadcrumb', '.breadcrumb'),
-            new CSSLocator('breadcrumbItem', '.breadcrumb-item'),
-            new CSSLocator('breadcrumbItemLink', '.breadcrumb-item a'),
-            new CSSLocator('activeBreadcrumb', '.breadcrumb-item.active'),
+            new VisibleCSSLocator('breadcrumb', '.breadcrumb'),
+            new VisibleCSSLocator('breadcrumbItem', '.breadcrumb-item'),
+            new VisibleCSSLocator('breadcrumbItemLink', '.breadcrumb-item a'),
+            new VisibleCSSLocator('activeBreadcrumb', '.breadcrumb-item.active'),
         ];
     }
 }

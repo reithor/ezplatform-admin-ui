@@ -7,7 +7,7 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
 use EzSystems\Behat\Browser\Page\Browser;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\DateAndTimePopup;
 use PHPUnit\Framework\Assert;
 
@@ -28,7 +28,7 @@ class Time extends FieldTypeComponent
 
     public function setValue(array $parameters): void
     {
-        $fieldSelector = $this->parentSelector->withDescendant($this->getLocator('fieldInput'));
+        $fieldSelector = $this->parentLocator->withDescendant($this->getLocator('fieldInput'));
 
         $this->getHTMLPage()->find($fieldSelector)->click();
 
@@ -37,7 +37,7 @@ class Time extends FieldTypeComponent
         $this->dateAndTimePopup->setTime($time[0], $time[1]);
 
         // This click is closing the date and time picker, to finally ensure that value is set up.
-        $this->getHTMLPage()->find($this->parentSelector)->click();
+        $this->getHTMLPage()->find($this->parentLocator)->click();
 
         $expectedTimeValue = date_format(date_create($parameters['value']), self::VALUE_TIME_FORMAT);
         $actualTimeValue = date_format(date_create($this->getHTMLPage()->find($fieldSelector)->getValue()), self::VALUE_TIME_FORMAT);
@@ -47,7 +47,7 @@ class Time extends FieldTypeComponent
 
     public function verifyValueInItemView(array $values): void
     {
-        $actualTimeValue = date_format(date_create($this->getHTMLPage()->find($this->getLocator('fieldContainer'))->getText()), self::VALUE_TIME_FORMAT);
+        $actualTimeValue = date_format(date_create($this->getHTMLPage()->find($this->parentLocator)->getText()), self::VALUE_TIME_FORMAT);
         $expectedTimeValue = date_format(date_create($values['value']), self::VALUE_TIME_FORMAT);
         Assert::assertEquals(
             $expectedTimeValue,
@@ -59,7 +59,7 @@ class Time extends FieldTypeComponent
     protected function specifyLocators(): array
     {
         return [
-            new CSSLocator('fieldInput', '.ez-data-source__input-wrapper input'),
+            new VisibleCSSLocator('fieldInput', '.ez-data-source__input-wrapper input'),
         ];
     }
 

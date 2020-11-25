@@ -8,7 +8,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Element\NodeElement;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
 class UniversalDiscoveryWidget extends Component
@@ -67,19 +67,19 @@ class UniversalDiscoveryWidget extends Component
 
     protected function addItemToMultiSelection(string $itemName, int $level): void
     {
-        $currentSelectedItemSelector = new CSSLocator('', sprintf($this->getLocator('treeLevelSelectedFormat')->getSelector(), $level));
+        $currentSelectedItemSelector = new VisibleCSSLocator('', sprintf($this->getLocator('treeLevelSelectedFormat')->getSelector(), $level));
         $this->getHTMLPage()->findAll($currentSelectedItemSelector)->getByText($itemName)->mouseOver();
 
-        $addItemSelector = new CSSLocator('', sprintf($this->getLocator('currentlySelectedAddItemButtonFormat')->getSelector(), $level));
+        $addItemSelector = new VisibleCSSLocator('', sprintf($this->getLocator('currentlySelectedAddItemButtonFormat')->getSelector(), $level));
         $this->getHTMLPage()->find($addItemSelector)->click();
 
-        $addedItemSelector = new CSSLocator('', sprintf($this->getLocator('currentlySelectedItemAddedFormat')->getSelector(), $level));
+        $addedItemSelector = new VisibleCSSLocator('', sprintf($this->getLocator('currentlySelectedItemAddedFormat')->getSelector(), $level));
         Assert::assertTrue($this->getHTMLPage()->find($addedItemSelector)->isVisible());
     }
 
     protected function selectTreeBranch(string $itemName, int $level): void
     {
-        $treeLevelSelector = new CSSLocator('', sprintf($this->getLocator('treeLevelFormat')->getSelector(), $level));
+        $treeLevelSelector = new VisibleCSSLocator('', sprintf($this->getLocator('treeLevelFormat')->getSelector(), $level));
 
         Assert::assertTrue($this->getHTMLPage()->setTimeout(self::LONG_TIMEOUT)->find($treeLevelSelector)->isVisible());
 
@@ -98,11 +98,11 @@ class UniversalDiscoveryWidget extends Component
             $currentItems = $this->getItemsFromLevel($level + 1);
         }
 
-        $treeElementsSelector = new CSSLocator('', sprintf($this->getLocator('treeLevelElementsFormat')->getSelector(), $level));
+        $treeElementsSelector = new VisibleCSSLocator('', sprintf($this->getLocator('treeLevelElementsFormat')->getSelector(), $level));
         $this->getHTMLPage()->findAll($treeElementsSelector)->getByText($itemName)->click();
         Assert::assertTrue(
             $this->getHTMLPage()->findAll(
-                new CSSLocator('', sprintf($this->getLocator('treeLevelSelectedFormat')->getSelector(), $level))
+                new VisibleCSSLocator('', sprintf($this->getLocator('treeLevelSelectedFormat')->getSelector(), $level))
             )->getByText($itemName)->isVisible()
         );
 
@@ -121,7 +121,7 @@ class UniversalDiscoveryWidget extends Component
 
     protected function getItemsFromLevel(int $level): array
     {
-        $levelItemsSelector = new CSSLocator('css', sprintf($this->getLocator('treeLevelElementsFormat')->getSelector(), $level));
+        $levelItemsSelector = new VisibleCSSLocator('css', sprintf($this->getLocator('treeLevelElementsFormat')->getSelector(), $level));
 
         return $this->getHTMLPage()->findAll($levelItemsSelector)->map(
             function (NodeElement $element) {
@@ -132,7 +132,7 @@ class UniversalDiscoveryWidget extends Component
 
     private function getCurrentlySelectedItemName(int $level): ?string
     {
-        $selectedElementSelector = new CSSLocator(
+        $selectedElementSelector = new VisibleCSSLocator(
             'selectedElement',
             sprintf($this->getLocator('treeLevelSelectedFormat')->getSelector(), $level)
         );
@@ -147,7 +147,7 @@ class UniversalDiscoveryWidget extends Component
         return $this->getHTMLPage()->
             setTimeout(self::SHORT_TIMEOUT)->
             find(
-                new CSSLocator(
+                new VisibleCSSLocator(
                     'css',
                     sprintf($this->getLocator('treeLevelElementsFormat')->getSelector(), $currentLevel + 1))
             )->isVisible();
@@ -178,21 +178,21 @@ class UniversalDiscoveryWidget extends Component
     {
         return [
             // general selectors
-            new CSSLocator('confirmButton', '.c-selected-locations__confirm-button'),
-            new CSSLocator('categoryTabSelector', '.c-tab-selector__item'),
-            new CSSLocator('cancelButton', '.c-top-menu__cancel-btn'),
-            new CSSLocator('mainWindow', '.m-ud'),
-            new CSSLocator('selectedLocationsTab', '.c-selected-locations'),
+            new VisibleCSSLocator('confirmButton', '.c-selected-locations__confirm-button'),
+            new VisibleCSSLocator('categoryTabSelector', '.c-tab-selector__item'),
+            new VisibleCSSLocator('cancelButton', '.c-top-menu__cancel-btn'),
+            new VisibleCSSLocator('mainWindow', '.m-ud'),
+            new VisibleCSSLocator('selectedLocationsTab', '.c-selected-locations'),
             // selectors for path traversal
-            new CSSLocator('treeLevelFormat', '.c-finder-branch:nth-child(%d)'),
-            new CSSLocator('treeLevelElementsFormat', '.c-finder-branch:nth-of-type(%d) .c-finder-leaf'),
-            new CSSLocator('treeLevelSelectedFormat', '.c-finder-branch:nth-of-type(%d) .c-finder-leaf--marked'),
+            new VisibleCSSLocator('treeLevelFormat', '.c-finder-branch:nth-child(%d)'),
+            new VisibleCSSLocator('treeLevelElementsFormat', '.c-finder-branch:nth-of-type(%d) .c-finder-leaf'),
+            new VisibleCSSLocator('treeLevelSelectedFormat', '.c-finder-branch:nth-of-type(%d) .c-finder-leaf--marked'),
             // selectors for multiitem selection
-            new CSSLocator('multiSelectAddButton', '.c-toggle-selection-button'),
+            new VisibleCSSLocator('multiSelectAddButton', '.c-toggle-selection-button'),
             // itemActions
-            new CSSLocator('previewButton', '.c-content-meta-preview__preview-button'),
-            new CSSLocator('currentlySelectedItemAddedFormat', '.c-finder-branch:nth-of-type(%d) .c-finder-leaf--marked .c-toggle-selection-button.c-toggle-selection-button--selected'),
-            new CSSLocator('currentlySelectedAddItemButtonFormat', '.c-finder-branch:nth-of-type(%d) .c-finder-leaf--marked .c-toggle-selection-button.c-toggle-selection-button--selected'),
+            new VisibleCSSLocator('previewButton', '.c-content-meta-preview__preview-button'),
+            new VisibleCSSLocator('currentlySelectedItemAddedFormat', '.c-finder-branch:nth-of-type(%d) .c-finder-leaf--marked .c-toggle-selection-button.c-toggle-selection-button--selected'),
+            new VisibleCSSLocator('currentlySelectedAddItemButtonFormat', '.c-finder-branch:nth-of-type(%d) .c-finder-leaf--marked .c-toggle-selection-button.c-toggle-selection-button--selected'),
         ];
     }
 }

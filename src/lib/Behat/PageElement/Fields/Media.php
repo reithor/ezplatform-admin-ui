@@ -7,13 +7,14 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
 use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
 class Media extends FieldTypeComponent
 {
     public function setValue(array $parameters): void
     {
-        $fieldSelector = $this->parentSelector->withDescendant($this->getLocator('fieldInput'));
+        $fieldSelector = $this->getLocator('fieldInput')->withParent($this->parentLocator);
         $this->getHTMLPage()->find($fieldSelector)->attachFile(
             $this->browser->getRemoteFileUploadPath($parameters['value'])
         );
@@ -25,14 +26,14 @@ class Media extends FieldTypeComponent
 
         Assert::assertContains(
             $filename,
-            $this->getHTMLPage()->find($this->parentSelector)->getText(),
+            $this->getHTMLPage()->find($this->parentLocator)->getText(),
             'Media has wrong file name'
         );
 
         Assert::assertContains(
             $filename,
             $this->getHTMLPage()->find(
-                $this->parentSelector->withDescendant($this->getLocator('video'))
+                $this->parentLocator->withDescendant($this->getLocator('video'))
             )->getAttribute('src'),
             'Media has wrong source'
         );
@@ -42,7 +43,7 @@ class Media extends FieldTypeComponent
     {
         return [
             new CSSLocator('fieldInput', 'input[type=file]'),
-            new CSSLocator('video', 'video'),
+            new VisibleCSSLocator('video', 'video'),
         ];
     }
 

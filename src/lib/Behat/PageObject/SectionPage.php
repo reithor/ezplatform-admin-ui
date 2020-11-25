@@ -7,7 +7,7 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use EzSystems\Behat\Browser\Page\Page;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
 class SectionPage extends Page
@@ -138,7 +138,7 @@ class SectionPage extends Page
     protected function specifyLocators(): array
     {
         return [
-            new CSSLocator('pageTitle', '.ez-header h1'),
+            new VisibleCSSLocator('pageTitle', '.ez-header h1'),
         ];
     }
 }

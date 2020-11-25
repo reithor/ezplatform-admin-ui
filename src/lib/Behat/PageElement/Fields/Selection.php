@@ -6,7 +6,7 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 
 class Selection extends FieldTypeComponent
 {
@@ -14,14 +14,14 @@ class Selection extends FieldTypeComponent
     {
         $value = $parameters['value'];
 
-        $fieldSelector = $this->parentSelector->withDescendant($this->getLocator('selectBar'));
+        $fieldSelector = $this->parentLocator->withDescendant($this->getLocator('selectBar'));
         $this->getHTMLPage()->find($fieldSelector)->click();
         $this->getHTMLPage()->findAll($this->getLocator('selectOption'))->getByText($value)->click();
     }
 
     public function getValue(): array
     {
-        $fieldSelector = $this->parentSelector->withDescendant($this->getLocator('selectBar'));
+        $fieldSelector = $this->parentLocator->withDescendant($this->getLocator('selectBar'));
 
 
         return [$this->getHTMLPage()->find($fieldSelector)->getValue()];
@@ -35,9 +35,9 @@ class Selection extends FieldTypeComponent
     public function specifyLocators(): array
     {
         return [
-            new CSSLocator('selectBar', '.ez-custom-dropdown__selection-info'),
-            new CSSLocator('selectOption', '.ez-custom-dropdown__item'),
-            new CSSLocator('specificOption', '.ez-custom-dropdown__item:nth-child(%s)'),
+            new VisibleCSSLocator('selectBar', '.ez-custom-dropdown__selection-info'),
+            new VisibleCSSLocator('selectOption', '.ez-custom-dropdown__item'),
+            new VisibleCSSLocator('specificOption', '.ez-custom-dropdown__item:nth-child(%s)'),
         ];
     }
 }

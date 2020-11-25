@@ -7,19 +7,19 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
 use EzSystems\Behat\Browser\Component\Component;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
 abstract class FieldTypeComponent extends Component implements FieldTypeComponentInterface
 {
     /**
-     * @var CSSLocator
+     * @var VisibleCSSLocator
      */
-    protected $parentSelector;
+    protected $parentLocator;
 
     public function setValue(array $parameters): void
     {
-        $fieldSelector = $this->parentSelector->withDescendant($this->getLocator('fieldInput'));
+        $fieldSelector = $this->parentLocator->withDescendant($this->getLocator('fieldInput'));
 
         $value = $parameters['value'];
         $this->getHTMLPage()->find($fieldSelector)->setValue($value);
@@ -27,7 +27,7 @@ abstract class FieldTypeComponent extends Component implements FieldTypeComponen
 
     public function getValue(): array
     {
-        $fieldSelector = $this->parentSelector->withDescendant($this->getLocator('fieldInput'));
+        $fieldSelector = $this->parentLocator->withDescendant($this->getLocator('fieldInput'));
         $value = $this->getHTMLPage()->find($fieldSelector)->getValue();
 
         return [$value];
@@ -37,13 +37,13 @@ abstract class FieldTypeComponent extends Component implements FieldTypeComponen
     {
         Assert::assertEquals(
             $values['value'],
-            $this->getHTMLPage()->find($this->parentSelector)->getText(),
+            $this->getHTMLPage()->find($this->parentLocator)->getText(),
             'Field has wrong value'
         );
     }
-    public function setParentContainer(CSSLocator $selector): void
+    public function setParentLocator(VisibleCSSLocator $locator): void
     {
-        $this->parentSelector = $selector;
+        $this->parentLocator = $locator;
     }
 
     abstract public function getFieldTypeIdentifier(): string;

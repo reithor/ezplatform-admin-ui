@@ -9,7 +9,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 use Exception;
 use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Element\NodeElement;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
 /** Element that describes user notification bar, that appears on the bottom of the screen */
@@ -71,11 +71,11 @@ class Notification extends Component
     protected function specifyLocators(): array
     {
         return [
-            new CSSLocator('alert', '.ez-notifications-container .alert.show'),
-            new CSSLocator('alertMessage', '.ez-notifications-container .alert.show span:nth-of-type(2)'),
-            new CSSLocator('successAlert', '.alert-success'),
-            new CSSLocator('failureAlert', '.alert-danger'),
-            new CSSLocator('closeAlert', 'button.close'),
+            new VisibleCSSLocator('alert', '.ez-notifications-container .alert.show'),
+            new VisibleCSSLocator('alertMessage', '.ez-notifications-container .alert.show span:nth-of-type(2)'),
+            new VisibleCSSLocator('successAlert', '.alert-success'),
+            new VisibleCSSLocator('failureAlert', '.alert-danger'),
+            new VisibleCSSLocator('closeAlert', 'button.close'),
         ];
     }
 }

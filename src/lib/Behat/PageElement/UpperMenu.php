@@ -9,7 +9,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Element\Element;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
 /** Element that describes upper menu (Content, Admin, Page and theirs children) */
@@ -54,12 +54,12 @@ class UpperMenu extends Component
     protected function specifyLocators(): array
     {
         return [
-            new CSSLocator('menuButton', '.ez-main-nav .nav-link'),
-            new CSSLocator('submenuButton', '.ez-main-sub-nav .nav-link'),
-            new CSSLocator('dashboardLink', '.navbar-brand'),
-            new CSSLocator('pendingNotificationsCount', '.ez-user-menu__name-wrapper .n-pending-notifications'),
-            new CSSLocator('userSettingsToggle', '.ez-user-menu__name-wrapper'),
-            new CSSLocator('userSettingsItem', '.ez-user-menu__item'),
+            new VisibleCSSLocator('menuButton', '.ez-main-nav .nav-link'),
+            new VisibleCSSLocator('submenuButton', '.ez-main-sub-nav .nav-link'),
+            new VisibleCSSLocator('dashboardLink', '.navbar-brand'),
+            new VisibleCSSLocator('pendingNotificationsCount', '.ez-user-menu__name-wrapper .n-pending-notifications'),
+            new VisibleCSSLocator('userSettingsToggle', '.ez-user-menu__name-wrapper'),
+            new VisibleCSSLocator('userSettingsItem', '.ez-user-menu__item'),
         ];
     }
 }

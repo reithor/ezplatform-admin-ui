@@ -8,7 +8,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\FieldTypeComponent;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
 use PHPUnit\Framework\Assert;
@@ -73,13 +73,13 @@ class ContentUpdateItemPage extends Page
     protected function specifyLocators(): array
     {
         return [
-            new CSSLocator('pageTitle', '.ez-content-edit-page-title__title'),
-            new CSSLocator('formElement', '[name=ezplatform_content_forms_content_edit]'),
-            new CSSLocator('closeButton', '.ez-content-edit-container__close'),
-            new CSSLocator('fieldLabel', '.ez-field-edit__label-wrapper label.ez-field-edit__label, .ez-field-edit__label-wrapper legend, .ez-card > .card-body > div > div > legend'),
-            new CSSLocator('nthField', '.ez-card .card-body > div > div:nth-of-type(%s)'),
-            new CSSLocator('noneditableFieldClass', 'ez-field-edit--eznoneditable'),
-            new CSSLocator('fieldOfType', '.ez-field-edit--%s'),
+            new VisibleCSSLocator('pageTitle', '.ez-content-edit-page-title__title'),
+            new VisibleCSSLocator('formElement', '[name=ezplatform_content_forms_content_edit]'),
+            new VisibleCSSLocator('closeButton', '.ez-content-edit-container__close'),
+            new VisibleCSSLocator('fieldLabel', '.ez-field-edit__label-wrapper label.ez-field-edit__label, .ez-field-edit__label-wrapper legend, .ez-card > .card-body > div > div > legend'),
+            new VisibleCSSLocator('nthField', '.ez-card .card-body > div > div:nth-of-type(%s)'),
+            new VisibleCSSLocator('noneditableFieldClass', 'ez-field-edit--eznoneditable'),
+            new VisibleCSSLocator('fieldOfType', '.ez-field-edit--%s'),
         ];
     }
 
@@ -90,13 +90,13 @@ class ContentUpdateItemPage extends Page
 
     public function getField(string $fieldName): FieldTypeComponent
     {
-        $fieldLocator = new CSSLocator('', sprintf($this->getLocator('nthField')->getSelector(), $this->getFieldPosition($fieldName)));
+        $fieldLocator = new VisibleCSSLocator('', sprintf($this->getLocator('nthField')->getSelector(), $this->getFieldPosition($fieldName)));
         $fieldtypeIdentifier = $this->getFieldtypeIdentifier($fieldLocator, $fieldName);
 
         foreach ($this->fieldTypeComponents as $fieldTypeComponent)
         {
             if ($fieldTypeComponent->getFieldTypeIdentifier() === $fieldtypeIdentifier) {
-                $fieldTypeComponent->setParentContainer($fieldLocator);
+                $fieldTypeComponent->setParentLocator($fieldLocator);
 
                 return $fieldTypeComponent;
             }
@@ -125,7 +125,7 @@ class ContentUpdateItemPage extends Page
         $this->getField($label)->verifyValueInEditView($fieldData);
     }
 
-    private function getFieldtypeIdentifier(CSSLocator $fieldLocator, string $fieldName): string
+    private function getFieldtypeIdentifier(VisibleCSSLocator $fieldLocator, string $fieldName): string
     {
         $isEditable = !$this->getHTMLPage()
             ->find($fieldLocator)

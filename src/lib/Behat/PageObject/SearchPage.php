@@ -9,7 +9,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\Behat\Browser\Page\Page;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\DashboardTable;
 use PHPUnit\Framework\Assert;
 
@@ -49,9 +49,9 @@ class SearchPage extends Page
     protected function specifyLocators(): array
     {
         return [
-            new CSSLocator('inputField', '.ez-search-form #search_query'),
-            new CSSLocator('buttonSearch', '.ez-btn--search'),
-            new CSSLocator('pageTitle', '.ez-page-title .ez-page-title__content-name'),
+            new VisibleCSSLocator('inputField', '.ez-search-form #search_query'),
+            new VisibleCSSLocator('buttonSearch', '.ez-btn--search'),
+            new VisibleCSSLocator('pageTitle', '.ez-page-title .ez-page-title__content-name'),
         ];
     }
 }

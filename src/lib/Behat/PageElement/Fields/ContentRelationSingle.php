@@ -7,7 +7,7 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
 use Behat\Mink\Session;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
 use PHPUnit\Framework\Assert;
 
@@ -21,7 +21,7 @@ class ContentRelationSingle extends FieldTypeComponent
     public function specifyLocators(): array
     {
         return [
-            new CSSLocator('selectContent', '.ez-relations__cta-btn-label'),
+            new VisibleCSSLocator('selectContent', '.ez-relations__cta-btn-label'),
         ];
     }
 
@@ -88,7 +88,7 @@ class ContentRelationSingle extends FieldTypeComponent
 
     public function isRelationEmpty(): bool
     {
-        $selectSelector = $this->parentSelector->withDescendant($this->getLocator('selectContent'));
+        $selectSelector = $this->parentLocator->withDescendant($this->getLocator('selectContent'));
 
         return $this->getHTMLPage()->findAll($selectSelector)->any();
     }

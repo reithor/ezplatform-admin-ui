@@ -7,7 +7,7 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\Browser\Component\Component;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
 class LeftMenu extends Component
@@ -35,8 +35,8 @@ class LeftMenu extends Component
     protected function specifyLocators(): array
     {
         return [
-            new CSSLocator('buttonSelector', '.ez-sticky-container .btn'),
-            new CSSLocator('menuSelector', '.ez-side-menu'),
+            new VisibleCSSLocator('buttonSelector', '.ez-sticky-container .btn'),
+            new VisibleCSSLocator('menuSelector', '.ez-side-menu'),
         ];
     }
 }

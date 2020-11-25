@@ -7,7 +7,7 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
 use EzSystems\Behat\Browser\Element\NodeElement;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
 class Keywords extends FieldTypeComponent
@@ -45,7 +45,7 @@ SCRIPT;
         $expectedValues = $this->parseValueString($values['value']);
 
         $actualValues = $this->getHTMLPage()
-            ->findAll($this->parentSelector->withDescendant($this->getLocator('keywordItem')))
+            ->findAll($this->parentLocator->withDescendant($this->getLocator('keywordItem')))
             ->map(static function (NodeElement $element) {
                 return $element->getText();
             });
@@ -70,8 +70,8 @@ SCRIPT;
     public function specifyLocators(): array
     {
         return [
-            new CSSLocator('fieldInput', 'input'),
-            new CSSLocator('keywordItem', '.ez-keyword__item'),
+            new VisibleCSSLocator('fieldInput', 'input'),
+            new VisibleCSSLocator('keywordItem', '.ez-keyword__item'),
         ];
     }
 

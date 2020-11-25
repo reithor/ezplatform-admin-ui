@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
 class MapLocation extends FieldTypeComponent
@@ -35,7 +35,7 @@ class MapLocation extends FieldTypeComponent
 
     private function setSpecificCoordinate(string $coordinateName, string $value): void
     {
-        $fieldSelector = $this->parentSelector->withDescendant($this->getLocator($coordinateName));
+        $fieldSelector = $this->parentLocator->withDescendant($this->getLocator($coordinateName));
         $this->getHTMLPage()->find($fieldSelector)->setValue($value);
     }
 
@@ -50,7 +50,7 @@ class MapLocation extends FieldTypeComponent
 
     public function getSpecificCoordinate(string $coordinateName): string
     {
-        $coordinateSelector = $this->parentSelector->withDescendant($this->getLocator($coordinateName));
+        $coordinateSelector = $this->parentLocator->withDescendant($this->getLocator($coordinateName));
 
         return $this->getHTMLPage()->find($coordinateSelector)->getValue();
     }
@@ -80,7 +80,7 @@ class MapLocation extends FieldTypeComponent
 
     public function verifyValueInItemView(array $expectedValues): void
     {
-        $mapText = $this->getHTMLPage()->find($this->parentSelector)->getText();
+        $mapText = $this->getHTMLPage()->find($this->parentLocator)->getText();
 
         $matches = [];
         preg_match('/Address: (.*) Latitude: (.*) Longitude: (.*)/', $mapText, $matches);
@@ -110,10 +110,10 @@ class MapLocation extends FieldTypeComponent
     public function specifyLocators(): array
     {
         return [
-            new CSSLocator('latitude', '#ezplatform_content_forms_content_edit_fieldsData_ezgmaplocation_value_latitude'),
-            new CSSLocator('longitude', '#ezplatform_content_forms_content_edit_fieldsData_ezgmaplocation_value_longitude'),
-            new CSSLocator('address', '#ezplatform_content_forms_content_edit_fieldsData_ezgmaplocation_value_address'),
-            new CSSLocator('searchButton', '.btn--search-by-address'),
+            new VisibleCSSLocator('latitude', '#ezplatform_content_forms_content_edit_fieldsData_ezgmaplocation_value_latitude'),
+            new VisibleCSSLocator('longitude', '#ezplatform_content_forms_content_edit_fieldsData_ezgmaplocation_value_longitude'),
+            new VisibleCSSLocator('address', '#ezplatform_content_forms_content_edit_fieldsData_ezgmaplocation_value_address'),
+            new VisibleCSSLocator('searchButton', '.btn--search-by-address'),
         ];
     }
 }

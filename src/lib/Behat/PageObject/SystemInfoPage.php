@@ -9,7 +9,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 use Behat\Mink\Session;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\TableNavigationTab;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SimpleTable;
@@ -85,7 +85,7 @@ class SystemInfoPage extends Page
     protected function specifyLocators(): array
     {
         return [
-            new CSSLocator('pageTitle', '.ez-header h1'),
+            new VisibleCSSLocator('pageTitle', '.ez-header h1'),
         ];
     }
 }

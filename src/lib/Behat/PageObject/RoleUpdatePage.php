@@ -6,7 +6,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 use Behat\Mink\Session;
 use Exception;
 use EzSystems\Behat\Browser\Page\Browser;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\AdminUpdateItemPage;
@@ -67,11 +67,11 @@ class RoleUpdatePage extends AdminUpdateItemPage
     public function specifyLocators(): array
     {
         return [
-            new CSSLocator('limitationField', '.ez-update-policy__action-wrapper'),
-            new CSSLocator('limitationDropdown', '.ez-custom-dropdown__selection-info'),
-            new CSSLocator('limitationDropdownOption', 'ul:not(.ez-custom-dropdown__items--hidden) .ez-custom-dropdown__item'),
-            new CSSLocator('limitationDropdownOptionRemove', '.ez-custom-dropdown__remove-selection'),
-            new CSSLocator('labelSelector', '.ez-label'),
+            new VisibleCSSLocator('limitationField', '.ez-update-policy__action-wrapper'),
+            new VisibleCSSLocator('limitationDropdown', '.ez-custom-dropdown__selection-info'),
+            new VisibleCSSLocator('limitationDropdownOption', 'ul:not(.ez-custom-dropdown__items--hidden) .ez-custom-dropdown__item'),
+            new VisibleCSSLocator('limitationDropdownOptionRemove', '.ez-custom-dropdown__remove-selection'),
+            new VisibleCSSLocator('labelSelector', '.ez-label'),
         ];
     }
 

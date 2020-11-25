@@ -6,7 +6,7 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
 class Country extends FieldTypeComponent
@@ -27,10 +27,10 @@ class Country extends FieldTypeComponent
     public function specifyLocators(): array
     {
         return [
-            new CSSLocator('fieldInput', 'select'),
-            new CSSLocator('dropdownSelector', '.ez-custom-dropdown__selection-info'),
-            new CSSLocator('dropdownExpanded', '.ez-custom-dropdown__selection-info:not(.ez-custom-dropdown__items--hidden)'),
-            new CSSLocator('dropdownItem', '.ez-custom-dropdown__item'),
+            new VisibleCSSLocator('fieldInput', 'select'),
+            new VisibleCSSLocator('dropdownSelector', '.ez-custom-dropdown__selection-info'),
+            new VisibleCSSLocator('dropdownExpanded', '.ez-custom-dropdown__selection-info:not(.ez-custom-dropdown__items--hidden)'),
+            new VisibleCSSLocator('dropdownItem', '.ez-custom-dropdown__item'),
         ];
     }
 }

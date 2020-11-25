@@ -7,7 +7,7 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
 use EzSystems\Behat\Browser\Element\NodeElement;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 use Exception;
 
@@ -50,7 +50,7 @@ class RichText extends FieldTypeComponent
 
         $this->getHTMLPage()->find($this->getLocator('styleDropdown'))->click();
 
-        $blockStyleSelector = $this->getLocator('blockstyle')->withDescendant(new CSSLocator('style', $style));
+        $blockStyleSelector = $this->getLocator('blockstyle')->withDescendant(new VisibleCSSLocator('style', $style));
 
         $this->getHTMLPage()->find($blockStyleSelector)->click();
     }
@@ -75,7 +75,7 @@ class RichText extends FieldTypeComponent
         }
 
         $this->changeStyle($style);
-        $selector = $this->getLocator('fieldInput')->withDescendant(new CSSLocator('style', $style));
+        $selector = $this->getLocator('fieldInput')->withDescendant(new VisibleCSSLocator('style', $style));
 
         Assert::assertContains(
             sprintf('%s%s</%s>', $value, '<br>', $style),
@@ -140,7 +140,7 @@ class RichText extends FieldTypeComponent
             throw new Exception(sprintf('Unsupported direction: %s', $direction));
         }
 
-        $moveSelector = $this->getLocator('moveButton')->withDescendant(new CSSLocator('direction', $direction));
+        $moveSelector = $this->getLocator('moveButton')->withDescendant(new VisibleCSSLocator('direction', $direction));
 
         $this->getHTMLPage()->find($moveSelector)->click();
     }
@@ -148,19 +148,19 @@ class RichText extends FieldTypeComponent
     protected function specifyLocators(): array
     {
         return [
-            new CSSLocator('fieldInput', '.ez-data-source__richtext'),
-            new CSSLocator('textarea', 'textarea'),
-            new CSSLocator('embedInlineButton', '.ez-btn-ae--embed-inline'),
-            new CSSLocator('embedButton', '.ez-btn-ae--embed'),
-            new CSSLocator('addButton', '.ae-button-add'),
-            new CSSLocator('embedTitle', '.cke_widget_ezembed .ez-embed-content__title'),
-            new CSSLocator('embedInlineTitle', '.cke_widget_ezembedinline .ez-embed-content__title'),
-            new CSSLocator('unorderedListButton', '.ez-btn-ae--unordered-list'),
-            new CSSLocator('unorderedListElement', '.ez-data-source__richtext ul li'),
-            new CSSLocator('styleDropdown', '.ae-toolbar-element'),
-            new CSSLocator('blockStyle', '.ae-listbox li %s'),
-            new CSSLocator('moveButton', '.ez-btn-ae--move-%s'),
-            new CSSLocator('toolbarButton', '.ae-toolbar .ez-btn-ae'),
+            new VisibleCSSLocator('fieldInput', '.ez-data-source__richtext'),
+            new VisibleCSSLocator('textarea', 'textarea'),
+            new VisibleCSSLocator('embedInlineButton', '.ez-btn-ae--embed-inline'),
+            new VisibleCSSLocator('embedButton', '.ez-btn-ae--embed'),
+            new VisibleCSSLocator('addButton', '.ae-button-add'),
+            new VisibleCSSLocator('embedTitle', '.cke_widget_ezembed .ez-embed-content__title'),
+            new VisibleCSSLocator('embedInlineTitle', '.cke_widget_ezembedinline .ez-embed-content__title'),
+            new VisibleCSSLocator('unorderedListButton', '.ez-btn-ae--unordered-list'),
+            new VisibleCSSLocator('unorderedListElement', '.ez-data-source__richtext ul li'),
+            new VisibleCSSLocator('styleDropdown', '.ae-toolbar-element'),
+            new VisibleCSSLocator('blockStyle', '.ae-listbox li %s'),
+            new VisibleCSSLocator('moveButton', '.ez-btn-ae--move-%s'),
+            new VisibleCSSLocator('toolbarButton', '.ae-toolbar .ez-btn-ae'),
         ];
     }
 

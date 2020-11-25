@@ -8,7 +8,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use ErrorException;
 use EzSystems\Behat\Browser\Page\Page;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
 class ContentPreviewPage extends Page
@@ -31,13 +31,13 @@ class ContentPreviewPage extends Page
     protected function specifyLocators(): array
     {
         return [
-            new CSSLocator('previewNav', '.ez-preview__nav'),
-            new CSSLocator('backToEdit', '.ez-preview__nav .ez-preview__item--back a'),
-            new CSSLocator('title', '.ez-preview__nav .ez-preview__item--description'),
-            new CSSLocator('desktop', '.ez-preview__nav .ez-preview__item--actions .ez-icon-desktop'),
-            new CSSLocator('tablet', '.ez-preview__nav .ez-preview__item--actions .ez-icon-tablet'),
-            new CSSLocator('mobile', '.ez-preview__nav .ez-preview__item--actions .ez-icon-mobile'),
-            new CSSLocator('selectedView', '.ez-preview__action--selected'),
+            new VisibleCSSLocator('previewNav', '.ez-preview__nav'),
+            new VisibleCSSLocator('backToEdit', '.ez-preview__nav .ez-preview__item--back a'),
+            new VisibleCSSLocator('title', '.ez-preview__nav .ez-preview__item--description'),
+            new VisibleCSSLocator('desktop', '.ez-preview__nav .ez-preview__item--actions .ez-icon-desktop'),
+            new VisibleCSSLocator('tablet', '.ez-preview__nav .ez-preview__item--actions .ez-icon-tablet'),
+            new VisibleCSSLocator('mobile', '.ez-preview__nav .ez-preview__item--actions .ez-icon-mobile'),
+            new VisibleCSSLocator('selectedView', '.ez-preview__action--selected'),
         ];
     }
 

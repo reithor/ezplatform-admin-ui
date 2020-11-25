@@ -9,7 +9,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Element\Element;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 
 class Pagination extends Component
 {
@@ -32,8 +32,8 @@ class Pagination extends Component
     protected function specifyLocators(): array
     {
         return [
-            new CSSLocator('nextButton','.pagination .page-item.next:not(.disabled)'),
-            new CSSLocator('spinner','.m-sub-items__spinner-wrapper'),
+            new VisibleCSSLocator('nextButton','.pagination .page-item.next:not(.disabled)'),
+            new VisibleCSSLocator('spinner','.m-sub-items__spinner-wrapper'),
         ];
     }
 }

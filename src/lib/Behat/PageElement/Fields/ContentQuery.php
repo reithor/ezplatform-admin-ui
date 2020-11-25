@@ -7,7 +7,7 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
 use EzSystems\Behat\Browser\Element\NodeElement;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
 class ContentQuery extends NonEditableField
@@ -25,7 +25,7 @@ class ContentQuery extends NonEditableField
 
     private function getValueInItemView(): array
     {
-        $itemSelector = $this->parentSelector->withDescendant($this->getLocator('queryResultItem'));
+        $itemSelector = $this->parentLocator->withDescendant($this->getLocator('queryResultItem'));
 
         return $this->getHTMLPage()->findAll($itemSelector)->map(function (NodeElement $element) {
             return $element->getText();
@@ -36,7 +36,7 @@ class ContentQuery extends NonEditableField
     {
         return array_merge(
             parent::specifyLocators(),
-            [new CSSLocator('queryResultItem', 'p a')],
+            [new VisibleCSSLocator('queryResultItem', 'p a')],
         );
     }
 

@@ -7,8 +7,8 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
 use EzSystems\Behat\Browser\Element\NodeElement;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
-use EzSystems\Behat\Browser\Selector\LocatorInterface;
+use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
+use EzSystems\Behat\Browser\Locator\LocatorInterface;
 use PHPUnit\Framework\Assert;
 
 class Matrix extends FieldTypeComponent
@@ -73,10 +73,10 @@ class Matrix extends FieldTypeComponent
 
     private function internalSetValue(int $rowIndex, string $column, $value): void
     {
-        $matrixCellSelector = CSSLocator::combine(
+        $matrixCellSelector = VisibleCSSLocator::combine(
             $this->getLocator('matrixCellSelectorFormat')->getSelector(),
-            new CSSLocator('rowIndex', (string)$rowIndex),
-            new CSSLocator('columnIndex', $column),
+            new VisibleCSSLocator('rowIndex', (string)$rowIndex),
+            new VisibleCSSLocator('columnIndex', $column),
         );
 
         $this->getHTMLPage()->find($matrixCellSelector)->setValue($value);
@@ -96,7 +96,7 @@ class Matrix extends FieldTypeComponent
         foreach ($rows as $row) {
             $parsedTable .= ',';
             $cellValues = $row
-                ->findAll(new CSSLocator('cell', 'td'))
+                ->findAll(new VisibleCSSLocator('cell', 'td'))
                 ->map(function (NodeElement $element) { return $element->getText();});
             $parsedTable .= implode(':', $cellValues);
         }
@@ -107,13 +107,13 @@ class Matrix extends FieldTypeComponent
     protected function specifyLocators(): array
     {
         return [
-            new CSSLocator('matrixCellSelectorFormat', '[name="ezplatform_content_forms_content_edit[fieldsData][ezmatrix][value][entries][%d][%s]"]'),
-            new CSSLocator('row', '.ez-table__matrix-entry'),
-            new CSSLocator('addRowButton', '.ez-btn--add-matrix-entry'),
-            new CSSLocator('viewModeTableHeaders', '.ez-content-field-value thead th'),
-            new CSSLocator('viewModeTableRow', '.ez-content-field-value tbody tr'),
-            new CSSLocator('editModeTableHeaders', '.ez-table thead th[data-identifier]'),
-            new CSSLocator('editModeTableRow', '.ez-table tr.ez-table__matrix-entry'),
+            new VisibleCSSLocator('matrixCellSelectorFormat', '[name="ezplatform_content_forms_content_edit[fieldsData][ezmatrix][value][entries][%d][%s]"]'),
+            new VisibleCSSLocator('row', '.ez-table__matrix-entry'),
+            new VisibleCSSLocator('addRowButton', '.ez-btn--add-matrix-entry'),
+            new VisibleCSSLocator('viewModeTableHeaders', '.ez-content-field-value thead th'),
+            new VisibleCSSLocator('viewModeTableRow', '.ez-content-field-value tbody tr'),
+            new VisibleCSSLocator('editModeTableHeaders', '.ez-table thead th[data-identifier]'),
+            new VisibleCSSLocator('editModeTableRow', '.ez-table tr.ez-table__matrix-entry'),
         ];
     }
 
