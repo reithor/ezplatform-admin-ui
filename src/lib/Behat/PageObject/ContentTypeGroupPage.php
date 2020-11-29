@@ -7,11 +7,10 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use Behat\Mink\Session;
+use eZ\Publish\API\Repository\ContentTypeService;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
-use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
 use PHPUnit\Framework\Assert;
 
 class ContentTypeGroupPage extends Page
@@ -21,11 +20,19 @@ class ContentTypeGroupPage extends Page
 
     /** @var string */
     protected $expectedName;
+    /**
+     * @var ContentTypeService
+     */
+    private $contentTypeService;
+    /**
+     * @var mixed
+     */
+    private $contentTypeGroupId;
 
-    public function __construct(Browser $browser, AdminList $adminList)
+    public function __construct(Browser $browser, ContentTypeService $contentTypeService)
     {
         parent::__construct($browser);
-        $this->adminList = $adminList;
+        $this->contentTypeService = $contentTypeService;
     }
 
     public function verifyListIsEmpty(): void
@@ -43,31 +50,46 @@ class ContentTypeGroupPage extends Page
         $this->adminList->clickItem(['Name' => $contentTypeName]);
     }
 
-    public function create(): void
+    public function createNew(): void
     {
         $this->getHTMLPage()->find($this->getLocator('createButton'))->click();
     }
 
+    public function isContentTypeOnTheList($contentTypeName)
+    {
+    }
+
+    public function delete(string $contentTypeName)
+    {
+        $this->adminList->delete($contentTypeName);
+    }
+
     protected function getRoute(): string
     {
-        return '/contenttypegroup/<id>'; // TODO: Get ContentTypeGroupID z nazwy
+        return sprintf('/contenttypegroup/%d', $this->contentTypeGroupId);
     }
 
     public function verifyIsLoaded(): void
     {
-        $this->adminList->verifyIsLoaded();
-        Assert::assertEquals(
-            'Content',
-            $this->getHTMLPage()->find($this->getLocator('pageTitle'))->getText()
-        );
-        Assert::assertEquals(
-            sprintf("Content Types in '%s'", $this->expectedName),
-            $this->getHTMLPage()->find($this->getLocator('listHeader'))->getText()
-        );
+        $this->getHTMLPage()
+            ->find($this->getLocator('pageTitle'))
+            ->assert()->textEquals($this->expectedName);
+        $this->getHTMLPage()
+            ->find($this->getLocator('listHeader'))
+            ->assert()->textEquals(sprintf("Content Types in '%s'", $this->expectedName));
     }
     
     public function setExpectedContentTypeGroupName(string $expectedName) {
         $this->expectedName = $expectedName;
+        $groups = $this->contentTypeService->loadContentTypeGroups();
+
+        foreach ($groups as $group) {
+            if ($group->identifier === $expectedName)
+            {
+                $this->contentTypeGroupId = $group->id;
+                return;
+            }
+        }
     }
 
     public function getName(): string

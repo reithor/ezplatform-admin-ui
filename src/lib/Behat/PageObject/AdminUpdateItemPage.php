@@ -6,6 +6,7 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
+use EzSystems\Behat\Browser\Element\NodeElement;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
@@ -38,10 +39,9 @@ class AdminUpdateItemPage extends Page
         return 'Admin item update';
     }
 
-    public function fillFieldWithValue(string $fieldName, $value, ?string $containerName = null): void
+    public function fillFieldWithValue(string $fieldName, $value): void
     {
-        $fieldElement = $this->getField($fieldName, null);
-        $fieldElement->setValue($value);
+        $this->getField($fieldName)->setValue($value);
     }
 
     public function clickButton(string $label, int $indexOfButton = 0): void
@@ -65,6 +65,16 @@ class AdminUpdateItemPage extends Page
             new VisibleCSSLocator('mainFormSection', 'form'),
             new VisibleCSSLocator('closeButton', '.ez-content-edit-container__close'),
             new VisibleCSSLocator('button', 'button'),
+            new VisibleCSSLocator('field', '.form-group'),
+            new VisibleCSSLocator('fieldInput', 'input'),
         ];
+    }
+
+    private function getField(string $fieldName): NodeElement
+    {
+        return $this->getHTMLPage()
+            ->findAll($this->getLocator('field'))
+            ->getByText($fieldName)
+            ->find($this->getLocator('fieldInput'));
     }
 }

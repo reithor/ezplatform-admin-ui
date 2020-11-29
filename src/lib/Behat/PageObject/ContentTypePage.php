@@ -6,15 +6,10 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
+use eZ\Publish\API\Repository\ContentTypeService;
+use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\DoubleHeaderTable;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SimpleTable;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SystemInfoTable;
-use PHPUnit\Framework\Assert;
 
 class ContentTypePage extends Page
 {
@@ -23,6 +18,8 @@ class ContentTypePage extends Page
 
     /** @var string locator for container of Content list */
     public $globalPropertiesTableLocator = '.ez-table--list';
+
+    private $contentTypeTableHeaders = ['Name', 'Identifier', 'Description'];
 
     /**
      * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList
@@ -38,38 +35,35 @@ class ContentTypePage extends Page
      */
     public $contentTypeAdminList;
 
-//    public function __construct(OldBrowserContext $context, string $contentTypeName)
-//    {
-
-//        $this->contentTypeAdminList = ElementFactory::createElement(
-//            $this->context,
-//            AdminList::ELEMENT_NAME,
-//            'Content Type',
-//            SimpleTable::ELEMENT_NAME
-//        );
-//        $this->globalPropertiesTable = ElementFactory::createElement(
-//            $this->context,
-//            SystemInfoTable::ELEMENT_NAME,
-//            $this->globalPropertiesTableLocator
-//        );
-//        $this->fieldsAdminList = ElementFactory::createElement(
-//            $this->context,
-//            AdminList::ELEMENT_NAME,
-//            'Content',
-//            DoubleHeaderTable::ELEMENT_NAME,
-//            $this->contentFieldDefinitionsListLocator
-//        );
-//        $this->pageTitle = $contentTypeName;
-//        $this->pageTitleLocator = '.ez-header h1';
-//    }
     /**
      * @var string
      */
     private $expectedContentTypeName;
+    /**
+     * @var ContentTypeService
+     */
+    private $contentTypeService;
+    /**
+     * @var mixed
+     */
+    private $expectedContenTypeGroupId;
+    /**
+     * @var mixed
+     */
+    private $expectedContenTypeId;
+
+    public function __construct(Browser $browser, ContentTypeService $contentTypeService)
+    {
+        parent::__construct($browser);
+        $this->contentTypeService = $contentTypeService;
+    }
 
     protected function getRoute(): string
     {
-        return '/contenttypegroup/'; //TODO: load content type
+        return sprintf(
+            '/contenttypegroup/%d/contenttype/%d',
+            $this->expectedContenTypeGroupId, $this->expectedContenTypeId
+        );
     }
 
     public function getName(): string
@@ -79,10 +73,9 @@ class ContentTypePage extends Page
 
     public function verifyIsLoaded(): void
     {
-        Assert::assertEquals(
-            sprintf('ContentType: %s', $this->expectedContentTypeName),
-            $this->getHTMLPage()->find($this->getLocator('pageTitle'))->getText()
-        );
+        $this->getHTMLPage()
+            ->find($this->getLocator('pageTitle'))
+            ->assert()->textEquals($this->expectedContentTypeName);
 
         $this->contentTypeAdminList->verifyIsLoaded();
         $this->fieldsAdminList->verifyIsLoaded();    
@@ -91,11 +84,24 @@ class ContentTypePage extends Page
     public function setExpectedContentTypeName(string $contentTypeName): void
     {
         $this->expectedContentTypeName = $contentTypeName;
+
+        foreach ($this->contentTypeService->loadContentTypeGroups() as $group)
+        {
+            foreach ($this->contentTypeService->loadContentTypes($group) as $contentType) {
+                if ($contentType->getName() === $contentTypeName) {
+                    $this->expectedContenTypeId = $contentType->id;
+                    $this->expectedContenTypeGroupId = $group->id;
+
+                    return;
+                }
+            }
+        }
     }
 
     protected function specifyLocators(): array
     {
         return [
+            new VisibleCSSLocator('createButton', '.btn-icon .ez-icon-create'),
             new VisibleCSSLocator('pageTitle', '.ez-header h1'),
         ];
     }

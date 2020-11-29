@@ -24,8 +24,8 @@ class Dialog extends Component
 
     public function verifyIsLoaded(): void
     {
-        Assert::assertTrue($this->getHTMLPage()->find($this->getLocator('confirm'))->isVisible());
-        Assert::assertTrue($this->getHTMLPage()->find($this->getLocator('decline'))->isVisible());
+        $this->getHTMLPage()->setTimeout(3)->find($this->getLocator('confirm'))->assert()->isVisible();
+        $this->getHTMLPage()->find($this->getLocator('decline'))->assert()->isVisible();
     }
 
     protected function specifyLocators(): array

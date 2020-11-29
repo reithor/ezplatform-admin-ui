@@ -4,13 +4,13 @@ Feature: Content type groups management
   I want to manage my Content types structure.
 
   Background:
-        Given I open Login page in admin SiteAccess
-    And I log in as admin
+    Given I open Login page in admin SiteAccess
+    And I am logged as admin
 
-      And I go to "Content Types" in "Admin" tab
-
-  @javascript @common
+  @javascript @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
   Scenario: Changes can be discarded while creating new Content Type group
+    Given I'm on Content Type Page for "Content" group
+    When I create a new Content Type
     When I start creating new "Content Type group"
       And I set fields
         | label | value    |

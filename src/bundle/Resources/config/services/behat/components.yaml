@@ -47,6 +47,10 @@ services:
 
   #tables
 
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table: ~
+
+  # remove me
+
   EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SubitemsGridList: ~
 
   EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SubItemsTable: ~

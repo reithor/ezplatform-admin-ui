@@ -13,6 +13,8 @@ use EzSystems\Behat\Browser\Page\PageRegistry;
 use EzSystems\Behat\Core\Behat\ArgumentParser;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Breadcrumb;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UpperMenu;
+use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentTypeGroupPage;
+use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentTypePage;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentUpdateItemPage;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentViewPage;
 use PHPUnit\Framework\Assert;
@@ -37,6 +39,14 @@ class NavigationContext implements Context
      * @var ContentUpdateItemPage
      */
     private $contentUpdateItemPage;
+    /**
+     * @var ContentTypeGroupPage
+     */
+    private $contentTypeGroupPage;
+    /**
+     * @var ContentTypePage
+     */
+    private $contentTypePage;
 
     public function __construct(
         ArgumentParser $argumentParser,
@@ -44,7 +54,9 @@ class NavigationContext implements Context
         Breadcrumb $breadcrumb,
         ContentViewPage $contentViewPage,
         PageRegistry $pageRegistry,
-        ContentUpdateItemPage $contentUpdateItemPage
+        ContentUpdateItemPage $contentUpdateItemPage,
+        ContentTypeGroupPage $contentTypeGroupPage,
+        ContentTypePage $contentTypePage
     )
     {
         $this->argumentParser = $argumentParser;
@@ -53,6 +65,8 @@ class NavigationContext implements Context
         $this->breadcrumb = $breadcrumb;
         $this->contentViewPage = $contentViewPage;
         $this->contentUpdateItemPage = $contentUpdateItemPage;
+        $this->contentTypeGroupPage = $contentTypeGroupPage;
+        $this->contentTypePage = $contentTypePage;
     }
 
     /**
@@ -74,14 +88,9 @@ class NavigationContext implements Context
 
     /**
      * @Then /^I should be on "?([^\"]*)"? page$/
-     * @Then /^I should be on "?([^\"]*)"? "([^\"]*)" page$/
      */
-    public function iAmOnPage(string $pageName, string $itemName = ''): void
+    public function iAmOnPage(string $pageName): void
     {
-        if ($itemName !== '') {
-            throw new Exception('zbadaj parametry do pagea');
-        }
-
         $this->pageRegistry->get($pageName)->verifyIsLoaded();
     }
 
@@ -189,5 +198,33 @@ class NavigationContext implements Context
     {
         $this->contentUpdateItemPage->setExpectedPageTitle($contentItemName);
         $this->contentUpdateItemPage->verifyIsLoaded();
+    }
+
+    /**
+     * @Given I'm on Content Type Page for :contentTypeGroup group
+     */
+    public function iMOnContentTypePageFor(string $contentTypeGroup)
+    {
+        $this->contentTypeGroupPage->setExpectedContentTypeGroupName($contentTypeGroup);
+        $this->contentTypeGroupPage->open('admin');
+        $this->contentTypeGroupPage->verifyIsLoaded();
+    }
+
+    /**
+     * @Then I should be on Content Type group page for :contentTypeGroup group
+     */
+    public function iShouldBeOnContentTypeGroupPage($contentTypeGroup)
+    {
+        $this->contentTypeGroupPage->setExpectedContentTypeGroupName($contentTypeGroup);
+        $this->contentTypeGroupPage->verifyIsLoaded();
+    }
+
+    /**
+     * @Then I should be on Content Type page for :contentTypeName
+     */
+    public function iShouldBeOnContentTypePage(string $contentTypeName)
+    {
+        $this->contentTypePage->setExpectedContentTypeName($contentTypeName);
+        $this->contentTypePage->verifyIsLoaded();
     }
 }

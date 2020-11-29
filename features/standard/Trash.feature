@@ -1,48 +1,43 @@
+@test
 Feature: Trash management
   As an administrator
   In order to manage content to my site
   I want to empty trash, delete, restore and restore element under new parent location in trash.
 
   Background:
-    Given I open Login page in admin SiteAccess
+    Given I open 'Login page with redirect' page in admin SiteAccess
     And I am logged as admin
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce @needsWork
+  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
   Scenario: Trash can be emptied
-    And I create "Folder" Content items in root in "eng-GB"
-      | name      | short_name |
-      | TrashTest | TrashTest  |
-    And I create "Folder" Content items in "TrashTest" in "eng-GB"
-      | name          | short_name    |
-      | FolderToTrash | FolderToTrash |
+    And I create "Folder" Content items
+      | name          | short_name    | parentPath     | language |
+      | TrashTest     | TrashTest     | root           | eng-GB   |
+      | FolderToTrash | FolderToTrash | TrashTest | eng-GB   |
     And I send "TrashTest/FolderToTrash" to the Trash
     And I open "Trash" page in admin SiteAccess
     And trash is not empty
     When I empty the trash
     Then trash is empty
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce @needsWork
+  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
   Scenario: Content can be moved to trash
-    And I create "Folder" Content items in root in "eng-GB"
-      | name      | short_name |
-      | TrashTest | TrashTest  |
-    And I create "Folder" Content items in "TrashTest" in "eng-GB"
-      | name                  | short_name            |
-      | FolderToTrashManually | FolderToTrashManually |
+    And I create "Folder" Content items
+      | name          | short_name    | parentPath | language |
+      | TrashTest     | TrashTest     | root       | eng-GB   |
+      | FolderToTrashManually | FolderToTrashManually | TrashTest  | eng-GB   |
     And I'm on Content view Page for "TrashTest/FolderToTrashManually"
     When I send content to trash
     Then success notification that "Location 'FolderToTrashManually' moved to Trash." appears
     And I open "Trash" page in admin SiteAccess
     And there is a "Folder" "FolderToTrashManually" on Trash list
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce @needsWork
+  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
   Scenario: Element in trash can be deleted
-    And I create "Folder" Content items in root in "eng-GB"
-      | name      | short_name |
-      | TrashTest | TrashTest  |
-    And I create "Folder" Content items in "TrashTest" in "eng-GB"
-      | name            | short_name    |
-      | DeleteFromTrash | DeleteFromTrash |
+    And I create "Folder" Content items
+      | name          | short_name    | parentPath | language |
+      | TrashTest     | TrashTest     | root       | eng-GB   |
+      | DeleteFromTrash | DeleteFromTrash | TrashTest  | eng-GB   |
     And I send "TrashTest/DeleteFromTrash" to the Trash
     And I open "Trash" page in admin SiteAccess
     And there is a "Folder" "DeleteFromTrash" on Trash list
@@ -50,7 +45,7 @@ Feature: Trash management
       | item       |
       | DeleteFromTrash    |
     Then success notification that "Deleted selected item(s) from Trash." appears
-    And there is no "Folder" "Folder1" on Trash list
+    And there is no "Folder" "DeleteFromTrash" on Trash list
 
   @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
   Scenario: Element in trash can be restored
@@ -72,18 +67,16 @@ Feature: Trash management
 
   @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
   Scenario: Element in trash can be restored under new location
-    And I create "Folder" Content items in root in "eng-GB"
-      | name      | short_name |
-      | TrashTest | TrashTest  |
-    And I create "Folder" Content items in "TrashTest" in "eng-GB"
-      | name                | short_name          |
-      | RestoreFromTrashNew | RestoreFromTrashNew |
-    And I send "TrashTest/RestoreFromTrashNew" to the Trash
+    And I create "Folder" Content items
+      | name          | short_name    | parentPath | language |
+      | TrashTest     | TrashTest     | root       | eng-GB   |
+      | RestoreFromTrashNewLocation | RestoreFromTrashNewLocation | TrashTest  | eng-GB   |
+    And I send "TrashTest/RestoreFromTrashNewLocation" to the Trash
     And I open "Trash" page in admin SiteAccess
-    And there is a "Folder" "RestoreFromTrashNew" on Trash list
+    And there is a "Folder" "RestoreFromTrashNewLocation" on Trash list
     When I restore item from trash under new location "Media/Files"
-      | item                |
-      | RestoreFromTrashNew |
+      | item                        |
+      | RestoreFromTrashNewLocation |
     Then success notification that "Restored content under Location 'Files'." appears
-    And there is no "Folder" "Folder1" on Trash list
-    And there exists Content view Page for "Media/Files/RestoreFromTrash"
+    And there is no "Folder" "RestoreFromTrashNewLocation" on Trash list
+    And there exists Content view Page for "Media/Files/RestoreFromTrashNewLocation"

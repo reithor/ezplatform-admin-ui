@@ -13,7 +13,7 @@ use PHPUnit\Framework\Assert;
 
 class UniversalDiscoveryWidget extends Component
 {
-    private const LONG_TIMEOUT = 10;
+    private const LONG_TIMEOUT = 20;
     private const SHORT_TIMEOUT = 2;
 
     public function selectContent(string $itemPath): void
@@ -81,7 +81,7 @@ class UniversalDiscoveryWidget extends Component
     {
         $treeLevelSelector = new VisibleCSSLocator('', sprintf($this->getLocator('treeLevelFormat')->getSelector(), $level));
 
-        Assert::assertTrue($this->getHTMLPage()->setTimeout(self::LONG_TIMEOUT)->find($treeLevelSelector)->isVisible());
+        $this->getHTMLPage()->setTimeout(self::LONG_TIMEOUT)->find($treeLevelSelector)->assert()->isVisible();
 
         $alreadySelectedItemName = $this->getCurrentlySelectedItemName($level);
 
@@ -98,13 +98,11 @@ class UniversalDiscoveryWidget extends Component
             $currentItems = $this->getItemsFromLevel($level + 1);
         }
 
-        $treeElementsSelector = new VisibleCSSLocator('', sprintf($this->getLocator('treeLevelElementsFormat')->getSelector(), $level));
-        $this->getHTMLPage()->findAll($treeElementsSelector)->getByText($itemName)->click();
-        Assert::assertTrue(
-            $this->getHTMLPage()->findAll(
-                new VisibleCSSLocator('', sprintf($this->getLocator('treeLevelSelectedFormat')->getSelector(), $level))
-            )->getByText($itemName)->isVisible()
-        );
+        $treeElementsLocator = new VisibleCSSLocator('', sprintf($this->getLocator('treeLevelElementsFormat')->getSelector(), $level));
+        $selectedTreeElementLocator = new VisibleCSSLocator('', sprintf($this->getLocator('treeLevelSelectedFormat')->getSelector(), $level));
+
+        $this->getHTMLPage()->findAll($treeElementsLocator)->getByText($itemName)->click();
+        $this->getHTMLPage()->findAll($selectedTreeElementLocator)->getByText($itemName)->assert()->isVisible();
 
         if ($willNextLevelBeReloaded) {
             // Wait until the items displayed previously disappear or change

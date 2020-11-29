@@ -71,7 +71,7 @@ Feature: Content fields setting and editing
       | label          | value      |
       | ImageAField    | small2.jpg |
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce @test
+  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
   Scenario Outline: Edit content item with given field
     Given I open Login page in admin SiteAccess
       And I log in as admin
@@ -114,7 +114,7 @@ Feature: Content fields setting and editing
       | value     | col1:col2:col3,11:12:13,21:22:23,31:32:33 |                         ||         |           | Matrix                    | Matrix                       |
       | value     | imageasset2.png.zip          |            |                          |         |           | imageasset1.png           | imageasset2.png              |
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce @test
+  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
   Scenario Outline: Create content item with Content Query field
     Given I create a "<fieldName> CT" Content Type in "Content" with "<fieldInternalName>" identifier
       | Field Type  | Name        | Identifier          | Required | Searchable | Translatable | Settings        |
@@ -138,7 +138,7 @@ Feature: Content fields setting and editing
       | fieldInternalName | fieldName     | fieldSettings                                                                                                  | label1 | value1                  |
       | ezcontentquery    | Content query | QueryType-Folders under media,ContentType-folder,ItemsPerPage-100,Parameters-contentTypeId:folder;locationId:43| value  | Images,Files,Multimedia |
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce @test
+  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
   Scenario: Edit content item with Content Query
     Given I open Login page in admin SiteAccess
     And I log in as admin

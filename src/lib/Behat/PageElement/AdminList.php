@@ -48,6 +48,10 @@ class AdminList extends Component
     {
     }
 
+    public function delete(string $contentTypeName)
+    {
+    }
+
     protected function specifyLocators(): array
     {
         return [

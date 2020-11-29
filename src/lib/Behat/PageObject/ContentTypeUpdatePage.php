@@ -1,57 +1,43 @@
 <?php
 
 
-namespace src\lib\Behat\PageObject;
-
+namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use EzSystems\Behat\API\ContentData\FieldTypeNameConverter;
+use EzSystems\Behat\Browser\Element\NodeElement;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
-use EzSystems\EzPlatformAdminUi\Behat\PageObject\AdminUpdateItemPage;
-use PHPUnit\Framework\Assert;
+use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Notification;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
 
 class ContentTypeUpdatePage extends AdminUpdateItemPage
 {
-    private const NEW_FIELD_TITLE_PATTERN = 'New FieldDefinition (%s)';
+    /**
+     * @var Notification
+     */
+    private $notification;
 
-    public function fillFieldWithValue(string $fieldName, $value, ?string $containerName = null): void
+    public function __construct(Browser $browser, RightMenu $rightMenu, Notification $notification)
     {
-        $newContainerName = sprintf(self::NEW_FIELD_TITLE_PATTERN, FieldTypeNameConverter::getFieldTypeIdentifierByName($containerName));
-        $fieldElement = $this->getField($fieldName, $newContainerName);
-        $fieldElement->setValue($value);
+        parent::__construct($browser, $rightMenu);
+        $this->notification = $notification;
     }
 
-    public function getFieldDefinitionContainerLocator(string $containerName): string
+    public function fillFieldDefinitionFieldWithValue(string $fieldName, string $label, string $value)
     {
-        $containerIndex = $this->context->getElementPositionByText($containerName, $this->fields['fieldDefinitionName']);
+        $this->expandFieldDefinition($fieldName);
 
-        return sprintf($this->fields['fieldDefinitionContainer'], $containerIndex);
-    }
-
-    public function selectFieldDefinition(string $fieldName): void
-    {
-        $this->context->findElement($this->fields['fieldTypesList'], $this->defaultTimeout)->selectOption($fieldName);
-    }
-
-    public function clickAddFieldDefinition(): void
-    {
-        $this->context->pressButton($this->fields['addFieldDefinition']);
-    }
-
-    public function verifyNewFieldDefinitionFormExists(string $fieldName): void
-    {
-        $form = $this->context->getElementByText(sprintf(self::NEW_FIELD_TITLE_PATTERN, FieldTypeNameConverter::getFieldTypeIdentifierByName($fieldName)), $this->fields['fieldDefinitionName']);
-        if ($form === null) {
-            throw new \Exception('Field definition not added to the form.');
-        }
+        $this->getFieldDefinition($fieldName)
+            ->findAll($this->getLocator('field'))->getByText($label)
+            ->find($this->getLocator('fieldInput'))->setValue($value);
     }
 
     public function expandFieldDefinition(string $fieldName): void
     {
-        $container = $this->context->findElement($this->getFieldDefinitionContainerLocator(sprintf($this::NEW_FIELD_TITLE_PATTERN, FieldTypeNameConverter::getFieldTypeIdentifierByName($fieldName))));
-        Assert::assertNotNull($container, sprintf('Definition for field %s not found', $fieldName));
+        $fieldDefinition = $this->getFieldDefinition($fieldName);
 
-        if (strpos($container->getAttribute('class'), $this->fields['fieldCollapsed']) !== false) {
-            $container->find('css', $this->fields['fieldDefinitionToggler'])->click();
+        if ($fieldDefinition->hasClass($this->getLocator('fieldCollapsed')->getSelector())) {
+            $fieldDefinition->find($this->getLocator('fieldDefinitionToggler'))->click();
         }
     }
 
@@ -59,13 +45,37 @@ class ContentTypeUpdatePage extends AdminUpdateItemPage
     {
         return array_merge(parent::specifyLocators(), [
             new VisibleCSSLocator('fieldTypesList', '#ezplatform_content_forms_contenttype_update_fieldTypeSelection'),
-            new VisibleCSSLocator('addFieldDefinition', 'ezplatform_content_forms_contenttype_update_addFieldDefinition'),
-            new VisibleCSSLocator('fieldDefinitionContainer', '.ez-card--toggle-group:nth-child(%s)'),
+            new VisibleCSSLocator('addFieldDefinition', '#ezplatform_content_forms_contenttype_update_addFieldDefinition'),
+            new VisibleCSSLocator('fieldDefinitionContainer', '.ez-card--toggle-group'),
             new VisibleCSSLocator('fieldDefinitionName', '.ez-card--toggle-group .ez-card__header .form-check-label'),
             new VisibleCSSLocator('fieldBody', 'ez-card__body'),
             new VisibleCSSLocator('fieldCollapsed', 'ez-card--collapsed'),
             new VisibleCSSLocator('fieldDefinitionToggler', '.ez-card__body-display-toggler'),
         ]);
+    }
+
+    public function addFieldDefinition(string $fieldName)
+    {
+        $this->getHTMLPage()->find($this->getLocator('fieldTypesList'))->selectOption($fieldName);
+        $this->getHTMLPage()->find($this->getLocator('addFieldDefinition'))->click();
+        $this->getFieldDefinition($fieldName)->assert()->isVisible();
+
+        $this->notification->verifyIsLoaded();
+        $this->notification->verifyAlertSuccess();
+        $this->notification->closeAlert();
+    }
+
+    private function getFieldDefinition($fieldName): NodeElement
+    {
+        $fieldTypeIdentifier =  FieldTypeNameConverter::getFieldTypeIdentifierByName($fieldName);
+
+        return $this->getHTMLPage()
+//            ->setTimeout(10)
+            ->findAll($this->getLocator('fieldDefinitionContainer'))
+            ->filter(function(NodeElement  $element) use ($fieldTypeIdentifier) {
+                return strpos($element->find($this->getLocator('fieldDefinitionName'))->getText(), $fieldTypeIdentifier) !== false;
+            })
+            ->single();
     }
 
 }

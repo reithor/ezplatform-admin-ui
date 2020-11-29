@@ -44,10 +44,10 @@ class Notification extends Component
 
     public function closeAlert(): void
     {
-        $alerts = $this->getHTMLPage()->findAll($this->getLocator('alert'));
+        $closeButtons = $this->getHTMLPage()->findAll($this->getLocator('closeAlert'));
 
-        if ($alerts->any()) {
-            $alerts->single()->click();
+        foreach($closeButtons as $closeButton) {
+            $closeButton->click();
         }
     }
 
@@ -66,6 +66,11 @@ class Notification extends Component
                 ->find($this->getLocator('alert'))
                 ->isVisible()
         );
+    }
+
+    public function verifyMessage(string $expectedMessage)
+    {
+        $this->getHTMLPage()->find($this->getLocator('alertMessage'))->assert()->textEquals($expectedMessage);
     }
 
     protected function specifyLocators(): array

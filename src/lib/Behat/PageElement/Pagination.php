@@ -15,13 +15,12 @@ class Pagination extends Component
 {
     public function isNextButtonActive(): bool
     {
-        return $this->getHTMLPage()->findAll($this->getLocator('nextButton'))->any();
+        return $this->getHTMLPage()->setTimeout(0)->findAll($this->getLocator('nextButton'))->any();
     }
 
     public function clickNextButton(): void
     {
         $this->getHTMLPage()->find($this->getLocator('nextButton'))->click();
-//        $this->context->waitUntilElementDisappears($this->fields['spinner'], 10);
     }
 
     public function verifyIsLoaded(): void
@@ -33,7 +32,6 @@ class Pagination extends Component
     {
         return [
             new VisibleCSSLocator('nextButton','.pagination .page-item.next:not(.disabled)'),
-            new VisibleCSSLocator('spinner','.m-sub-items__spinner-wrapper'),
         ];
     }
 }

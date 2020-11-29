@@ -49,7 +49,7 @@ class NotificationContext implements Context
     {
         $this->notification->verifyIsLoaded();
         $this->notification->verifyAlertSuccess();
-        Assert::assertEquals($message, $this->notification->getMessage());
+        $this->notification->verifyMessage($message);
         $this->notification->closeAlert();
     }
 

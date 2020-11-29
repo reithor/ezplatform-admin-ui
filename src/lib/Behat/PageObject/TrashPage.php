@@ -12,6 +12,8 @@ use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\TableBuilder;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
 use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
 use PHPUnit\Framework\Assert;
@@ -24,10 +26,6 @@ class TrashPage extends Page
     public $dialog;
 
     /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\TrashTable
-     */
-    public $trashTable;
-    /**
      * @var UniversalDiscoveryWidget
      */
     private $universalDiscoveryWidget;
@@ -35,31 +33,33 @@ class TrashPage extends Page
      * @var RightMenu
      */
     private $rightMenu;
+    /**
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
+     */
+    private $table;
 
     public function __construct(
         Browser $browser,
         UniversalDiscoveryWidget $universalDiscoveryWidget,
         Dialog $dialog,
-        RightMenu $rightMenu)
+        RightMenu $rightMenu,
+        Table $table)
     {
         parent::__construct($browser);
         $this->universalDiscoveryWidget = $universalDiscoveryWidget;
         $this->dialog = $dialog;
         $this->rightMenu = $rightMenu;
+        $this->table = $table;
     }
 
     public function hasElement(string $itemType, string $itemName): bool
     {
-        return !$this->isEmpty() &&
-            ($this->trashTable->isElementInTable($itemName) &&
-            $this->trashTable->getTableCellValue('Content type', $itemName) == $itemType);
+        return $this->table->hasElement(['Name' => $itemName, 'Content type' => $itemType]);
     }
 
     public function isEmpty(): bool
     {
-        $firstRowValue = $this->trashTable->getCellValue(1, 1);
-
-        return $this->trashTable->getItemCount() === 1 && strpos($firstRowValue, 'Trash is empty.') !== false;
+        return $this->table->isEmpty();
     }
 
     public function restoreSelectedNewLocation(string $pathToContent)
@@ -73,22 +73,20 @@ class TrashPage extends Page
     public function emptyTrash()
     {
         $this->rightMenu->clickButton('Empty Trash');
+        $this->dialog->verifyIsLoaded();
         $this->dialog->confirm();
     }
 
     public function deleteSelectedItems()
     {
         $this->getHTMLPage()->find($this->getLocator('trashButton'))->click();
-
-
-        $this->trashTable->clickTrashButton();
-        $this->dialog->verifyVisibility();
+        $this->dialog->verifyIsLoaded();
         $this->dialog->confirm();
     }
 
     public function select(array $parameters)
     {
-        throw new \Exception('implement');
+        $this->table->getTableRow($parameters)->select();
     }
 
     public function restoreSelectedItems()
@@ -118,9 +116,9 @@ class TrashPage extends Page
     {
         return [
             new VisibleCSSLocator('pageTitle', '.ez-page-title h1'),
-            new VisibleCSSLocator('restoreButton', '[name=trash_item_restore]'),
-            new VisibleCSSLocator('trashButton', '[id=delete-trash-items]'),
-            new VisibleCSSLocator('restoreUnderNewLocationButton', '[id=trash_item_restore_location_select_content]'),
+            new VisibleCSSLocator('restoreButton', '#trash_item_restore_restore'),
+            new VisibleCSSLocator('trashButton', '#delete-trash-items'),
+            new VisibleCSSLocator('restoreUnderNewLocationButton', '#trash_item_restore_location_select_content'),
             ];
     }
 }

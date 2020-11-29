@@ -83,64 +83,6 @@ class AdministrationContext implements Context
     }
 
     /**
-     * @Then there's :listElementName on :pageName list
-     * @Then there's :listElementName on :parameter :pageName list
-     */
-    public function verifyElementOnTheList(string $listElementName, string $pageName, ?string $parameter = null): void
-    {
-        throw new \Exception('refactor me ...');
-
-        $page = PageObjectFactory::createPage($this->browserContext, $pageName, $parameter);
-        $page->verifyIsLoaded();
-        Assert::assertTrue(
-            $page->adminList->isElementOnTheList($listElementName),
-            sprintf('Element "%s" is on the %s list.', $listElementName, $pageName)
-        );
-    }
-
-    /**
-     * @Then there's no :listElementName on :pageName list
-     * @Then there's no :listElementName on :parameter :pageName list
-     */
-    public function verifyElementNotOnTheList(string $listElementName, string $pageName, string $parameter = null): void
-    {
-        throw new \Exception('refactor me ...');
-
-        $page = PageObjectFactory::createPage($this->browserContext, $pageName, $parameter);
-        $page->verifyIsLoaded();
-        Assert::assertFalse(
-            $page->adminList->isElementOnTheList($listElementName),
-            sprintf('Element "%s" is on the %s list.', $listElementName, $pageName)
-        );
-    }
-
-    /**
-     * Check if item is or is not empty, according to $empty param.
-     *
-     * @param string $itemName
-     * @param string $page
-     * @param bool $shouldBeEmpty
-     */
-    private function verifyContentsStatus(string $itemName, string $page, bool $shouldBeEmpty): void
-    {
-        throw new \Exception('refactor me ...');
-
-        $emptyContainerCellValue = '0';
-
-        $contentsCount = PageObjectFactory::createPage($this->browserContext, $page)
-            ->adminList->table->getTableCellValue($itemName, $this->emptyHeaderMapping[$page]);
-
-        $msg = '';
-        if ($shouldBeEmpty) {
-            $msg = ' non';
-        }
-
-        if (($contentsCount !== $emptyContainerCellValue) === $shouldBeEmpty) {
-            Assert::fail(sprintf('No%s empty %s on the %s list.', $msg, $itemName, $page));
-        }
-    }
-
-    /**
      * @Given there's empty :itemName on :page list
      */
     public function isEmptyElementOnTheList(string $itemName, string $page): void
@@ -191,19 +133,6 @@ class AdministrationContext implements Context
         } else {
             Assert::fail(sprintf('Element %s is not on the list.', $itemName));
         }
-    }
-
-    /**
-     * @When I start editing :itemType :itemName
-     * @When I start editing :itemType :itemName from :containerName
-     */
-    public function iStartEditingItem(string $itemType, string $itemName, ?string $containerName = null): void
-    {
-        throw new \Exception('refactor me ...');
-
-        $page = PageObjectFactory::createPage($this->browserContext, $this->itemCreateMapping[$itemType], $containerName);
-        $page->verifyIsLoaded();
-        $page->startEditingItem($itemName);
     }
 
     /**

@@ -8,21 +8,31 @@ namespace EzSystems\EzPlatformAdminUi\Behat\BusinessContext;
 
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
+use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentTypeGroupPage;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentTypePage;
-use EzSystems\Behat\Browser\Factory\PageObjectFactory;
+use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentTypeUpdatePage;
 use PHPUnit\Framework\Assert;
 
 class ContentTypeContext implements Context
 {
-    private $contentTypeTableHeaders = ['Name', 'Identifier', 'Description'];
     /**
      * @var ContentTypePage
      */
     private $contentTypePage;
+    /**
+     * @var ContentTypeUpdatePage
+     */
+    private $contentTypeUpdatePage;
+    /**
+     * @var ContentTypeGroupPage
+     */
+    private $contentTypeGroupPage;
 
-    public function __construct(ContentTypePage $contentTypePage)
+    public function __construct(ContentTypePage $contentTypePage, ContentTypeUpdatePage $contentTypeUpdatePage, ContentTypeGroupPage $contentTypeGroupPage)
     {
         $this->contentTypePage = $contentTypePage;
+        $this->contentTypeUpdatePage = $contentTypeUpdatePage;
+        $this->contentTypeGroupPage = $contentTypeGroupPage;
     }
 
     /**
@@ -45,6 +55,16 @@ class ContentTypeContext implements Context
                 sprintf('Content Type\'s %s is %s instead of %s.', $row['label'], $actualValue, $row['value'])
             );
         }
+    }
+
+
+
+    /**
+     * @When I create a new Content Type
+     */
+    public function createNewContentType(): void
+    {
+        $this->contentTypeGroupPage->createNew();
     }
 
     /**
@@ -81,5 +101,53 @@ class ContentTypeContext implements Context
         foreach ($hash as $row) {
             $this->contentTypeHasField($contentTypeName, $row['fieldName'], $row['fieldType']);
         }
+    }
+
+    /**
+     * @Given there's no :contentTypeName on Content Types list
+     */
+    public function thereSNoOnContentTypesList($contentTypeName)
+    {
+        Assert::assertFalse($this->contentTypeGroupPage->isContentTypeOnTheList($contentTypeName));
+    }
+
+    /**
+     * @Given there's a :contentTypeName on Content Types list
+     */
+    public function thereAContentTypeOnContentTypesList($contentTypeName)
+    {
+        Assert::assertTrue($this->contentTypeGroupPage->isContentTypeOnTheList($contentTypeName));
+    }
+
+    /**
+     * @When I add field :fieldName to Content Type definition
+     */
+    public function iAddField(string $fieldName): void
+    {
+         $this->contentTypeUpdatePage->addFieldDefinition($fieldName);
+    }
+
+    /**
+     * @When I set :field to :value for :fieldName field
+     */
+    public function iSetFieldDefinitionData(string $label, string $value, string $fieldName): void
+    {
+        $this->contentTypeUpdatePage->fillFieldDefinitionFieldWithValue($fieldName, $label, $value);
+    }
+
+    /**
+     * @When I start editing Content Type $contentTypeName
+     */
+    public function iStartEditingItem(string $contentTypeName): void
+    {
+        $this->contentTypeGroupPage->edit($contentTypeName);
+    }
+
+    /**
+     * @When I delete :contentTypeName Content Type
+     */
+    public function iDeleteContentType(string $contentTypeName)
+    {
+        $this->contentTypeGroupPage->delete($contentTypeName);
     }
 }
