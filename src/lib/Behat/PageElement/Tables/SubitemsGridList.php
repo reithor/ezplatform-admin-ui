@@ -6,15 +6,14 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables;
 
+use EzSystems\Behat\Browser\Component\Component;
+use EzSystems\Behat\Browser\Locator\LocatorCollection;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\TableInterface;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\TableRow;
 
-class SubitemsGridList extends ItemsList
+class SubitemsGridList extends Component implements TableInterface
 {
-    public function clickListElement(string $name): void
-    {
-        $this->getHTMLPage()->findAll($this->getLocator('listElement'))->getByText($name)->click();
-    }
-
     public function canBeSorted(): bool
     {
         return false;
@@ -29,5 +28,54 @@ class SubitemsGridList extends ItemsList
         return [
             new VisibleCSSLocator('listElement', '.c-grid-view-item'),
         ];
+    }
+
+    public function isEmpty(): bool
+    {
+        return $this->getHTMLPage()->findAll($this->getLocator('listElement'))->any() === false;
+    }
+
+    public function hasElement(array $elementData): bool
+    {
+        $name = array_values($elementData);
+
+        foreach ($this->getHTMLPage()->findAll($this->getLocator('listElement')) as $element)
+        {
+            if ($element->getText() === $name) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function hasElementOnCurrentPage(array $elementData): bool
+    {
+        $name = array_values($elementData);
+
+        foreach ($this->getHTMLPage()->findAll($this->getLocator('listElement')) as $element)
+        {
+            if ($element->getText() === $name) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getTableRow(array $elementData): ?TableRow
+    {
+        $name = array_values($elementData);
+
+        $elements = $this->getHTMLPage()->findAll($this->getLocator('listElement'));
+
+        foreach ($this->getHTMLPage()->findAll($this->getLocator('listElement')) as $element)
+        {
+            if ($element->getText() === $name) {
+                return new TableRow($this->browser, $element, new LocatorCollection([]));
+            }
+        }
+
+        return null;
     }
 }

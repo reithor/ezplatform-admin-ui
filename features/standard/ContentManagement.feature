@@ -1,13 +1,13 @@
+@IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
 Feature: Content items creation
   As an administrator
   In order to manage content to my site
   I want to create, edit, copy and move content items.
   
 Background:
-      Given I open Login page in admin SiteAccess
-      And I am logged as admin
+      Given I am logged as admin
 
-@javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
+@javascript @APIUser:admin
 Scenario: Content moving can be cancelled
   Given I create "Folder" Content items
     | name               | short_name          | parentPath        | language |
@@ -19,7 +19,7 @@ Scenario: Content moving can be cancelled
     And I close the UDW window
   Then I should be on Content view Page for "ContentManagement/FolderToCancelMove"
 
-@javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
+@javascript @APIUser:admin
 Scenario: Content can be moved
   Given I create "Folder" Content items
     | name               | short_name        | parentPath        | language |
@@ -34,7 +34,7 @@ Scenario: Content can be moved
     And I'm on Content view Page for "ContentManagement"
     And there's no "FolderToMove" "Folder" on Subitems list
 
-@javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
+@javascript @APIUser:admin
 Scenario: Content copying can be cancelled
   Given I create "Folder" Content items
     | name               | short_name         | parentPath        | language |
@@ -46,7 +46,7 @@ Scenario: Content copying can be cancelled
     And I close the UDW window
   Then I should be on Content view Page for "ContentManagement/FolderToCopyCancel"
 
-@javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
+@javascript @APIUser:admin
 Scenario: Content can be copied
   Given I create "Folder" Content items
     | name               | short_name         | parentPath        | language |
@@ -61,7 +61,7 @@ Scenario: Content can be copied
     And I'm on Content view Page for "ContentManagement"
     And there's a "FolderToCopy" "Folder" on Subitems list
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
+  @javascript @APIUser:admin
   Scenario: Subtree copying can be cancelled
     Given I create "Folder" Content items
       | name                      | short_name                | parentPath        | language |
@@ -73,7 +73,7 @@ Scenario: Content can be copied
     And I close the UDW window
     Then I should be on Content view Page for "ContentManagement/FolderToSubtreeCopyCancel"
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
+  @javascript @APIUser:admin
   Scenario: Subtree can be copied
     Given I create "Folder" Content items
       | name                      | short_name                | parentPath        | language |

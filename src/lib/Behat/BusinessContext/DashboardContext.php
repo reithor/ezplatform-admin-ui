@@ -8,6 +8,8 @@ namespace EzSystems\EzPlatformAdminUi\Behat\BusinessContext;
 
 use Behat\Behat\Context\Context;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UpperMenu;
+use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentUpdateItemPage;
+use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentViewPage;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\DashboardPage;
 use PHPUnit\Framework\Assert;
 
@@ -22,10 +24,16 @@ class DashboardContext implements Context
      */
     private $dashboardPage;
 
-    public function __construct(UpperMenu $upperMenu, DashboardPage $dashboardPage)
+    /**
+     * @var ContentUpdateItemPage
+     */
+    private $contentUpdateItemPage;
+
+    public function __construct(UpperMenu $upperMenu, DashboardPage $dashboardPage, ContentUpdateItemPage $contentUpdateItemPage)
     {
         $this->upperMenu = $upperMenu;
         $this->dashboardPage = $dashboardPage;
+        $this->contentUpdateItemPage = $contentUpdateItemPage;
     }
 
     /**
@@ -41,7 +49,7 @@ class DashboardContext implements Context
      */
     public function goingToDashboardISeeDraft(string $draftName): void
     {
-        Assert::assertTrue($this->isDraftOnList($draftName));
+        Assert::assertTrue($this->dashboardPage->isDraftOnList($draftName));
     }
 
     /**
@@ -49,7 +57,7 @@ class DashboardContext implements Context
      */
     public function goingToDashboardISeeNoDraft(string $draftName): void
     {
-        Assert::assertFalse($this->isDraftOnList($draftName));
+        Assert::assertFalse($this->dashboardPage->isDraftOnList($draftName));
     }
 
     /**
@@ -58,15 +66,7 @@ class DashboardContext implements Context
     public function startEditingContentDraft(string $contentDraftName): void
     {
         $this->dashboardPage->editDraft($contentDraftName);
-    }
-
-    private function isDraftOnList(string $draftName): bool
-    {
-        if ($this->dashboardPage->isListEmpty()) {
-            return false;
-        }
-
-        // REFACTOR ME
-        return $this->dashboardPage->dashboardTable->isElementOnCurrentPage($draftName);
+        $this->contentUpdateItemPage->setExpectedPageTitle($contentDraftName);
+        $this->contentUpdateItemPage->verifyIsLoaded();
     }
 }

@@ -18,7 +18,7 @@ class ContentTypePicker extends Component
     public function select(string $contentTypeName): void
     {
         $this->getHTMLPage()->find($this->getLocator('filterInput'))->setValue($contentTypeName);
-        $this->getHTMLPage()->findAll($this->getLocator('filteredItem'))->getByText($contentTypeName)->click();
+        $this->getHTMLPage()->setTimeout(5)->findAll($this->getLocator('filteredItem'))->getByText($contentTypeName)->click();
     }
 
     public function verifyIsLoaded(): void

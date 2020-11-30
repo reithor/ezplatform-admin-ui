@@ -22,9 +22,7 @@ class SubitemsList extends Component
     /** @var SubItemsTable */
     protected $table;
 
-    protected $currentView;
-
-    protected $isGridViewEnabledByDefault;
+    protected $isGridViewEnabled;
 
     /** @var SubitemsGridList */
     protected $gridList;
@@ -38,8 +36,19 @@ class SubitemsList extends Component
 
     public function sortBy(string $columnName, bool $ascending): void
     {
-        $this->currentView->sortBy($columnName, $ascending);
-        $this->verifyIsLoaded();
+        $this->context->getElementByText($columnName, $this->fields['horizontalHeaders'])->click();
+
+        $isSortedAscending = $this->context->isElementVisible(sprintf('%s%s', $this->fields['horizontalHeaders'], $this->fields['sortingOrderAscending']));
+
+        if ($ascending !== $isSortedAscending) {
+            $this->context->getElementByText($columnName, $this->fields['horizontalHeaders'])->click();
+        }
+
+        $verificationSelector = $ascending ?
+            sprintf('%s%s', $this->fields['horizontalHeaders'], $this->fields['sortingOrderAscending']) :
+            sprintf('%s%s', $this->fields['horizontalHeaders'], $this->fields['sortingOrderDescending']);
+
+        $this->context->waitUntilElementIsVisible($verificationSelector);
     }
 
     public function canBeSorted(): bool
@@ -49,7 +58,7 @@ class SubitemsList extends Component
 
     public function shouldHaveGridViewEnabled(bool $enabled): void
     {
-        $this->currentView = $enabled ? $this->gridList : $this->table;
+        $this->isGridViewEnabled = $enabled;
     }
 
     public function verifyIsLoaded(): void
@@ -67,9 +76,9 @@ class SubitemsList extends Component
         $this->table->clickListElement($contentName, $contentType);
     }
 
-    public function isElementInTable($itemName)
+    public function isElementInTable($itemName): bool
     {
-        return $this->table->isElementInTable($itemName);
+        return $$this->table->isElementInTable($itemName);
     }
 
     protected function specifyLocators(): array

@@ -21,7 +21,7 @@ class DashboardPage extends Page
     public function __construct(Browser $browser, Table $table)
     {
         parent::__construct($browser);
-        $this->table = $table;
+        $this->table = $table->withParentLocator($this->getLocator('table'));
     }
 
     public function switchTab(string $tableName, string $tabName)
@@ -40,6 +40,11 @@ class DashboardPage extends Page
     public function editDraft(string $contentDraftName)
     {
         $this->table->getTableRow(['Name' => $contentDraftName])->edit();
+    }
+
+    public function isDraftOnList(string $draftName): bool
+    {
+        return $this->table->hasElement(['Name' => $draftName]);
     }
 
     protected function getRoute(): string

@@ -8,10 +8,23 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
+use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
 use PHPUnit\Framework\Assert;
 
 class DraftConflictDialog extends Component
 {
+    /**
+     * @var Table
+     */
+    private $table;
+
+    public function __construct(Browser $browser, Table $table)
+    {
+        parent::__construct($browser);
+        $this->table = $table->withParentLocator($this->getLocator('table'))->endConfiguration();
+    }
+
     public function createNewDraft(): void
     {
         $this->getHTMLPage()->find($this->getLocator('addDraft'))->click();
@@ -19,37 +32,20 @@ class DraftConflictDialog extends Component
 
     public function verifyIsLoaded(): void
     {
-        Assert::assertTrue($this->getHTMLPage()->find($this->getLocator('dialog'))->isVisible());
+        $this->getHTMLPage()->setTimeout(5)->find($this->getLocator('dialog'))->assert()->isVisible();
     }
 
     protected function specifyLocators(): array
     {
         return [
-            new VisibleCSSLocator('dialog', '.ez-modal--version-draft-conflict.show'),
+            new VisibleCSSLocator('dialog', '#version-draft-conflict-modal.ez-modal--version-draft-conflict.show .modal-content'),
             new VisibleCSSLocator('addDraft', '.ez-btn--add-draft'),
+            new VisibleCSSLocator('table', '#version-draft-conflict-modal .modal-content'),
         ];
     }
 
-    public function getTableCellValue(string $header, ?string $secondHeader = null): string
+    public function edit(string $versionNumber): void
     {
-
-//        $this->fields['listElement'] = $this->fields['list'] . ' tbody td:nth-child(1)';
-//        $this->fields['editButton'] = $this->fields['list'] . ' tr:nth-child(%s) .ez-icon-edit';
-//
-        $columnPosition = $this->context->getElementPositionByText(
-            $header,
-            $this->fields['horizontalHeaders']
-        );
-        $rowPosition = $this->context->getElementPositionByText(
-            $secondHeader,
-            $this->fields['listElement']
-        );
-
-        return $this->getCellValue($rowPosition, $columnPosition);
-    }
-
-    public function edit(string $draftName): void
-    {
-        $this->clickEditButtonByElementLocator($draftName, $this->fields['listElement']);
+        $this->table->getTableRow(['Version' => $versionNumber])->edit();
     }
 }

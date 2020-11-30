@@ -42,7 +42,9 @@ class ContentUpdateItemPage extends Page
         if ($this->pageTitle) {
             Assert::assertEquals(
                 $this->pageTitle,
-                $this->getHTMLPage()->find($this->getLocator('pageTitle'))->getText()
+                $this->getHTMLPage()
+                    ->setTimeout(5)
+                    ->find($this->getLocator('pageTitle'))->getText()
             );
         }
 

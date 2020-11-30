@@ -128,26 +128,12 @@ class ContentViewContext implements Context
     }
 
     /**
-     * @When I start editing draft with ID :draftID from draft conflict modal
+     * @When I start editing draft with version number :versionNumber from draft conflict modal
      */
-    public function startEditingDraftFromDraftConflictModal(string $draftID): void
+    public function startEditingDraftFromDraftConflictModal(string $versionNumber): void
     {
         $this->draftConflictDialog->verifyIsLoaded();
-        $this->draftConflictDialog->edit($draftID);
-    }
-
-    /**
-     * @Then going to :path there is no :contentName :contentType on Sub-items list
-     */
-    public function goingToPathTheresNoSubItem(string $path, string $contentName, string $contentType): void
-    {
-        $this->contentViewPage->navigateToPath($path);
-        $this->contentViewPage->setExpectedLocationPath($path);
-
-        $explodedPath = explode('/', $path);
-
-        // refactor me
-        $this->verifyThereIsNoItemInSubItemList($contentName, $contentType, $explodedPath[count($explodedPath) - 1]);
+        $this->draftConflictDialog->edit($versionNumber);
     }
 
     /**

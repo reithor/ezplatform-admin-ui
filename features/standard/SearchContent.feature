@@ -3,7 +3,7 @@ Feature: Searching for a Content item
   As an administrator
   I want to search for Content items.
 
-  @javascript @APIUser:admin @test
+  @javascript @APIUser:admin
   Scenario: Content can be searched for
     Given I create "folder" Content items in root in "eng-GB"
       | name              | short_name          |

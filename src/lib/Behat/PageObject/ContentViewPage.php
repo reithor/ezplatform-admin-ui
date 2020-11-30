@@ -195,9 +195,9 @@ class ContentViewPage extends Page
         }
     }
 
-    public function isChildElementPresent(array $parameters)
+    public function isChildElementPresent(array $parameters): bool
     {
-        $this->subItemList->isElementInTable($parameters);
+        return $this->subItemList->isElementInTable($parameters);
     }
 
     public function sendToTrash()

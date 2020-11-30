@@ -1,13 +1,13 @@
+@IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
 Feature: Content items creation
   As an administrator
   In order to manage content to my site
   I want to create and edit Content Items
 
   Background:
-    Given I open Login page in admin SiteAccess
-    And I am logged as admin
+    Given I am logged as admin
 
-  @javascript @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
+  @javascript
   Scenario: Content draft can be saved
     And I'm on Content view Page for root
     When I start creating a new content "Folder"
@@ -18,22 +18,22 @@ Feature: Content items creation
     Then success notification that "Content draft saved." appears
       And I should be on Content update page for "Test Folder Draft"
       And I open the "Dashboard" page in admin SiteAccess
-      And there's draft "Test Article draft" on Dashboard list
+      And there's draft "Test Folder Draft" on Dashboard list
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
+  @javascript @APIUser:admin
   Scenario: Content draft can be deleted
     Given I create "folder" Content drafts
       | name      | short_name | parentPath | language |
       | TestDraft | TestDraft  | root       | eng-GB   |
     And I open the "Dashboard" page in admin SiteAccess
-    Given there's draft "Test Article draft" on Dashboard list
-    When I start editing content draft "Test Article draft"
+    Given there's draft "TestDraft" on Dashboard list
+    When I start editing content draft "TestDraft"
     And I click on the edit action bar button "Delete draft"
     Then I should be on Content view Page for root
     And I open the "Dashboard" page in admin SiteAccess
-    And there's no draft "Test Article draft edited" on Dashboard list
+    And there's no draft "TestDraft" on Dashboard list
 
-  @javascript @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
+  @javascript
   Scenario: Content draft can be saved and then published
     When I'm on Content view Page for root
       And I start creating a new content "Folder"
@@ -45,7 +45,7 @@ Feature: Content items creation
       And I click on the edit action bar button "Publish"
     And I should be on Content view Page for "TestFolderSavePublish"
 
-  @javascript @APIUser:admin  @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
+  @javascript @APIUser:admin
   Scenario: Content draft edition can be closed
     Given I create "folder" Content drafts
       | name                   | short_name             | parentPath | language |
@@ -57,7 +57,7 @@ Feature: Content items creation
     When I click on the close button
     And I should be on Content view Page for root
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
+  @javascript @APIUser:admin
   Scenario: Content draft can be created and published through draft list modal
     Given I create "Folder" Content items
       | name                 | short_name           | parentPath        | language |
@@ -79,17 +79,17 @@ Feature: Content items creation
         | Name       | ContentDraftConflict         |
         | Short name | ContentDraftConflictVersion2 |
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
+  @javascript @APIUser:admin
   Scenario: Content draft from draft list modal can be published
     Given I create "Folder" Content items
       | name                            | short_name                      | parentPath        | language |
       | ContentDraftConflictFromTheList | ContentDraftConflictFromTheList | root              | eng-GB   |
-    And I create a new Draft for "ContentDraftConflict" Content item in "eng-GB"
+    And I create a new Draft for "ContentDraftConflictFromTheList" Content item in "eng-GB"
       | name                                    | short_name                              |
       | ContentDraftConflictFromTheListVersion2 | ContentDraftConflictFromTheListVersion2 |
     And I'm on Content view Page for "ContentDraftConflictFromTheList"
     When I click on the edit action bar button "Edit"
-      And I start editing draft with ID "2" from draft conflict modal
+      And I start editing draft with version number "2" from draft conflict modal
       And I set content fields
         | label      | value                                         |
         | Short name | ContentDraftConflictFromTheListVersion2Edited |

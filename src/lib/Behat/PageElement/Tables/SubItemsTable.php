@@ -27,23 +27,6 @@ class SubItemsTable extends Table
         return $this->getCellValue($rowPosition, $columnPosition);
     }
 
-    public function sortBy(string $columnName, bool $ascending): void
-    {
-        $this->context->getElementByText($columnName, $this->fields['horizontalHeaders'])->click();
-
-        $isSortedAscending = $this->context->isElementVisible(sprintf('%s%s', $this->fields['horizontalHeaders'], $this->fields['sortingOrderAscending']));
-
-        if ($ascending !== $isSortedAscending) {
-            $this->context->getElementByText($columnName, $this->fields['horizontalHeaders'])->click();
-        }
-
-        $verificationSelector = $ascending ?
-                                sprintf('%s%s', $this->fields['horizontalHeaders'], $this->fields['sortingOrderAscending']) :
-                                sprintf('%s%s', $this->fields['horizontalHeaders'], $this->fields['sortingOrderDescending']);
-
-        $this->context->waitUntilElementIsVisible($verificationSelector);
-    }
-
     public function clickListElement(string $name, ?string $contentType = null): void
     {
         $pagination = ElementFactory::createElement($this->context, Pagination::ELEMENT_NAME);
