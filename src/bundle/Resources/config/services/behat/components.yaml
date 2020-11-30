@@ -13,8 +13,6 @@ services:
 
   EzSystems\EzPlatformAdminUi\Behat\PageElement\Notification: ~
 
-  EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables: ~
-
   EzSystems\EzPlatformAdminUi\Behat\PageElement\Breadcrumb: ~
 
   EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog: ~
@@ -47,7 +45,8 @@ services:
 
   #tables
 
-  EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table: ~
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table:
+    shared: false
 
   # remove me
 

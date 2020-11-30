@@ -63,6 +63,7 @@ class Notification extends Component
         Assert::assertTrue(
             $this
                 ->getHTMLPage()
+                ->setTimeout(20)
                 ->find($this->getLocator('alert'))
                 ->isVisible()
         );

@@ -150,4 +150,32 @@ class ContentTypeContext implements Context
     {
         $this->contentTypeGroupPage->delete($contentTypeName);
     }
+
+    /**
+     * @Given I'm on Content Type Page for :contentTypeGroup group
+     */
+    public function iMOnContentTypePageFor(string $contentTypeGroup)
+    {
+        $this->contentTypeGroupPage->setExpectedContentTypeGroupName($contentTypeGroup);
+        $this->contentTypeGroupPage->open('admin');
+        $this->contentTypeGroupPage->verifyIsLoaded();
+    }
+
+    /**
+     * @Then I should be on Content Type group page for :contentTypeGroup group
+     */
+    public function iShouldBeOnContentTypeGroupPage($contentTypeGroup)
+    {
+        $this->contentTypeGroupPage->setExpectedContentTypeGroupName($contentTypeGroup);
+        $this->contentTypeGroupPage->verifyIsLoaded();
+    }
+
+    /**
+     * @Then I should be on Content Type page for :contentTypeName
+     */
+    public function iShouldBeOnContentTypePage(string $contentTypeName)
+    {
+        $this->contentTypePage->setExpectedContentTypeName($contentTypeName);
+        $this->contentTypePage->verifyIsLoaded();
+    }
 }

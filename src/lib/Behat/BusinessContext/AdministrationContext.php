@@ -55,71 +55,6 @@ class AdministrationContext implements Context
     }
 
     /**
-     * @When I start creating new :newItemType
-     * @When I start creating new :newItemType in :containerItem
-     *
-     * @param string $newItemType
-     */
-    public function iStartCreatingNew(string $newItemType, ?string $containerItem = null): void
-    {
-        throw new \Exception('refactor me ...');
-
-        if (!array_key_exists($newItemType, $this->itemCreateMapping)) {
-            throw new \InvalidArgumentException(sprintf('Unrecognized item type name: %s', $newItemType));
-        }
-        PageObjectFactory::createPage($this->browserContext, $this->itemCreateMapping[$newItemType], $containerItem)
-            ->startCreatingItem();
-    }
-
-    /**
-     * @When I start assigning to :itemName from :pageType page
-     */
-    public function iStartAssigningTo(string $itemName, string $pageType): void
-    {
-        throw new \Exception('refactor me ...');
-
-        $pageObject = PageObjectFactory::createPage($this->browserContext, $pageType, $itemName);
-        $pageObject->startAssigningToItem($itemName);
-    }
-
-    /**
-     * @Given there's empty :itemName on :page list
-     */
-    public function isEmptyElementOnTheList(string $itemName, string $page): void
-    {
-        throw new \Exception('refactor me ...');
-
-        $this->verifyContentsStatus($itemName, $page, true);
-    }
-
-    /**
-     * @Given there's non-empty :itemName on :page list
-     */
-    public function isNonEmptyElementOnTheList(string $itemName, string $page): void
-    {
-        throw new \Exception('refactor me ...');
-
-
-        $this->verifyContentsStatus($itemName, $page, false);
-    }
-
-    /**
-     * @Then :itemType :itemName cannot be selected
-     */
-    public function itemCannotBeSelected(string $itemType, string $itemName): void
-    {
-        throw new \Exception('refactor me ...');
-
-
-        $isListElementSelectable = PageObjectFactory::createPage($this->browserContext, $this->itemCreateMapping[$itemType])
-            ->adminList->table->isElementSelectable($itemName);
-
-        if ($isListElementSelectable) {
-            Assert::fail(sprintf('Element %s shoudn\'t be selectable.', $itemName));
-        }
-    }
-
-    /**
      * @Given I go to :itemName :itemType page
      * @Given I go to :itemName :itemType page from :itemContainer
      */
@@ -133,35 +68,6 @@ class AdministrationContext implements Context
         } else {
             Assert::fail(sprintf('Element %s is not on the list.', $itemName));
         }
-    }
-
-    /**
-     * @When I start editing :itemType :itemName from details page
-     */
-    public function iStartEditingItemFromDetails(string $itemType, string $itemName): void
-    {
-        throw new \Exception('refactor me ...');
-
-
-        PageObjectFactory::createPage($this->browserContext, $itemType, $itemName)
-            ->startEditingSelf($itemName);
-    }
-
-    /**
-     * @When I delete :itemType
-     */
-    public function iDeleteItems(string $itemType, TableNode $settings): void
-    {
-        throw new \Exception('refactor me ...');
-
-        $hash = $settings->getHash();
-
-        $page = PageObjectFactory::createPage($this->browserContext, $this->itemCreateMapping[$itemType]);
-        foreach ($hash as $setting) {
-            $page->adminList->table->selectListElement($setting['item']);
-        }
-
-        $this->performDeletion($page);
     }
 
     /**
@@ -228,29 +134,5 @@ class AdministrationContext implements Context
 
         $pageObject = PageObjectFactory::createPage($this->browserContext, $pageName);
         $pageObject->verifyItemAttribute($attributeName, $value, $itemName);
-    }
-
-    /**
-     * @Then :itemType :itemName has proper attributes
-     */
-    public function itemHasProperAttributes(string $itemType, string $itemName, TableNode $settings)
-    {
-        throw new \Exception('refactor me ...');
-
-        $hash = $settings->getHash();
-        foreach ($hash as $setting) {
-            $this->itemHasProperAttribute($itemType, $itemName, $setting['label'], $setting['value']);
-        }
-    }
-
-    /**
-     * @Then :listName list in :itemType :itemName is empty
-     */
-    public function listIsEmpty(string $listName, string $itemType, string $itemName): void
-    {
-        throw new \Exception('refactor me ...');
-
-        $pageObject = PageObjectFactory::createPage($this->browserContext, $itemType, $itemName);
-        $pageObject->verifyListIsEmpty($listName);
     }
 }

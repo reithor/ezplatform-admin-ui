@@ -1,7 +1,7 @@
 @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
 Feature: Trash management
   As an administrator
-  In order to manage content to my site
+  In order to manage content on my site
   I want to empty trash, delete, restore and restore element under new parent location in trash.
 
   Background:

@@ -26,7 +26,7 @@ ezplatform:
                 - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\ContentTypeContext
                 # - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\RolesContext
                 - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\SystemInfoContext
-                # - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\SectionsContext
+                - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\SectionsContext
                 # - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\ObjectStatesContext
                 - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\DashboardContext
                 - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\SearchContext

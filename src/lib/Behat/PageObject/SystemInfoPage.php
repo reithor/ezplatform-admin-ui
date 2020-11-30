@@ -6,17 +6,12 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use Behat\Mink\Session;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\TableInterface;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\TableNavigationTab;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SimpleTable;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SystemInfoTable;
-use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
 use PHPUnit\Framework\Assert;
 
 class SystemInfoPage extends Page
@@ -27,7 +22,7 @@ class SystemInfoPage extends Page
     protected $tableNavigationTab;
 
     /**
-     * @var Table
+     * @var TableInterface
      */
     private $table;
 
@@ -38,8 +33,7 @@ class SystemInfoPage extends Page
         $this->tableNavigationTab = $tableNavigationTab;
         $this->table = $table
             ->withParentLocator($this->getLocator('packagesTable'))
-            ->withColumnLocator($this->getLocator('tableHeader'))
-            ->withTableCell($this->getLocator('tableCell'));
+            ->endConfiguration();
 
     }
 
@@ -88,8 +82,6 @@ class SystemInfoPage extends Page
         return [
             new VisibleCSSLocator('pageTitle', '.ez-header h1'),
             new VisibleCSSLocator('tableTitle', '.tab-pane.active .ez-fieldgroup__name'),
-            new VisibleCSSLocator('tableHeader', 'th'),
-            new VisibleCSSLocator('tableCell', 'td:nth-of-type(%d)'),
             new VisibleCSSLocator('packagesTable', '.tab-pane.active .ez-fieldgroup:nth-of-type(2)'),
         ];
     }

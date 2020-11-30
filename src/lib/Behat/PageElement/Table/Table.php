@@ -5,9 +5,13 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Table;
 use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Element\DocumentElement;
 use EzSystems\Behat\Browser\Element\NodeElement;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
+use EzSystems\Behat\Browser\Locator\LocatorCollection;
+use EzSystems\Behat\Browser\Locator\LocatorInterface;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Pagination;
+use PHPUnit\Framework\Assert;
 
 class Table extends Component implements TableInterface
 {
@@ -34,7 +38,7 @@ class Table extends Component implements TableInterface
         parent::__construct($browser);
         $this->pagination = $pagination;
         $this->parentLocatorChanged = true;
-        $this->parentLocator = new VisibleCSSLocator('parent', '.ez-table');
+        $this->parentLocator = $this->getLocator('parent');
     }
 
     public function isEmpty(): bool
@@ -70,6 +74,8 @@ class Table extends Component implements TableInterface
             if ($hasElementOnCurrentPage) {
                 return true;
             }
+
+            $iterationCount++;
         }
 
         return false;
@@ -114,28 +120,48 @@ class Table extends Component implements TableInterface
             return false;
         }
 
-        $foundHeaders = $this->getHeaders($elementData);
+        $searchedHeaders = array_keys($elementData);
 
-        return $this->getMatchingTableRow($foundHeaders, $elementData) !== null;
+        $allHeaders = $this->parentElement->setTimeout(0)->findAll($this->getLocator('columnHeader'))
+            ->map(function (NodeElement $element) {
+                return $element->getText();
+            });
+
+        $searchedHeadersWithPositions = $this->getHeaderPositions($searchedHeaders, $allHeaders);
+
+        return $this->getMatchingTableRow($searchedHeadersWithPositions, $elementData) !== null;
     }
 
     public function getTableRow(array $elementData): TableRow
     {
         if ($this->isEmpty()) {
-            return false;
+            throw new \Exception('Table row with given data was not found!');
         }
 
-        $foundHeaders = $this->getHeaders($elementData);
+        $searchedHeaders = array_keys($elementData);
 
+        $allHeaders = $this->parentElement->findAll($this->getLocator('columnHeader'))
+            ->map(function (NodeElement $element) {
+                return $element->getText();
+            });
+
+        $foundHeaders = $this->getHeaderPositions($searchedHeaders, $allHeaders);
         $rowElement = $this->getMatchingTableRow($foundHeaders, $elementData);
 
+        $cellLocators = [];
+        foreach ($allHeaders as $headerPosition => $header) {
+            $cellLocators[] = $this->getTableCellLocator($headerPosition, $header);
+        }
+
+        $filteredCellLocators = array_filter($cellLocators, function (LocatorInterface $locator) {
+            return $locator->getIdentifier() !== '';
+        });
+
         if ($rowElement) {
-            return new TableRow($this->browser, $rowElement);
+            return new TableRow($this->browser, $rowElement, new LocatorCollection($filteredCellLocators));
         }
 
         throw new \Exception('Table row with given data was not found!');
-
-
     }
 
     public function verifyIsLoaded(): void
@@ -145,33 +171,34 @@ class Table extends Component implements TableInterface
     protected function specifyLocators(): array
     {
         return [
-            new VisibleCSSLocator('empty', '.ez-table__cell--no-content'),
-            new VisibleCSSLocator('columnHeader', '.ez-table__header-cell'),
-            new VisibleCSSLocator('row', 'tr'),
-            new VisibleCSSLocator('cell', '.ez-table__cell:nth-of-type(%d)'),
+            new CSSLocator('empty', '.ez-table__cell--no-content,.ez-table-no-content'),
+            new CSSLocator('columnHeader', '.ez-table__header-cell,th'),
+            new CSSLocator('row', 'tr'),
+            new CSSLocator('cell', '.ez-table__cell:nth-of-type(%d),td:nth-of-type(%d)'),
+            new CSSLocator('parent', '.ez-table'),
         ];
     }
 
 
-    public function withRowLocator(VisibleCSSLocator $locator): self
+    public function withRowLocator(CSSLocator $locator): self
     {
-        $rowLocator = new VisibleCSSLocator('row', $locator->getSelector());
+        $rowLocator = new CSSLocator('row', $locator->getSelector());
 
         $this->locators->replace($rowLocator);
 
         return $this;
     }
 
-    public function withTableCell(VisibleCSSLocator $locator): self
+    public function withTableCell(CSSLocator $locator): self
     {
-        $rowLocator = new VisibleCSSLocator('cell', $locator->getSelector());
+        $rowLocator = new CSSLocator('cell', $locator->getSelector());
 
         $this->locators->replace($rowLocator);
 
         return $this;
     }
 
-    public function withParentLocator(VisibleCSSLocator $locator): self
+    public function withParentLocator(CSSLocator $locator): self
     {
         $this->parentLocator = $locator;
         $this->parentLocatorChanged = true;
@@ -179,18 +206,18 @@ class Table extends Component implements TableInterface
         return $this;
     }
 
-    public function withEmptyLocator(VisibleCSSLocator $locator): self
+    public function withEmptyLocator(CSSLocator $locator): self
     {
-        $rowLocator = new VisibleCSSLocator('empty', $locator->getSelector());
+        $rowLocator = new CSSLocator('empty', $locator->getSelector());
 
         $this->locators->replace($rowLocator);
 
         return $this;
     }
 
-    public function withColumnLocator(VisibleCSSLocator $locator): self
+    public function withColumnLocator(CSSLocator $locator): self
     {
-        $columnLocator = new VisibleCSSLocator('columnHeader', $locator->getSelector());
+        $columnLocator = new CSSLocator('columnHeader', $locator->getSelector());
 
         $this->locators->replace($columnLocator);
 
@@ -210,28 +237,27 @@ class Table extends Component implements TableInterface
         $this->parentLocatorChanged = false;
     }
 
-    private function getTableCellLocator(int $headerPosition): VisibleCSSLocator
+    private function getTableCellLocator(int $headerPosition, string $identifier = 'tableCell'): CSSLocator
     {
         // +1: headerPosition is 0-indexed, but CSS selectors are 1-indexed
-        return new VisibleCSSLocator('tableCell', sprintf($this->getLocator('cell')->getSelector(), $headerPosition + 1));
+        return new CSSLocator($identifier, sprintf($this->getLocator('cell')->getSelector(), $headerPosition + 1, $headerPosition + 1));
     }
 
     /**
      * @param array $elementData
      * @return array
      */
-    private function getHeaders(array $elementData): array
+    private function getHeaderPositions(array $searchedHeaders, array $allHeaders): array
     {
-        $searchedHeaders = array_keys($elementData);
-
-        $allHeaders = $this->parentElement->findAll($this->getLocator('columnHeader'))
-            ->map(function (NodeElement $element) {
-                return $element->getText();
-            });
-
         $foundHeaders = array_filter($allHeaders, function (string $header) use ($searchedHeaders) {
             return in_array($header, $searchedHeaders, true);
         });
+
+        Assert::assertCount(
+            count($searchedHeaders), $foundHeaders,
+            sprintf('Could not find all expected headersin the table. Found: %s', implode(',', $foundHeaders))
+        );
+
         return $foundHeaders;
     }
 
@@ -243,12 +269,12 @@ class Table extends Component implements TableInterface
      */
     private function getMatchingTableRow(array $foundHeaders, array $elementData): ?NodeElement
     {
-        foreach ($this->parentElement->findAll($this->getLocator('row')) as $row) {
+        foreach ($this->parentElement->setTimeout(0)->findAll($this->getLocator('row')) as $row) {
             foreach ($foundHeaders as $headerPosition => $header) {
                 try {
                     $cellValue = $row->setTimeout(0)->find($this->getTableCellLocator($headerPosition))->getText();
-                    // value not found, skip row
                 } catch (\Exception $exception) {
+                    // value not found, skip row
                     continue 2;
                 }
 

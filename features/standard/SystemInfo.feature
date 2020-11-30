@@ -1,7 +1,7 @@
-@systemInformation @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce  @test
+@systemInformation @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
 Feature: System info verification
   As an administrator
-  In order to customize my eZ installation
+  In order to customize my website
   I want to have access to all System Information.
 
   Background:

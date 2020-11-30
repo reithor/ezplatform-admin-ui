@@ -8,6 +8,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Element\NodeElement;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
@@ -36,25 +37,11 @@ class UniversalDiscoveryWidget extends Component
     public function confirm(): void
     {
         $this->getHTMLPage()->find($this->getLocator('confirmButton'))->click();
-        $this->getHTMLPage()->setTimeout(self::SHORT_TIMEOUT)->waitUntil(function () {
-            return !$this->isVisible();
-        });
     }
 
     public function cancel(): void
     {
         $this->getHTMLPage()->find($this->getLocator('cancelButton'))->click();
-        $this->getHTMLPage()->setTimeout(self::SHORT_TIMEOUT)->waitUntil(function () {
-            return !$this->isVisible();
-        });
-    }
-
-    protected function isVisible(): bool
-    {
-        return $this->getHTMLPage()
-            ->setTimeout(self::SHORT_TIMEOUT)
-            ->findAll($this->getLocator('mainWindow'))
-            ->any();
     }
 
     protected function isMultiSelect(): bool
@@ -67,11 +54,11 @@ class UniversalDiscoveryWidget extends Component
 
     protected function addItemToMultiSelection(string $itemName, int $level): void
     {
-        $currentSelectedItemSelector = new VisibleCSSLocator('', sprintf($this->getLocator('treeLevelSelectedFormat')->getSelector(), $level));
-        $this->getHTMLPage()->findAll($currentSelectedItemSelector)->getByText($itemName)->mouseOver();
+        $currentSelectedItemLocator = new VisibleCSSLocator('currentSelectedItem', sprintf($this->getLocator('treeLevelSelectedFormat')->getSelector(), $level));
+        $this->getHTMLPage()->findAll($currentSelectedItemLocator)->getByText($itemName)->mouseOver();
 
-        $addItemSelector = new VisibleCSSLocator('', sprintf($this->getLocator('currentlySelectedAddItemButtonFormat')->getSelector(), $level));
-        $this->getHTMLPage()->find($addItemSelector)->click();
+        $addItemLocator = new VisibleCSSLocator('addItemLocator', sprintf($this->getLocator('currentlySelectedAddItemButtonFormat')->getSelector(), $level));
+        $this->getHTMLPage()->find($addItemLocator)->click();
 
         $addedItemSelector = new VisibleCSSLocator('', sprintf($this->getLocator('currentlySelectedItemAddedFormat')->getSelector(), $level));
         Assert::assertTrue($this->getHTMLPage()->find($addedItemSelector)->isVisible());
@@ -176,21 +163,21 @@ class UniversalDiscoveryWidget extends Component
     {
         return [
             // general selectors
-            new VisibleCSSLocator('confirmButton', '.c-selected-locations__confirm-button'),
-            new VisibleCSSLocator('categoryTabSelector', '.c-tab-selector__item'),
-            new VisibleCSSLocator('cancelButton', '.c-top-menu__cancel-btn'),
-            new VisibleCSSLocator('mainWindow', '.m-ud'),
-            new VisibleCSSLocator('selectedLocationsTab', '.c-selected-locations'),
+            new CSSLocator('confirmButton', '.c-selected-locations__confirm-button'),
+            new CSSLocator('categoryTabSelector', '.c-tab-selector__item'),
+            new CSSLocator('cancelButton', '.c-top-menu__cancel-btn'),
+            new CSSLocator('mainWindow', '.m-ud'),
+            new CSSLocator('selectedLocationsTab', '.c-selected-locations'),
             // selectors for path traversal
-            new VisibleCSSLocator('treeLevelFormat', '.c-finder-branch:nth-child(%d)'),
-            new VisibleCSSLocator('treeLevelElementsFormat', '.c-finder-branch:nth-of-type(%d) .c-finder-leaf'),
-            new VisibleCSSLocator('treeLevelSelectedFormat', '.c-finder-branch:nth-of-type(%d) .c-finder-leaf--marked'),
+            new CSSLocator('treeLevelFormat', '.c-finder-branch:nth-child(%d)'),
+            new CSSLocator('treeLevelElementsFormat', '.c-finder-branch:nth-of-type(%d) .c-finder-leaf'),
+            new CSSLocator('treeLevelSelectedFormat', '.c-finder-branch:nth-of-type(%d) .c-finder-leaf--marked'),
             // selectors for multiitem selection
-            new VisibleCSSLocator('multiSelectAddButton', '.c-toggle-selection-button'),
+            new CSSLocator('multiSelectAddButton', '.c-toggle-selection-button'),
             // itemActions
-            new VisibleCSSLocator('previewButton', '.c-content-meta-preview__preview-button'),
-            new VisibleCSSLocator('currentlySelectedItemAddedFormat', '.c-finder-branch:nth-of-type(%d) .c-finder-leaf--marked .c-toggle-selection-button.c-toggle-selection-button--selected'),
-            new VisibleCSSLocator('currentlySelectedAddItemButtonFormat', '.c-finder-branch:nth-of-type(%d) .c-finder-leaf--marked .c-toggle-selection-button.c-toggle-selection-button--selected'),
+            new CSSLocator('previewButton', '.c-content-meta-preview__preview-button'),
+            new CSSLocator('currentlySelectedItemAddedFormat', '.c-finder-branch:nth-of-type(%d) .c-finder-leaf--marked .c-toggle-selection-button.c-toggle-selection-button--selected'),
+            new CSSLocator('currentlySelectedAddItemButtonFormat', '.c-finder-branch:nth-of-type(%d) .c-finder-leaf--marked .c-toggle-selection-button'),
         ];
     }
 }
