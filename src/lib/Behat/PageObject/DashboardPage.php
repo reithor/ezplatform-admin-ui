@@ -6,47 +6,40 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use Behat\Mink\Session;
-use eZ\Publish\Core\MVC\Symfony\SiteAccess\Router;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\TableNavigationTab;
-use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
-use PHPUnit\Framework\Assert;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
 
 class DashboardPage extends Page
 {
-    public const TABLE_CONTAINER = '#ez-tab-list-content-dashboard-my .tab-pane.active';
-
-    public $dashboardTable;
     /**
-     * @var TableNavigationTab
+     * @var Table
      */
-    private $tableNavigationTab;
+    private $table;
 
-    public function __construct(Browser $browser, TableNavigationTab $tableNavigationTab)
+    public function __construct(Browser $browser, Table $table)
     {
         parent::__construct($browser);
-        $this->tableNavigationTab = $tableNavigationTab;
+        $this->table = $table;
     }
 
     public function switchTab(string $tableName, string $tabName)
     {
-        $table = $this->context->getElementByText('My content', $this->fields['tableSelector'], $this->fields['tableTitle']);
-        $this->context->getElementByText($tabName, $this->fields['tableTabSelector'], null, $table)->click();
+        $this->getHTMLPage()
+            ->findAll($this->getLocator('tableTitle'))->getByText($tableName)
+            ->findAll($this->getLocator('tableTab'))->getByText($tabName)
+            ->click();
     }
 
     public function isListEmpty(): bool
     {
-        $tableValue = $this->context->findElement($this::TABLE_CONTAINER)->getText();
-
-        return strpos($tableValue, 'No content.') !== false;
+        return $this->table->isEmpty();
     }
 
     public function editDraft(string $contentDraftName)
     {
-        $this->dashboardTable->clickEditButton($contentDraftName);
+        $this->table->getTableRow(['Name' => $contentDraftName])->edit();
     }
 
     protected function getRoute(): string
@@ -56,11 +49,8 @@ class DashboardPage extends Page
 
     public function verifyIsLoaded(): void
     {
-        Assert::assertEquals('My dashboard', $this->getHTMLPage()->find($this->getLocator('pageTitle'))->getText());
-
-        Assert::assertNotNull($this->context->getElementByText('My content', $this->fields['tableSelector'], $this->fields['tableTitle']));
-        $this->tableNavigationTab->verifyIsLoaded();
-        $this->dashboardTable->verifyVisibility();
+        $this->getHTMLPage()->find($this->getLocator('pageTitle'))->assert()->textEquals('My dashboard');
+        $this->getHTMLPage()->find($this->getLocator('table'))->assert()->isVisible();
     }
 
     public function getName(): string
@@ -73,8 +63,9 @@ class DashboardPage extends Page
         return [
                 new VisibleCSSLocator('tableSelector', '.ez-card'),
                 new VisibleCSSLocator('tableTitle', '.ez-card__title'),
-                new VisibleCSSLocator('tableTabSelector', '.ez-tabs .nav-item'),
+                new VisibleCSSLocator('tableTab', '.ez-tabs .nav-item'),
                 new VisibleCSSLocator('pageTitle', '.ez-header h1'),
+                new VisibleCSSLocator('table', '#ez-tab-list-content-dashboard-my .tab-pane.active'),
         ];
     }
 }
