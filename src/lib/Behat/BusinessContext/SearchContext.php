@@ -8,6 +8,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\BusinessContext;
 
 use Behat\Behat\Context\Context;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\SearchPage;
+use PHPUnit\Framework\Assert;
 
 class SearchContext implements Context
 {
@@ -35,6 +36,6 @@ class SearchContext implements Context
      */
     public function searchResults(string $contentItemName): void
     {
-        $this->searchPage->verifyItemInSearchResults($contentItemName);
+        Assert::assertTrue($this->searchPage->isElementInResults(['Name' => $contentItemName]));
     }
 }

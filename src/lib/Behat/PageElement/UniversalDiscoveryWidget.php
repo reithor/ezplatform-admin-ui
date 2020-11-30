@@ -54,19 +54,19 @@ class UniversalDiscoveryWidget extends Component
 
     protected function addItemToMultiSelection(string $itemName, int $level): void
     {
-        $currentSelectedItemLocator = new VisibleCSSLocator('currentSelectedItem', sprintf($this->getLocator('treeLevelSelectedFormat')->getSelector(), $level));
+        $currentSelectedItemLocator = new CSSLocator('currentSelectedItem', sprintf($this->getLocator('treeLevelSelectedFormat')->getSelector(), $level));
         $this->getHTMLPage()->findAll($currentSelectedItemLocator)->getByText($itemName)->mouseOver();
 
-        $addItemLocator = new VisibleCSSLocator('addItemLocator', sprintf($this->getLocator('currentlySelectedAddItemButtonFormat')->getSelector(), $level));
+        $addItemLocator = new CSSLocator('addItemLocator', sprintf($this->getLocator('currentlySelectedAddItemButtonFormat')->getSelector(), $level));
         $this->getHTMLPage()->find($addItemLocator)->click();
 
-        $addedItemSelector = new VisibleCSSLocator('', sprintf($this->getLocator('currentlySelectedItemAddedFormat')->getSelector(), $level));
+        $addedItemSelector = new CSSLocator('', sprintf($this->getLocator('currentlySelectedItemAddedFormat')->getSelector(), $level));
         Assert::assertTrue($this->getHTMLPage()->find($addedItemSelector)->isVisible());
     }
 
     protected function selectTreeBranch(string $itemName, int $level): void
     {
-        $treeLevelSelector = new VisibleCSSLocator('', sprintf($this->getLocator('treeLevelFormat')->getSelector(), $level));
+        $treeLevelSelector = new CSSLocator('', sprintf($this->getLocator('treeLevelFormat')->getSelector(), $level));
 
         $this->getHTMLPage()->setTimeout(self::LONG_TIMEOUT)->find($treeLevelSelector)->assert()->isVisible();
 
@@ -85,8 +85,8 @@ class UniversalDiscoveryWidget extends Component
             $currentItems = $this->getItemsFromLevel($level + 1);
         }
 
-        $treeElementsLocator = new VisibleCSSLocator('', sprintf($this->getLocator('treeLevelElementsFormat')->getSelector(), $level));
-        $selectedTreeElementLocator = new VisibleCSSLocator('', sprintf($this->getLocator('treeLevelSelectedFormat')->getSelector(), $level));
+        $treeElementsLocator = new CSSLocator('', sprintf($this->getLocator('treeLevelElementsFormat')->getSelector(), $level));
+        $selectedTreeElementLocator = new CSSLocator('', sprintf($this->getLocator('treeLevelSelectedFormat')->getSelector(), $level));
 
         $this->getHTMLPage()->findAll($treeElementsLocator)->getByText($itemName)->click();
         $this->getHTMLPage()->findAll($selectedTreeElementLocator)->getByText($itemName)->assert()->isVisible();
@@ -106,7 +106,7 @@ class UniversalDiscoveryWidget extends Component
 
     protected function getItemsFromLevel(int $level): array
     {
-        $levelItemsSelector = new VisibleCSSLocator('css', sprintf($this->getLocator('treeLevelElementsFormat')->getSelector(), $level));
+        $levelItemsSelector = new CSSLocator('css', sprintf($this->getLocator('treeLevelElementsFormat')->getSelector(), $level));
 
         return $this->getHTMLPage()->findAll($levelItemsSelector)->map(
             function (NodeElement $element) {
@@ -117,7 +117,7 @@ class UniversalDiscoveryWidget extends Component
 
     private function getCurrentlySelectedItemName(int $level): ?string
     {
-        $selectedElementSelector = new VisibleCSSLocator(
+        $selectedElementSelector = new CSSLocator(
             'selectedElement',
             sprintf($this->getLocator('treeLevelSelectedFormat')->getSelector(), $level)
         );
@@ -132,7 +132,7 @@ class UniversalDiscoveryWidget extends Component
         return $this->getHTMLPage()->
             setTimeout(self::SHORT_TIMEOUT)->
             find(
-                new VisibleCSSLocator(
+                new CSSLocator(
                     'css',
                     sprintf($this->getLocator('treeLevelElementsFormat')->getSelector(), $currentLevel + 1))
             )->isVisible();

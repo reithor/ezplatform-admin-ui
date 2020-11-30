@@ -6,26 +6,40 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
+use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\DashboardTable;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\TableInterface;
 use PHPUnit\Framework\Assert;
 
 class SearchPage extends Page
 {
+    /**
+     * @var TableInterface
+     */
+    private $table;
+
+    public function __construct(Browser $browser, Table $table)
+    {
+        parent::__construct($browser);
+        $this->table = $table
+            ->withParentLocator($this->getLocator('table'))
+            ->withEmptyLocator($this->getLocator('emptyTable'))
+            ->endConfiguration();
+    }
+
     public function search(string $contentItemName): void
     {
         $this->getHTMLPage()->find($this->getLocator('inputField'))->setValue($contentItemName);
         $this->getHTMLPage()->find($this->getLocator('buttonSearch'))->click();
+        $this->verifyIsLoaded();
+        $this->getHTMLPage()->find($this->getLocator('table'))->assert()->isVisible();
     }
 
-    public function verifyItemInSearchResults($contentItemName): void
+    public function isElementInResults(array $elementData): bool
     {
-        // powrot do tabelek...
-        $table = ElementFactory::createElement($this->context, DashboardTable::ELEMENT_NAME, '.container');
-        Assert::assertTrue($table->isElementInTable($contentItemName));
+        return $this->table->hasElement($elementData);
     }
 
     protected function getRoute(): string
@@ -52,6 +66,8 @@ class SearchPage extends Page
             new VisibleCSSLocator('inputField', '.ez-search-form #search_query'),
             new VisibleCSSLocator('buttonSearch', '.ez-btn--search'),
             new VisibleCSSLocator('pageTitle', '.ez-page-title .ez-page-title__content-name'),
+            new VisibleCSSLocator('table', '.ez-content-container table.table'),
+            new VisibleCSSLocator('emptyTable', '.ez-table-header__headline'),
         ];
     }
 }
