@@ -73,7 +73,34 @@ class Table extends Component implements TableInterface
         }
 
         return false;
+    }
 
+    public function getColumnValues(array $columnNames): array
+    {
+        if ($this->isEmpty()) {
+            return [];
+        }
+
+        $allHeaders = $this->parentElement->findAll($this->getLocator('columnHeader'))
+            ->map(function (NodeElement $element) {
+                return $element->getText();
+            });
+
+        $foundHeaders = array_filter($allHeaders, function (string $header) use ($columnNames) {
+            return in_array($header, $columnNames, true);
+        });
+
+        $result = [];
+
+        foreach ($foundHeaders as $headerPosition => $header) {
+            $result[$header] = $this->parentElement
+                ->findAll($this->getTableCellLocator($headerPosition))
+                ->map(function(NodeElement $element) {
+                    return $element->getText();
+                });
+        }
+
+        return $result;
     }
 
     public function endConfiguration(): TableInterface
@@ -129,6 +156,15 @@ class Table extends Component implements TableInterface
     public function withRowLocator(VisibleCSSLocator $locator): self
     {
         $rowLocator = new VisibleCSSLocator('row', $locator->getSelector());
+
+        $this->locators->replace($rowLocator);
+
+        return $this;
+    }
+
+    public function withTableCell(VisibleCSSLocator $locator): self
+    {
+        $rowLocator = new VisibleCSSLocator('cell', $locator->getSelector());
 
         $this->locators->replace($rowLocator);
 
@@ -207,7 +243,7 @@ class Table extends Component implements TableInterface
      */
     private function getMatchingTableRow(array $foundHeaders, array $elementData): ?NodeElement
     {
-        foreach ($this->getHTMLPage()->findAll($this->getLocator('row')) as $row) {
+        foreach ($this->parentElement->findAll($this->getLocator('row')) as $row) {
             foreach ($foundHeaders as $headerPosition => $header) {
                 try {
                     $cellValue = $row->setTimeout(0)->find($this->getTableCellLocator($headerPosition))->getText();

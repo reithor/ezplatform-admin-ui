@@ -1,16 +1,15 @@
-@test
+@IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
 Feature: Trash management
   As an administrator
   In order to manage content to my site
   I want to empty trash, delete, restore and restore element under new parent location in trash.
 
   Background:
-    Given I open 'Login page with redirect' page in admin SiteAccess
-    And I am logged as admin
+    Given I am logged as admin
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
+  @javascript @APIUser:admin
   Scenario: Trash can be emptied
-    And I create "Folder" Content items
+    Given I create "Folder" Content items
       | name          | short_name    | parentPath     | language |
       | TrashTest     | TrashTest     | root           | eng-GB   |
       | FolderToTrash | FolderToTrash | TrashTest | eng-GB   |
@@ -20,9 +19,9 @@ Feature: Trash management
     When I empty the trash
     Then trash is empty
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
+  @javascript @APIUser:admin
   Scenario: Content can be moved to trash
-    And I create "Folder" Content items
+    Given I create "Folder" Content items
       | name          | short_name    | parentPath | language |
       | TrashTest     | TrashTest     | root       | eng-GB   |
       | FolderToTrashManually | FolderToTrashManually | TrashTest  | eng-GB   |
@@ -32,9 +31,9 @@ Feature: Trash management
     And I open "Trash" page in admin SiteAccess
     And there is a "Folder" "FolderToTrashManually" on Trash list
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
+  @javascript @APIUser:admin
   Scenario: Element in trash can be deleted
-    And I create "Folder" Content items
+    Given I create "Folder" Content items
       | name          | short_name    | parentPath | language |
       | TrashTest     | TrashTest     | root       | eng-GB   |
       | DeleteFromTrash | DeleteFromTrash | TrashTest  | eng-GB   |
@@ -47,9 +46,9 @@ Feature: Trash management
     Then success notification that "Deleted selected item(s) from Trash." appears
     And there is no "Folder" "DeleteFromTrash" on Trash list
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
+  @javascript @APIUser:admin
   Scenario: Element in trash can be restored
-    And I create "Folder" Content items in root in "eng-GB"
+    Given I create "Folder" Content items in root in "eng-GB"
       | name      | short_name |
       | TrashTest | TrashTest  |
     And I create "Folder" Content items in "TrashTest" in "eng-GB"
@@ -65,9 +64,9 @@ Feature: Trash management
     And there is no "Folder" "RestoreFromTrash" on Trash list
     And there exists Content view Page for "TrashTest/RestoreFromTrash"
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
+  @javascript @APIUser:admin
   Scenario: Element in trash can be restored under new location
-    And I create "Folder" Content items
+    Given I create "Folder" Content items
       | name          | short_name    | parentPath | language |
       | TrashTest     | TrashTest     | root       | eng-GB   |
       | RestoreFromTrashNewLocation | RestoreFromTrashNewLocation | TrashTest  | eng-GB   |

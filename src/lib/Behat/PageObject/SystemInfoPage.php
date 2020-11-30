@@ -11,6 +11,8 @@ use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\TableInterface;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\TableNavigationTab;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SimpleTable;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SystemInfoTable;
@@ -20,50 +22,49 @@ use PHPUnit\Framework\Assert;
 class SystemInfoPage extends Page
 {
     /**
-     * @var SystemInfoTable
-     */
-    protected $systemInfoTable;
-
-    /**
      * @var TableNavigationTab
      */
     protected $tableNavigationTab;
 
-    public function __construct(Browser $browser, TableNavigationTab $tableNavigationTab)
+    /**
+     * @var Table
+     */
+    private $table;
+
+    public function __construct(Browser $browser, TableNavigationTab $tableNavigationTab, Table $table)
     {
         parent::__construct($browser);
 
         $this->tableNavigationTab = $tableNavigationTab;
-    }
+        $this->table = $table
+            ->withParentLocator($this->getLocator('packagesTable'))
+            ->withColumnLocator($this->getLocator('tableHeader'))
+            ->withTableCell($this->getLocator('tableCell'));
 
-    public function verifySystemInfoTable(string $tabName): void
-    {
-//        $systemInfoTable->verifyHeader($tabName);
-    }
-
-    public function verifySystemInfoRecords(string $tableName, array $records): void
-    {
-        $tab = ElementFactory::createElement($this->context, AdminList::ELEMENT_NAME, $tableName, SimpleTable::ELEMENT_NAME, '.ez-main-container .tab-pane.active');
-        $tab->verifyVisibility();
-        $tableHash = $tab->table->getTableHash();
-
-        foreach ($records as $desiredRecord) {
-            $found = false;
-            foreach ($tableHash as $actualRecord) {
-                if ($desiredRecord['Name'] === $actualRecord['Name']) {
-                    $found = true;
-                    break;
-                }
-            }
-            if (!$found) {
-                Assert::fail(sprintf('Could not find requested record [%s] on the "%s" list.', $desiredRecord['Name'], $tableName));
-            }
-        }
     }
 
     public function goToTab(string $tabName)
     {
         $this->tableNavigationTab->goToTab($tabName);
+    }
+
+    public function verifyCurrentTableHeader(string $header)
+    {
+        $this->getHTMLPage()->find($this->getLocator('tableTitle'))->assert()->textEquals($header);
+    }
+
+    public function verifyPackages(array $packages)
+    {
+        $actualPackageData = $this->table->getColumnValues(['Name']);
+
+        foreach ($packages as $package) {
+            Assert::assertContains($package, $actualPackageData['Name']);
+        }
+    }
+
+    public function verifyBundles(array $bundleNames)
+    {
+        $this->verifyPackages($bundleNames);
     }
 
     protected function getRoute(): string
@@ -74,7 +75,7 @@ class SystemInfoPage extends Page
     public function verifyIsLoaded(): void
     {
         $this->tableNavigationTab->verifyIsLoaded();
-        $this->verifySystemInfoTable('Product');
+        $this->verifyCurrentTableHeader('Product');
     }
 
     public function getName(): string
@@ -86,6 +87,10 @@ class SystemInfoPage extends Page
     {
         return [
             new VisibleCSSLocator('pageTitle', '.ez-header h1'),
+            new VisibleCSSLocator('tableTitle', '.tab-pane.active .ez-fieldgroup__name'),
+            new VisibleCSSLocator('tableHeader', 'th'),
+            new VisibleCSSLocator('tableCell', 'td:nth-of-type(%d)'),
+            new VisibleCSSLocator('packagesTable', '.tab-pane.active .ez-fieldgroup:nth-of-type(2)'),
         ];
     }
 }

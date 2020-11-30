@@ -41,7 +41,7 @@ class SystemInfoContext implements Context
      */
     public function iSeeSystemInformationTable(string $tabName): void
     {
-        $this->systemInfoPage->verifySystemInfoTable($tabName);
+        $this->systemInfoPage->verifyCurrentTableHeader($tabName);
     }
 
     /**
@@ -49,7 +49,30 @@ class SystemInfoContext implements Context
      */
     public function iSeeRecordsInSystemInformation(string $tableName, TableNode $records): void
     {
-        $this->systemInfoPage->goToTab($this->systemInfoTableMapping[$tableName]);
-        $this->systemInfoPage->verifySystemInfoRecords($tableName, $records->getHash());
+        $this->systemInfoPage->verifyPackages();
+    }
+
+    /**
+     * @Then I see listed packages
+     */
+    public function iSeeListedPackages(TableNode $packages): void
+    {
+        $packageNames = array_map(function (array $row) {
+            return $row['Name'];
+        }, $packages->getHash());
+
+        $this->systemInfoPage->verifyPackages($packageNames);
+    }
+
+    /**
+     * @Then I see listed bundles
+     */
+    public function iSeeListedBundles(TableNode $bundles): void
+    {
+        $bundleNames = array_map(function (array $row) {
+            return $row['Name'];
+        }, $bundles->getHash());
+
+        $this->systemInfoPage->verifyBundles($bundleNames);
     }
 }
