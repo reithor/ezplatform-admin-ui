@@ -13,47 +13,47 @@ use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\Behat\Browser\Element\Element;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\SubitemsGrid;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\TableInterface;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SubitemsGridList;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SubItemsTable;
 use PHPUnit\Framework\Assert;
 
 class SubitemsList extends Component
 {
-    /** @var SubItemsTable */
+    /** @var Table */
     protected $table;
 
     protected $isGridViewEnabled;
 
-    /** @var SubitemsGridList */
-    protected $gridList;
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\SubitemsGrid */
+    private $grid;
 
-    public function __construct(Browser $browser, SubitemsGridList $gridList, SubItemsTable $table)
+    public function __construct(Browser $browser, Table $table, SubitemsGrid $grid)
     {
         parent::__construct($browser);
-        $this->table = $table;
-        $this->gridList = $gridList;
+        $this->table = $table->withParentLocator($this->getLocator('table'))->endConfiguration();
+        $this->grid = $grid;
     }
 
     public function sortBy(string $columnName, bool $ascending): void
     {
-        $this->context->getElementByText($columnName, $this->fields['horizontalHeaders'])->click();
-
-        $isSortedAscending = $this->context->isElementVisible(sprintf('%s%s', $this->fields['horizontalHeaders'], $this->fields['sortingOrderAscending']));
-
-        if ($ascending !== $isSortedAscending) {
-            $this->context->getElementByText($columnName, $this->fields['horizontalHeaders'])->click();
+        if ($this->isGridViewEnabled) {
+            return;
         }
 
-        $verificationSelector = $ascending ?
-            sprintf('%s%s', $this->fields['horizontalHeaders'], $this->fields['sortingOrderAscending']) :
-            sprintf('%s%s', $this->fields['horizontalHeaders'], $this->fields['sortingOrderDescending']);
+        $this->getHTMLPage()->findAll($this->getLocator('horizontalHeaders'))->getByText($columnName)->click();
+        $isSortedDescending = $this->getHTMLPage()->findAll($this->getLocator('sortingOrderDescending'))->any();
 
-        $this->context->waitUntilElementIsVisible($verificationSelector);
-    }
+        if ($isSortedDescending && $ascending) {
+            $this->getHTMLPage()->findAll($this->getLocator('horizontalHeaders'))->getByText($columnName)->click();
+        }
 
-    public function canBeSorted(): bool
-    {
-        return $this->table->canBeSorted();
+        $verificationLocator = $ascending ?
+            $this->getLocator('sortingOrderAscending') : $this->getLocator('sortingOrderDescending');
+
+        $this->getHTMLPage()->find($verificationLocator)->assert()->isVisible();
     }
 
     public function shouldHaveGridViewEnabled(bool $enabled): void
@@ -63,29 +63,31 @@ class SubitemsList extends Component
 
     public function verifyIsLoaded(): void
     {
-        Assert::assertTrue($this->getHTMLPage()->find($this->getLocator('list'))->isVisible());
-    }
-
-    public function getName(): string
-    {
-        return 'Subitems list';
+        Assert::assertTrue($this->getHTMLPage()->find($this->getLocator('table'))->isVisible());
     }
 
     public function clickListElement(string $contentName, string $contentType)
     {
-        $this->table->clickListElement($contentName, $contentType);
+        $this->getTable()->getTableRow(['Name' => $contentName, 'Content Type' => $contentType])->goToItem();
     }
 
-    public function isElementInTable($itemName): bool
+    public function isElementInTable(array $elementData): bool
     {
-        return $$this->table->isElementInTable($itemName);
+        return $this->getTable()->hasElement($elementData);
+    }
+
+    protected function getTable(): TableInterface
+    {
+        return $this->isGridViewEnabled ? $this->grid : $this->table;
     }
 
     protected function specifyLocators(): array
     {
         return [
-            new VisibleCSSLocator('list', '.ez-sil'),
-            new VisibleCSSLocator('listTable', '.ez-sil .m-sub-items__list'),
+            new VisibleCSSLocator('table', '.m-sub-items'),
+            new VisibleCSSLocator('horizontalHeaders', '.m-sub-items .c-table-view__cell--head'),
+            new VisibleCSSLocator('sortingOrderAscending', '.m-sub-items .c-table-view__cell--head.m-sub-items .c-table-view__cell--sorted-asc'),
+            new VisibleCSSLocator('sortingOrderDescending', '.m-sub-items .c-table-view__cell--head.m-sub-items .c-table-view__cell--sorted-desc'),
         ];
     }
 }

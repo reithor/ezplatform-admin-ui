@@ -82,7 +82,7 @@ Feature: Sections management
     Then I should be on "Test Section edited" Section page
       And notification that "Section" "Test Section edited" is updated appears
 
-  @javascript @APIUser:admin
+  @javascript
   Scenario: Changes can be discarded while editing Section from section details
     Given I open "Test Section edited" Section page in admin SiteAccess
     When I start editing the Section
@@ -94,7 +94,7 @@ Feature: Sections management
       And there's a "Test Section edited" on Sections list
       And there's no "Test Section edited2" on Sections list
 
-  @javascript @APIUser:admin
+  @javascript
   Scenario: Section can be edited from section details
     Given I open "Test Section edited" Section page in admin SiteAccess
     When I start editing the Section

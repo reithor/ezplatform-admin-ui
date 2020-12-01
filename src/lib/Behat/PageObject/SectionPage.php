@@ -6,6 +6,7 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
+use eZ\Publish\API\Repository\Repository;
 use eZ\Publish\API\Repository\SectionService;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
@@ -41,10 +42,6 @@ class SectionPage extends Page
 
     /** @var int */
     private $expectedSectionId;
-    /**
-     * @var SectionService
-     */
-    private $sectionService;
 
     /**
      * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\TableInterface
@@ -58,14 +55,23 @@ class SectionPage extends Page
      * @var Dialog
      */
     private $dialog;
+    /**
+     * @var Repository
+     */
+    private $repository;
 
-    public function __construct(Browser $browser, SectionService $sectionService, Table $contentItemsTable, Table $sectionInformationTable, Dialog $dialog)
+    public function __construct(
+        Browser $browser,
+        Table $contentItemsTable,
+        Table $sectionInformationTable,
+        Dialog $dialog,
+        Repository $repository)
     {
         parent::__construct($browser);
-        $this->sectionService = $sectionService;
         $this->contentItemsTable = $contentItemsTable->withParentLocator($this->getLocator('contentItemsTable'))->endConfiguration();
         $this->sectionInformationTable = $sectionInformationTable->withParentLocator($this->getLocator('sectionInfoTable'))->endConfiguration();
         $this->dialog = $dialog;
+        $this->repository = $repository;
     }
 
     public function isContentListEmpty(): bool
@@ -116,13 +122,16 @@ class SectionPage extends Page
     {
         $this->expectedSectionName = $sectionName;
 
-        foreach ($this->sectionService->loadSections() as $section) {
+        $sections = $this->repository->sudo(function(Repository $repository) {
+            return $repository->getSectionService()->loadSections();
+        });
+
+        foreach ($sections as $section) {
             if ($section->name === $sectionName) {
                 $this->expectedSectionId = $section->id;
                 return;
             }
         }
-
     }
 
     public function verifyIsLoaded(): void

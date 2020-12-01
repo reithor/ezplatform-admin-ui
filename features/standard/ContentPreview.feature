@@ -1,3 +1,4 @@
+@IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
 Feature: Content Item preview
   As an administrator
   To make sure my Content looks good on mobile, desktop and tablet
@@ -8,7 +9,7 @@ Feature: Content Item preview
       And I am logged as admin
       And I'm on Content view Page for "root"
 
-  @javascript @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
+  @javascript
   Scenario: Content can be previewed during creation
     When I start creating a new content "Folder"
     And I set content fields

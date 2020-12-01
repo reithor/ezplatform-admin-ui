@@ -48,8 +48,4 @@ services:
   EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table:
     shared: false
 
-  # remove me
-
-  EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SubitemsGridList: ~
-
-  EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SubItemsTable: ~
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\SubitemsGrid: ~

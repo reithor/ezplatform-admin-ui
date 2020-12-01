@@ -60,15 +60,14 @@ class UniversalDiscoveryWidget extends Component
         $addItemLocator = new CSSLocator('addItemLocator', sprintf($this->getLocator('currentlySelectedAddItemButtonFormat')->getSelector(), $level));
         $this->getHTMLPage()->find($addItemLocator)->click();
 
-        $addedItemSelector = new CSSLocator('', sprintf($this->getLocator('currentlySelectedItemAddedFormat')->getSelector(), $level));
-        Assert::assertTrue($this->getHTMLPage()->find($addedItemSelector)->isVisible());
+        $addedItemLocator = new CSSLocator('addedItemLocator', sprintf($this->getLocator('currentlySelectedItemAddedFormat')->getSelector(), $level));
+        Assert::assertTrue($this->getHTMLPage()->find($addedItemLocator)->isVisible());
     }
 
     protected function selectTreeBranch(string $itemName, int $level): void
     {
-        $treeLevelSelector = new CSSLocator('', sprintf($this->getLocator('treeLevelFormat')->getSelector(), $level));
-
-        $this->getHTMLPage()->setTimeout(self::LONG_TIMEOUT)->find($treeLevelSelector)->assert()->isVisible();
+        $treeLevelLocator = new CSSLocator('treeLeverlLocator', sprintf($this->getLocator('treeLevelFormat')->getSelector(), $level));
+        $this->getHTMLPage()->setTimeout(self::LONG_TIMEOUT)->find($treeLevelLocator)->assert()->isVisible();
 
         $alreadySelectedItemName = $this->getCurrentlySelectedItemName($level);
 

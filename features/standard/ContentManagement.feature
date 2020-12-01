@@ -73,17 +73,17 @@ Scenario: Content can be copied
     And I close the UDW window
     Then I should be on Content view Page for "ContentManagement/FolderToSubtreeCopyCancel"
 
-  @javascript @APIUser:admin
+  @javascript @APIUser:admin @test
   Scenario: Subtree can be copied
     Given I create "Folder" Content items
       | name                      | short_name                | parentPath        | language |
       | ContentManagement         | ContentManagement         | root              | eng-GB   |
-      | FolderToCopyToSubtreeCopy | FolderToCopyToSubtreeCopy | ContentManagement | eng-GB   |
-    And I'm on Content view Page for "ContentManagement/FolderToCopyToSubtreeCopy"
+      | FolderToSubtreeCopy | FolderToSubtreeCopy | ContentManagement | eng-GB   |
+    And I'm on Content view Page for "ContentManagement/FolderToSubtreeCopy"
     When I click on the edit action bar button "Copy Subtree"
     And I select content "Media" through UDW
     And I confirm the selection in UDW
     Then success notification that "Subtree 'FolderToSubtreeCopy' copied to Location 'Media'" appears
-    And I should be on Content view Page for "Media/Files/FolderToSubtreeCopy"
+    And I should be on Content view Page for "Media/FolderToSubtreeCopy"
     And I'm on Content view Page for "ContentManagement"
     And there's a "FolderToSubtreeCopy" "Folder" on Subitems list

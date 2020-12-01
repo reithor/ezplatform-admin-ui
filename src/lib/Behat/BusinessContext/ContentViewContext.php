@@ -84,7 +84,7 @@ class ContentViewContext implements Context
      */
     public function verifyThereIsItemInSubItemList(string $itemName, string $itemType): void
     {
-        Assert::assertTrue($this->contentViewPage->isChildElementPresent(['Name' => $itemName, 'Content Type' => $itemType]));
+        Assert::assertTrue($this->contentViewPage->isChildElementPresent(['Name' => $itemName, 'Content type' => $itemType]));
     }
 
     /**

@@ -132,7 +132,7 @@ class Table extends Component implements TableInterface
         return $this->getMatchingTableRow($searchedHeadersWithPositions, $elementData) !== null;
     }
 
-    public function getTableRow(array $elementData): TableRow
+    public function getTableRow(array $elementData): ?TableRow
     {
         if ($this->isEmpty()) {
             throw new \Exception('Table row with given data was not found!');
