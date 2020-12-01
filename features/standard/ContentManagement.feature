@@ -73,7 +73,7 @@ Scenario: Content can be copied
     And I close the UDW window
     Then I should be on Content view Page for "ContentManagement/FolderToSubtreeCopyCancel"
 
-  @javascript @APIUser:admin @test
+  @javascript @APIUser:admin
   Scenario: Subtree can be copied
     Given I create "Folder" Content items
       | name                      | short_name                | parentPath        | language |

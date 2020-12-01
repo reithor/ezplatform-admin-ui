@@ -6,28 +6,35 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use Behat\Mink\Session;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
-use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
 use PHPUnit\Framework\Assert;
 
 class LanguagesPage extends Page
 {
-    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList */
-    protected $adminList;
 
-    public function __construct(Browser $browser, AdminList $adminList)
+    /**
+     * @var Table
+     */
+    private $table;
+    /**
+     * @var Dialog
+     */
+    private $dialog;
+
+    public function __construct(Browser $browser, Table $table, Dialog $dialog)
     {
         parent::__construct($browser);
-        $this->adminList = $adminList;
+        $this->table = $table;
+        $this->dialog = $dialog;
     }
 
-    public function edit(string $languageName): void
+    public function editLanguage(string $languageName): void
     {
-        $this->adminList->editItem(['Name' => $languageName]);
+        $this->table->getTableRow(['Name' => $languageName])->edit();
     }
 
     public function create(): void
@@ -35,19 +42,17 @@ class LanguagesPage extends Page
         $this->getHTMLPage()->find($this->getLocator('createButton'))->click();
     }
 
-    public function delete(string $languageName): void
+    public function deleteLanguage(string $languageName): void
     {
-        $this->adminList->selectItem(['Name' => $languageName]);
-        $this->getHTMLPage()->find($this->get('trashButton'))->click();
+        $this->table->getTableRow(['Name' => $languageName])->select();
+        $this->getHTMLPage()->find($this->getLocator('deleteButton'))->click();
+        $this->dialog->verifyIsLoaded();
+        $this->dialog->confirm();
     }
 
-    public function verifyLanguageAttribute(string $label, string $value, string $itemName): void
+    public function isLanguageOnTheList(string $languageName)
     {
-//        // TODO
-//        Assert::assertEquals(
-//            $value,
-//            $this->adminList->
-//        );
+        return $this->table->hasElement(['Name' => $languageName]);
     }
 
     protected function getRoute(): string
@@ -57,13 +62,12 @@ class LanguagesPage extends Page
 
     public function verifyIsLoaded(): void
     {
-        $this->adminList->verifyIsLoaded();
         Assert::assertEquals(
-            'Content',
+            'Languages',
             $this->getHTMLPage()->find($this->getLocator('pageTitle'))->getText()
         );
         Assert::assertEquals(
-            sprintf("Content Types in '%s'", $this->expectedName),
+            "Languages",
             $this->getHTMLPage()->find($this->getLocator('listHeader'))->getText()
         );
     }
@@ -79,7 +83,7 @@ class LanguagesPage extends Page
             new VisibleCSSLocator('pageTitle',  '.ez-header h1'),
             new VisibleCSSLocator('listHeader', '.ez-table-header .ez-table-header__headline, header .ez-table__headline, header h5'),
             new VisibleCSSLocator('createButton', '.ez-icon-create'),
-            new VisibleCSSLocator('trashButton', '.ez-icon-trash,button[data-original-title^="Delete"]'),
+            new VisibleCSSLocator('deleteButton', '.ez-icon-trash,button[data-original-title^="Delete"]'),
         ];
     }
 }

@@ -41,3 +41,5 @@ services:
   EzSystems\EzPlatformAdminUi\Behat\BusinessContext\NotificationContext: ~
 
   EzSystems\EzPlatformAdminUi\Behat\BusinessContext\SectionsContext: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\BusinessContext\LanguageContext: ~

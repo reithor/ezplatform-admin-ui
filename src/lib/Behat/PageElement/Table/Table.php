@@ -272,7 +272,7 @@ class Table extends Component implements TableInterface
         foreach ($this->parentElement->setTimeout(0)->findAll($this->getLocator('row')) as $row) {
             foreach ($foundHeaders as $headerPosition => $header) {
                 try {
-                    $cellValue = $row->setTimeout(0)->find($this->getTableCellLocator($headerPosition))->getText();
+                    $cellValue = $row->setTimeout(0)->find($this->getTableCellLocator($headerPosition))->getValue();
                 } catch (\Exception $exception) {
                     // value not found, skip row
                     continue 2;

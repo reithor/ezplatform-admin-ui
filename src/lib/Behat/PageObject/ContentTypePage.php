@@ -7,34 +7,14 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use eZ\Publish\API\Repository\ContentTypeService;
+use EzSystems\Behat\Browser\Element\NodeElement;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
 
 class ContentTypePage extends Page
 {
-    /** @var string locator for container of Content list */
-    public $contentFieldDefinitionsListLocator = '.ez-fieldgroup:nth-of-type(2)';
-
-    /** @var string locator for container of Content list */
-    public $globalPropertiesTableLocator = '.ez-table--list';
-
-    private $contentTypeTableHeaders = ['Name', 'Identifier', 'Description'];
-
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList
-     */
-    public $globalPropertiesTable;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList
-     */
-    public $fieldsAdminList;
-
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList
-     */
-    public $contentTypeAdminList;
-
     /**
      * @var string
      */
@@ -51,11 +31,47 @@ class ContentTypePage extends Page
      * @var mixed
      */
     private $expectedContenTypeId;
+    /**
+     * @var Table
+     */
+    private $contentTypeDataTable;
+    /**
+     * @var Table
+     */
+    private $globalPropertiesTable;
+    /**
+     * @var Table
+     */
+    private $fieldTable;
 
-    public function __construct(Browser $browser, ContentTypeService $contentTypeService)
+    public function __construct(
+        Browser $browser,
+        ContentTypeService $contentTypeService,
+        Table $contentTypeDataTable,
+        Table $fieldTable)
     {
         parent::__construct($browser);
         $this->contentTypeService = $contentTypeService;
+        $this->contentTypeDataTable = $contentTypeDataTable->withParentLocator($this->getLocator('contentTypeDataTable'));
+        $this->fieldTable = $fieldTable->withParentLocator($this->getLocator('contentFieldsTable'));
+    }
+
+    public function hasProperty($label, $value): bool
+    {
+        if (in_array($label, ['Name', 'Identifier', 'Description'])) {
+            return $this->contentTypeDataTable->hasElement([$label => $value]);
+        }
+
+        return $this->getHTMLPage()
+            ->findAll($this->getLocator('globalPropertiesRow'))
+            ->getByChildElementText($this->getLocator('globalPropertiesLabel'), $label)
+            ->find($this->getLocator('globalPropertiesValue'))
+            ->getText() === $value;
+    }
+
+    public function hasFieldType(array $fieldTypeData): bool
+    {
+        return $this->fieldTable->hasElement($fieldTypeData);
     }
 
     protected function getRoute(): string
@@ -76,9 +92,6 @@ class ContentTypePage extends Page
         $this->getHTMLPage()
             ->find($this->getLocator('pageTitle'))
             ->assert()->textEquals($this->expectedContentTypeName);
-
-        $this->contentTypeAdminList->verifyIsLoaded();
-        $this->fieldsAdminList->verifyIsLoaded();    
     }
     
     public function setExpectedContentTypeName(string $contentTypeName): void
@@ -103,6 +116,11 @@ class ContentTypePage extends Page
         return [
             new VisibleCSSLocator('createButton', '.btn-icon .ez-icon-create'),
             new VisibleCSSLocator('pageTitle', '.ez-header h1'),
+            new VisibleCSSLocator('contentTypeDataTable', '.ez-fieldgroup .ez-fieldgroup__content .ez-table'),
+            new VisibleCSSLocator('contentFieldsTable', '.ez-fieldgroup:nth-of-type(2)'),
+            new VisibleCSSLocator('globalPropertiesRow', '.ez-fieldgroup__content .ez-table__row'),
+            new VisibleCSSLocator('globalPropertiesLabel', '.ez-table__cell:nth-of-type(1)'),
+            new VisibleCSSLocator('globalPropertiesValue', '.ez-table__cell:nth-of-type(2)'),
         ];
     }
 }

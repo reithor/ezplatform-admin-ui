@@ -6,38 +6,66 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
+use eZ\Publish\API\Repository\LanguageService;
+use eZ\Publish\API\Repository\Repository;
+use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SimpleTable;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
 use PHPUnit\Framework\Assert;
 
 class LanguagePage extends Page
 {
     /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList
-     */
-    public $adminList;
-
-    /**
      * @var string
      */
     private $expectedLanguageName;
+    /**
+     * @var Table
+     */
+    private $table;
+    /**
+     * @var Dialog
+     */
+    private $dialog;
+    /**
+     * @var int
+     */
+    private $expectedLanguageId;
+    /**
+     * @var Repository
+     */
+    private $repository;
 
-    public function verifyItemAttribute(string $label, string $value): void
+    public function __construct(Browser $browser, Table $table, Dialog $dialog, Repository $repository)
     {
-        Assert::assertEquals(
-            $value,
-            $this->adminList->table->getTableCellValue($label),
-            sprintf('Attribute "%s" has wrong value.', $label)
-        );
+        parent::__construct($browser);
+        $this->table = $table;
+        $this->dialog = $dialog;
+        $this->repository = $repository;
+    }
+
+    public function delete()
+    {
+        $this->getHTMLPage()->find($this->getLocator('deleteButton'))->click();
+        $this->dialog->verifyIsLoaded();
+        $this->dialog->confirm();
+    }
+
+    public function hasProperties($data): bool
+    {
+        return $this->table->hasElement($data);
+    }
+
+    public function edit()
+    {
+        $this->getHTMLPage()->find($this->getLocator('editButton'))->click();
     }
 
     protected function getRoute(): string
     {
-        return '/language/view'; //TODO: load language
+        return sprintf('/language/view/%d', $this->expectedLanguageId);
     }
 
     public function getName(): string
@@ -48,22 +76,35 @@ class LanguagePage extends Page
     public function setExpectedLanguageName(string $languageName)
     {
         $this->expectedLanguageName = $languageName;
+
+        $languages = $this->repository->sudo(function (Repository $repository) {
+            return $repository->getContentLanguageService()->loadLanguages();
+        });
+
+        foreach ($languages as $language)
+        {
+            if ($language->name === $languageName)
+            {
+                $this->expectedLanguageId = $language->id;
+                return;
+            }
+        }
     }
 
     public function verifyIsLoaded(): void
     {
         Assert::assertEquals(
-            'Language',
+            sprintf('Language "%s"', $this->expectedLanguageName),
             $this->getHTMLPage()->find($this->getLocator('pageTitle'))->getText()
         );
-
-        $this->adminList->verifyIsLoaded();
     }
 
     protected function specifyLocators(): array
     {
         return [
             new VisibleCSSLocator('pageTitle', '.ez-header h1'),
+            new VisibleCSSLocator('deleteButton', 'button[data-original-title="Delete language"]'),
+            new VisibleCSSLocator('editButton', 'button[data-original-title="Edit"]'),
         ];
     }
 }

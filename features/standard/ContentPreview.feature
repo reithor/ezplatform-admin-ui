@@ -5,8 +5,7 @@ Feature: Content Item preview
   I want to preview it during creation
 
   Background:
-      Given I open Login page in admin SiteAccess
-      And I am logged as admin
+      Given I am logged as admin
       And I'm on Content view Page for "root"
 
   @javascript

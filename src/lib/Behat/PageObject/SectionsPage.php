@@ -22,10 +22,7 @@ class SectionsPage extends Page
      * @var TableInterface
      */
     private $table;
-    /**
-     * @var Notification
-     */
-    private $notification;
+
     /**
      * @var Dialog
      */

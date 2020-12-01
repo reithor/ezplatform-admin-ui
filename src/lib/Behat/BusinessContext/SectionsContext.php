@@ -32,7 +32,7 @@ class SectionsContext implements Context
     /**
      * @When I create a new Section
      */
-    public function createNewContentType(): void
+    public function createNewSection(): void
     {
         $this->sectionsPage->createNew();
     }

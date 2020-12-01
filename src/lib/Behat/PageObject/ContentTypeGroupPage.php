@@ -11,6 +11,9 @@ use eZ\Publish\API\Repository\ContentTypeService;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
+use EzSystems\EzPlatformAdminUi\Behat\PageObject\Dialogalog as DialogalogAlias;
 use PHPUnit\Framework\Assert;
 
 class ContentTypeGroupPage extends Page
@@ -28,26 +31,36 @@ class ContentTypeGroupPage extends Page
      * @var mixed
      */
     private $contentTypeGroupId;
+    /**
+     * @var Table
+     */
+    private $table;
+    /**
+     * @var Dialog
+     */
+    private $dialog;
 
-    public function __construct(Browser $browser, ContentTypeService $contentTypeService)
+    public function __construct(Browser $browser, ContentTypeService $contentTypeService, Table $table, Dialog $dialog)
     {
         parent::__construct($browser);
         $this->contentTypeService = $contentTypeService;
+        $this->table = $table->withParentLocator($this->getLocator('tableContainer'));
+        $this->dialog = $dialog;
     }
 
     public function verifyListIsEmpty(): void
     {
-        Assert::assertTrue($this->adminList->isEmpty());
+        Assert::assertTrue($this->table->isEmpty());
     }
 
     public function edit(string $contentTypeName): void
     {
-        $this->adminList->editItem($contentTypeName);
+        $this->table->getTableRow(['Name' => $contentTypeName])->edit();
     }
 
     public function goTo(string $contentTypeName): void
     {
-        $this->adminList->clickItem(['Name' => $contentTypeName]);
+        $this->table->getTableRow(['Name' => $contentTypeName])->goToItem();
     }
 
     public function createNew(): void
@@ -55,13 +68,17 @@ class ContentTypeGroupPage extends Page
         $this->getHTMLPage()->find($this->getLocator('createButton'))->click();
     }
 
-    public function isContentTypeOnTheList($contentTypeName)
+    public function isContentTypeOnTheList($contentTypeName): bool
     {
+        return $this->table->hasElement(['Name' => $contentTypeName]);
     }
 
     public function delete(string $contentTypeName)
     {
-        $this->adminList->delete($contentTypeName);
+        $this->table->getTableRow(['Name' => $contentTypeName])->select();
+        $this->getHTMLPage()->find($this->getLocator('deleteButton'))->click();
+        $this->dialog->verifyIsLoaded();
+        $this->dialog->confirm();
     }
 
     protected function getRoute(): string
@@ -101,8 +118,10 @@ class ContentTypeGroupPage extends Page
     {
         return [
             new VisibleCSSLocator('pageTitle',  '.ez-header h1'),
-            new VisibleCSSLocator('listHeader', '.ez-table-header .ez-table-header__headline, header .ez-table__headline, header h5'),
             new VisibleCSSLocator('createButton', '.ez-icon-create'),
+            new VisibleCSSLocator('listHeader', '.ez-table-header .ez-table-header__headline, header .ez-table__headline, header h5'),
+            new VisibleCSSLocator('tableContainer', '.ez-container'),
+            new VisibleCSSLocator('deleteButton', '.ez-icon-trash,button[data-original-title^="Delete"]'),
         ];
     }
 }
