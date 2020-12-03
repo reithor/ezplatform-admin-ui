@@ -14,5 +14,7 @@ interface TableInterface
 
     public function hasElementOnCurrentPage(array $elementData): bool;
 
-    public function getTableRow(array $elementData): ?TableRow;
+    public function getTableRow(array $elementData): TableRow;
+
+    public function getTableRowByIndex(int $rowIndex): TableRow;
 }

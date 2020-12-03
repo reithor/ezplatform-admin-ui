@@ -1,4 +1,4 @@
-@IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce @test
+@IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
 Feature: Content types management
   As an administrator
   In order to customize my eZ installation

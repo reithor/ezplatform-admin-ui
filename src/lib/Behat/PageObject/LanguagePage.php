@@ -55,7 +55,16 @@ class LanguagePage extends Page
 
     public function hasProperties($data): bool
     {
-        return $this->table->hasElement($data);
+        $hasExpectedEnabledFieldValue = true;
+        if (array_key_exists('Enabled', $data)) {
+            // Table does not handle returning non-string values
+            $hasEnabledField = $this->getHTMLPage()->find($this->getLocator('enabledField'))->hasAttribute('checked');
+            $shouldHaveEnabledField = $data['Enabled'] === "true";
+            $hasExpectedEnabledFieldValue = $hasEnabledField === $shouldHaveEnabledField;
+            unset($data['Enabled']);
+        }
+
+        return $hasExpectedEnabledFieldValue && $this->table->hasElement($data);
     }
 
     public function edit()
@@ -104,7 +113,8 @@ class LanguagePage extends Page
         return [
             new VisibleCSSLocator('pageTitle', '.ez-header h1'),
             new VisibleCSSLocator('deleteButton', 'button[data-original-title="Delete language"]'),
-            new VisibleCSSLocator('editButton', 'button[data-original-title="Edit"]'),
+            new VisibleCSSLocator('editButton', '[data-original-title="Edit"]'),
+            new VisibleCSSLocator('enabledField', 'input[data-original-title="Enabled"]'),
         ];
     }
 }

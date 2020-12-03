@@ -19,6 +19,12 @@ class Image extends FieldTypeComponent
         $this->getHTMLPage()->find($fieldSelector)->attachFile(
             $this->browser->getRemoteFileUploadPath($parameters['value'])
         );
+
+        $alternativeText = str_replace('.zip', '', $parameters['value']);
+
+        $this->getHTMLPage()
+            ->find($this->parentLocator->withDescendant($this->getLocator('alternativeText')))
+            ->setValue($alternativeText);
     }
 
     public function verifyValueInItemView(array $values): void
@@ -35,7 +41,7 @@ class Image extends FieldTypeComponent
 
         Assert::assertContains(
             $filename,
-            $this->getHTMLPage()->find($fileFieldSelector)->getAttribute('src'),
+            $this->getHTMLPage()->setTimeout(5)->find($fileFieldSelector)->getAttribute('src'),
             'Image has wrong source'
         );
     }
@@ -45,6 +51,7 @@ class Image extends FieldTypeComponent
         return [
             new CSSLocator('fieldInput', 'input[type=file]'),
             new VisibleCSSLocator('image', '.ez-field-preview__image-wrapper .ez-field-preview__image img'),
+            new VisibleCSSLocator('alternativeText', 'input'),
         ];
     }
 

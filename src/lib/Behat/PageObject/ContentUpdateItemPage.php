@@ -43,13 +43,13 @@ class ContentUpdateItemPage extends Page
             Assert::assertEquals(
                 $this->pageTitle,
                 $this->getHTMLPage()
-                    ->setTimeout(5)
+                    ->setTimeout(10)
                     ->find($this->getLocator('pageTitle'))->getText()
             );
         }
 
         $this->rightMenu->verifyIsLoaded();
-        Assert::assertTrue($this->getHTMLPage()->find($this->getLocator('formElement'))->isVisible());
+        Assert::assertTrue($this->getHTMLPage()->setTimeout(10)->find($this->getLocator('formElement'))->isVisible());
     }
 
     public function setExpectedPageTitle(string $title)
@@ -95,8 +95,7 @@ class ContentUpdateItemPage extends Page
         $fieldLocator = new VisibleCSSLocator('', sprintf($this->getLocator('nthField')->getSelector(), $this->getFieldPosition($fieldName)));
         $fieldtypeIdentifier = $this->getFieldtypeIdentifier($fieldLocator, $fieldName);
 
-        foreach ($this->fieldTypeComponents as $fieldTypeComponent)
-        {
+        foreach ($this->fieldTypeComponents as $fieldTypeComponent) {
             if ($fieldTypeComponent->getFieldTypeIdentifier() === $fieldtypeIdentifier) {
                 $fieldTypeComponent->setParentLocator($fieldLocator);
 
@@ -107,19 +106,20 @@ class ContentUpdateItemPage extends Page
 
     protected function getFieldPosition(string $fieldName): int
     {
-        $fieldElements = $this->getHTMLPage()->findAll($this->getLocator('fieldLabel'));
-        $fieldPosition = 1;
+        $fieldElements = $this->getHTMLPage()->setTimeout(5)->findAll($this->getLocator('fieldLabel'));
 
-        foreach ($fieldElements as $fieldElement)
+        $foundFields = [];
+        foreach ($fieldElements as $fieldPosition => $fieldElement)
         {
-            if ($fieldElement->getText() === $fieldName) {
-                return $fieldPosition;
+            $fieldText = $fieldElement->getText();
+            $foundFields[] = $fieldText;
+            if ($fieldText === $fieldName) {
+                // +1 because CSS is 1-indexed and arrays are 0-indexed
+                return $fieldPosition + 1;
             }
-
-            ++$fieldPosition;
         }
 
-        Assert::fail(sprintf('Field %s not found.', $fieldName));
+        Assert::fail(sprintf('Field %s not found. Found: %s', $fieldName, implode(',', $foundFields)));
     }
 
     public function verifyFieldHasValue(string $label, array $fieldData): void

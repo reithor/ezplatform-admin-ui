@@ -32,14 +32,4 @@ class AdminUpdateContext implements Context
             $this->adminUpdateItemPage->fillFieldWithValue($row['label'], $row['value']);
         }
     }
-
-    /**
-     * @Then fields are set
-     */
-    public function verifyFieldsAreSet(TableNode $table): void
-    {
-        foreach ($table->getHash() as $row) {
-            Assert::assertEquals($row['value'], $this->adminUpdateItemPage->getFieldValue($row['label']));
-        }
-    }
 }

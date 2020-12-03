@@ -8,6 +8,8 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
 use Behat\Mink\Session;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
+use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
 use PHPUnit\Framework\Assert;
 
@@ -17,59 +19,64 @@ class ContentRelationSingle extends FieldTypeComponent
      * @var UniversalDiscoveryWidget
      */
     private $universalDiscoveryWidget;
+    /**
+     * @var Table
+     */
+    private $table;
 
     public function specifyLocators(): array
     {
         return [
             new VisibleCSSLocator('selectContent', '.ez-relations__cta-btn-label'),
+            new VisibleCSSLocator('buttonRemove', '.ez-relations__table-action--remove'),
+            new VisibleCSSLocator('relationRow', '.ez-relations__list tr'),
+            new VisibleCSSLocator('columnHeader', 'tr:not(.ez-relations__table-header) th'),
         ];
     }
 
-    public function __construct(Browser $browser, UniversalDiscoveryWidget $universalDiscoveryWidget)
+    public function __construct(Browser $browser, UniversalDiscoveryWidget $universalDiscoveryWidget, Table $table)
     {
         parent::__construct($browser);
         $this->universalDiscoveryWidget = $universalDiscoveryWidget;
+        $this->table = $table;
     }
 
     public function setValue(array $parameters): void
     {
         if (!$this->isRelationEmpty()) {
             $itemName = explode('/', $parameters['value'])[substr_count($parameters['value'], '/')];
-            if (!$this->contentRelationTable->isElementOnCurrentPage($itemName)) {
-                $this->removeActualRelation();
+            if (!$this->table->hasElement(['Name' => $itemName])) {
+                $this->table->getTableRowByIndex(0)->select();
+                $this->getHTMLPage()
+                    ->find($this->parentLocator->withDescendant($this->getLocator('buttonRemove')))
+                    ->click();
             } else {
                 return;
             }
         }
 
-        $selectContent = $this->context->findElement(
-            sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['selectContent'])
-        );
-
-        Assert::assertNotNull($selectContent, sprintf('Select content button for Field %s not found.', $this->label));
-
-        $selectContent->click();
+        $this->getHTMLPage()
+            ->find($this->parentLocator->withDescendant($this->getLocator('selectContent')))
+            ->click();
 
         $this->universalDiscoveryWidget->selectContent($parameters['value']);
         $this->universalDiscoveryWidget->confirm();
     }
 
-    public function removeActualRelation(): void
-    {
-        $actualItemName = $this->contentRelationTable->getCellValue(1, 2);
-        $this->contentRelationTable->selectListElement($actualItemName);
-        $this->contentRelationTable->clickTrashIcon();
-    }
-
     public function getValue(): array
     {
-        $fieldInput = $this->context->findElement(
-            sprintf('%s %s', $this->fields['fieldContainer'], $this->fields['selectContent'])
-        );
+        $names = $this->table->getColumnValues(['Name']);
 
-        Assert::assertNotNull($fieldInput, sprintf('Input for field %s not found.', $this->label));
+        return [$names[0]['Name']];
+    }
 
-        return [$this->contentRelationTable->getCellValue(1, 2)];
+    public function setParentLocator(VisibleCSSLocator $locator): void
+    {
+        parent::setParentLocator($locator);
+        $this->table = $this->table
+            ->withParentLocator($this->parentLocator)
+            ->withRowLocator($this->getLocator('relationRow'))
+            ->withColumnLocator($this->getLocator('columnHeader'));
     }
 
     public function verifyValueInItemView(array $values): void
@@ -81,7 +88,7 @@ class ContentRelationSingle extends FieldTypeComponent
 
         Assert::assertRegExp(
             sprintf($viewPatternRegex, $value),
-            $this->getHTMLPage()->find($this->getLocator('fieldContainer'))->getText(),
+            $this->getHTMLPage()->find($this->parentLocator)->getText(),
             'Field has wrong value'
         );
     }

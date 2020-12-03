@@ -66,7 +66,7 @@ class UniversalDiscoveryWidget extends Component
 
     protected function selectTreeBranch(string $itemName, int $level): void
     {
-        $treeLevelLocator = new CSSLocator('treeLeverlLocator', sprintf($this->getLocator('treeLevelFormat')->getSelector(), $level));
+        $treeLevelLocator = new VisibleCSSLocator('treeLevelLocator', sprintf($this->getLocator('treeLevelFormat')->getSelector(), $level));
         $this->getHTMLPage()->setTimeout(self::LONG_TIMEOUT)->find($treeLevelLocator)->assert()->isVisible();
 
         $alreadySelectedItemName = $this->getCurrentlySelectedItemName($level);
@@ -107,7 +107,7 @@ class UniversalDiscoveryWidget extends Component
     {
         $levelItemsSelector = new CSSLocator('css', sprintf($this->getLocator('treeLevelElementsFormat')->getSelector(), $level));
 
-        return $this->getHTMLPage()->findAll($levelItemsSelector)->map(
+        return $this->getHTMLPage()->setTimeout(self::LONG_TIMEOUT)->findAll($levelItemsSelector)->map(
             function (NodeElement $element) {
                 return $element->getText();
             }
@@ -123,18 +123,18 @@ class UniversalDiscoveryWidget extends Component
 
         $elements = $this->getHTMLPage()->setTimeout(self::SHORT_TIMEOUT)->findAll($selectedElementSelector);
 
-        return $elements->any() ? $elements->single()->getText() : null;
+        return $elements->any() ? $elements->first()->getText() : null;
     }
 
     private function isNextLevelDisplayed(int $currentLevel): bool
     {
         return $this->getHTMLPage()->
             setTimeout(self::SHORT_TIMEOUT)->
-            find(
+            findAll(
                 new CSSLocator(
                     'css',
                     sprintf($this->getLocator('treeLevelElementsFormat')->getSelector(), $currentLevel + 1))
-            )->isVisible();
+            )->any();
     }
 
     public function verifyIsLoaded(): void

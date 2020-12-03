@@ -5,6 +5,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use Behat\Mink\Session;
 use Exception;
+use EzSystems\Behat\Browser\Element\NodeElement;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
@@ -24,11 +25,6 @@ class RoleUpdatePage extends AdminUpdateItemPage
         parent::__construct($browser, $rightMenu);
         $this->universalDiscoveryWidget = $universalDiscoveryWidget;
     }
-
-    private $itemTypeToLabelMapping = [
-        'users' => 'Select Users',
-        'groups' => 'Select User Groups',
-    ];
 
     public function selectLimitationValues(string $selectName, array $values): void
     {
@@ -66,24 +62,70 @@ class RoleUpdatePage extends AdminUpdateItemPage
 
     public function specifyLocators(): array
     {
-        return [
-            new VisibleCSSLocator('limitationField', '.ez-update-policy__action-wrapper'),
-            new VisibleCSSLocator('limitationDropdown', '.ez-custom-dropdown__selection-info'),
-            new VisibleCSSLocator('limitationDropdownOption', 'ul:not(.ez-custom-dropdown__items--hidden) .ez-custom-dropdown__item'),
-            new VisibleCSSLocator('limitationDropdownOptionRemove', '.ez-custom-dropdown__remove-selection'),
-            new VisibleCSSLocator('labelSelector', '.ez-label'),
-        ];
+        return array_merge(
+            parent::specifyLocators(),
+            [
+                new VisibleCSSLocator('limitationField', '.ez-update-policy__action-wrapper'),
+                new VisibleCSSLocator('limitationDropdown', '.ez-custom-dropdown__selection-info'),
+                new VisibleCSSLocator('limitationDropdownOption', 'ul:not(.ez-custom-dropdown__items--hidden) .ez-custom-dropdown__item'),
+                new VisibleCSSLocator('limitationDropdownOptionRemove', '.ez-custom-dropdown__remove-selection'),
+                new VisibleCSSLocator('labelSelector', '.ez-label'),
+                new VisibleCSSLocator('policyAssignmentSelect', '#role_assignment_create_sections'),
+                new VisibleCSSLocator('newPolicySelectList', '#policy_create_policy'),
+            ]
+        );
     }
 
-    public function assign(array $items, string $itemType)
+    public function assign(array $itemPaths, string $itemType)
     {
-        $this->clickButton($this->itemTypeToLabelMapping[$itemType]);
+        $itemTypeToLabelMapping = [
+        'users' => 'Select Users',
+        'groups' => 'Select User Groups',
+        ];
+
+        $this->clickButton($itemTypeToLabelMapping[$itemType]);
         $this->universalDiscoveryWidget->verifyIsLoaded();
 
-        foreach ($items as $item) {
-            $this->universalDiscoveryWidget->selectContent($item['path']);
+        foreach ($itemPaths as $itemPath) {
+            $this->universalDiscoveryWidget->selectContent($itemPath);
         }
 
         $this->universalDiscoveryWidget->confirm();
+    }
+
+    public function assignSectionLimitation(string $limitationName): void
+    {
+        $this->fillFieldWithValue('Sections', true);
+        $this->getHTMLPage()->find($this->getLocator('policyAssignmentSelect'))->selectOption($limitationName);
+    }
+
+    public function selectLimitationForAssignment(string $itemPath)
+    {
+        $this->fillFieldWithValue('Subtree', 'true');
+        $this->clickButton('Select Subtree');
+        $this->universalDiscoveryWidget->verifyIsLoaded();
+        $this->universalDiscoveryWidget->selectContent($itemPath);
+        $this->universalDiscoveryWidget->confirm();
+    }
+
+    public function selectSubtreeLimitationForPolicy(string $itemPath)
+    {
+        $buttons = $this->getHTMLPage()
+            ->findAll($this->getLocator('button'))
+            ->filter(function(NodeElement $element) {
+                return $element->getText() === 'Select Locations';
+            })
+            ->toArray();
+
+        $buttons[1]->click();
+
+        $this->universalDiscoveryWidget->verifyIsLoaded();
+        $this->universalDiscoveryWidget->selectContent($itemPath);
+        $this->universalDiscoveryWidget->confirm();
+    }
+
+    public function selectPolicy(string $policyName)
+    {
+        $this->getHTMLPage()->find($this->getLocator('newPolicySelectList'))->selectOption($policyName);
     }
 }

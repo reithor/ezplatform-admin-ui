@@ -83,10 +83,12 @@ class LanguageContext implements Context
      */
     public function languageHasProperAttributes(TableNode $languageData)
     {
-        $data = $languageData->getHash()[0];
+        $expectedName = $languageData->getHash()[0]['Name'];
+        $expectedCode = $languageData->getHash()[0]['Language code'];
+        $expectedEnabledFlag = $languageData->getHash()[0]['Enabled'];
 
         Assert::assertTrue(
-            $this->languagePage->hasProperties($data)
+            $this->languagePage->hasProperties(['Name' => $expectedName, 'Language code' => $expectedCode, 'Enabled' => $expectedEnabledFlag])
         );
     }
 
@@ -105,6 +107,7 @@ class LanguageContext implements Context
     {
         $this->languagePage->setExpectedLanguageName($languageName);
         $this->languagePage->open('admin');
+        $this->languagePage->verifyIsLoaded();
     }
 
     /**

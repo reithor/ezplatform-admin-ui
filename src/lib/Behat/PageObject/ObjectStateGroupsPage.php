@@ -6,33 +6,52 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
+use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\LinkedListTable;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
 use PHPUnit\Framework\Assert;
 
 class ObjectStateGroupsPage extends Page
 {
-    public function verifyItemAttribute(string $label, string $value, string $itemName): void
+    /**
+     * @var Table
+     */
+    private $table;
+    /**
+     * @var Dialog
+     */
+    private $dialog;
+
+    public function __construct(Browser $browser, Table $table, Dialog $dialog)
     {
-        Assert::assertEquals(
-            $value,
-            $this->adminList->table->getTableCellValue($itemName, $label),
-            sprintf('Attribute "%s" of item "%s" has wrong value.', $label, $itemName)
-        );
+        parent::__construct($browser);
+        $this->table = $table;
+        $this->dialog = $dialog;
     }
 
-    public function startEditingItem(string $itemName): void
+    public function isObjectStateGroupOnTheList(string $objectStateGroupName): bool
     {
-        $this->adminList->table->clickEditButton($itemName);
+        return $this->table->hasElement(['Object state group name' => $objectStateGroupName]);
     }
 
-    public function startCreatingItem(): void
+    public function editObjectStateGroup(string $objectStateGroupName)
     {
-        $this->adminList->clickPlusButton();
+        $this->table->getTableRow(['Object state group name' => $objectStateGroupName])->edit();
+    }
+
+    public function createObjectStateGroup()
+    {
+        $this->getHTMLPage()->find($this->getLocator('createButton'))->click();
+    }
+
+    public function deleteObjectStateGroup(string $objectStateGroupName)
+    {
+        $this->table->getTableRow(['Object state group name' => $objectStateGroupName])->select();
+        $this->getHTMLPage()->find($this->getLocator('deleteButton'))->click();
+        $this->dialog->verifyIsLoaded();
+        $this->dialog->confirm();
     }
 
     protected function getRoute(): string
@@ -46,19 +65,19 @@ class ObjectStateGroupsPage extends Page
             'Object state groups',
             $this->getHTMLPage()->find($this->getLocator('pageTitle'))->getText()
         );
-
-        $this->adminList->verifyIsLoaded();
     }
 
     public function getName(): string
     {
-        return 'Object state groups';
+        return 'Object State groups';
     }
 
     protected function specifyLocators(): array
     {
         return [
             new VisibleCSSLocator('pageTitle', '.ez-header h1'),
+            new VisibleCSSLocator('createButton', '.ez-icon-create'),
+            new VisibleCSSLocator('deleteButton', '#delete-object-state-groups'),
         ];
     }
 }

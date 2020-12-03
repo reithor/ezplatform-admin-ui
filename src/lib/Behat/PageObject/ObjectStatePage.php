@@ -6,41 +6,52 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
+use eZ\Publish\API\Repository\Repository;
+use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SimpleTable;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
 use PHPUnit\Framework\Assert;
 
 class ObjectStatePage extends Page
 {
-    /** @var string */
-    private $objectStateName;
-
     /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList
+     * @var string
      */
-    public $adminList;
+    private $expectedObjectStateName;
+    /**
+     * @var Repository
+     */
+    private $repository;
+    /**
+     * @var mixed
+     */
+    private $expectedObjectStateId;
+    /**
+     * @var Table
+     */
+    private $table;
 
-    public function startEditingSelf(string $itemName): void
+    public function __construct(Browser $browser, Repository $repository, Table $table)
     {
-        $this->adminList->table->clickEditButton($itemName);
+        parent::__construct($browser);
+        $this->repository = $repository;
+        $this->table = $table;
     }
 
-    public function verifyItemAttribute(string $label, string $value): void
+    public function hasAttribute($label, $value)
     {
-        Assert::assertEquals(
-            $value,
-            $this->adminList->table->getTableCellValue($label),
-            sprintf('Attribute "%s" has wrong value.', $label)
-        );
+        return $this->table->hasElement([$label => $value]);
+    }
+
+    public function edit()
+    {
+        $this->getHTMLPage()->find($this->getLocator('editButton'))->click();
     }
 
     protected function getRoute(): string
     {
-        return '/state/state'; // TODO: add object state id here
+        return sprintf('/state/state/%s', $this->expectedObjectStateId);
     }
 
     public function getName(): string
@@ -50,23 +61,35 @@ class ObjectStatePage extends Page
 
     public function setExpectedObjectStateName(string $objectStateName)
     {
-        $this->objectStateName = $objectStateName;
+        $this->expectedObjectStateName = $objectStateName;
+
+        /** @var \eZ\Publish\API\Repository\Values\ObjectState\ObjectState $expectedObjectState */
+        $expectedObjectState = $this->repository->sudo(function (Repository $repository) use ($objectStateName) {
+            foreach ($repository->getObjectStateService()->loadObjectStateGroups() as $group) {
+                foreach ($repository->getObjectStateService()->loadObjectStates($group) as $objectState) {
+                    if ($objectState->getName() === $objectStateName) {
+                        return $objectState;
+                    }
+                }
+            }
+        });
+
+        $this->expectedObjectStateId = $expectedObjectState->id;
     }
 
     public function verifyIsLoaded(): void
     {
         Assert::assertEquals(
-            'Object state: %s',
+            sprintf('Object state: %s', $this->expectedObjectStateName),
             $this->getHTMLPage()->find($this->getLocator('pageTitle'))->getText()
         );
-
-        $this->adminList->verifyIsLoaded();
     }
 
     protected function specifyLocators(): array
     {
         return [
             new VisibleCSSLocator('pageTitle', '.ez-header h1'),
+            new VisibleCSSLocator('editButton', '.ez-icon-edit'),
         ];
     }
 }

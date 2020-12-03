@@ -99,11 +99,15 @@ class Table extends Component implements TableInterface
         $result = [];
 
         foreach ($foundHeaders as $headerPosition => $header) {
-            $result[$header] = $this->parentElement
-                ->findAll($this->getTableCellLocator($headerPosition))
-                ->map(function(NodeElement $element) {
-                    return $element->getText();
-                });
+             $columnValues = $this->parentElement
+                 ->findAll($this->getTableCellLocator($headerPosition))
+                 ->map(function(NodeElement $element) {
+                     return $element->getText();
+                 });
+
+             foreach ($columnValues as $position => $value) {
+                 $result[$position][$header] = $value;
+             }
         }
 
         return $result;
@@ -132,7 +136,7 @@ class Table extends Component implements TableInterface
         return $this->getMatchingTableRow($searchedHeadersWithPositions, $elementData) !== null;
     }
 
-    public function getTableRow(array $elementData): ?TableRow
+    public function getTableRow(array $elementData): TableRow
     {
         if ($this->isEmpty()) {
             throw new \Exception('Table row with given data was not found!');
@@ -162,6 +166,32 @@ class Table extends Component implements TableInterface
         }
 
         throw new \Exception('Table row with given data was not found!');
+    }
+
+    public function getTableRowByIndex(int $rowIndex): TableRow
+    {
+        foreach ($this->parentElement->setTimeout(0)->findAll($this->getLocator('row')) as $rowPosition => $row) {
+            if ($rowPosition === $rowIndex) {
+                $rowElement = $row;
+                break;
+            }
+        }
+
+        $allHeaders = $this->parentElement->findAll($this->getLocator('columnHeader'))
+            ->map(function (NodeElement $element) {
+                return $element->getText();
+            });
+
+        $cellLocators = [];
+        foreach ($allHeaders as $headerPosition => $header) {
+            $cellLocators[] = $this->getTableCellLocator($headerPosition, $header);
+        }
+
+        $filteredCellLocators = array_filter($cellLocators, function (LocatorInterface $locator) {
+            return $locator->getIdentifier() !== '';
+        });
+
+        return new TableRow($this->browser, $rowElement, new LocatorCollection($filteredCellLocators));
     }
 
     public function verifyIsLoaded(): void
@@ -272,7 +302,7 @@ class Table extends Component implements TableInterface
         foreach ($this->parentElement->setTimeout(0)->findAll($this->getLocator('row')) as $row) {
             foreach ($foundHeaders as $headerPosition => $header) {
                 try {
-                    $cellValue = $row->setTimeout(0)->find($this->getTableCellLocator($headerPosition))->getValue();
+                    $cellValue = $row->setTimeout(0)->find($this->getTableCellLocator($headerPosition))->getText();
                 } catch (\Exception $exception) {
                     // value not found, skip row
                     continue 2;

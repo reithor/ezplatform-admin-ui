@@ -8,10 +8,9 @@ namespace EzSystems\EzPlatformAdminUi\Behat\BusinessContext;
 
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\ObjectStateGroupPage;
-use EzSystems\Behat\Browser\Factory\PageObjectFactory;
+use EzSystems\EzPlatformAdminUi\Behat\PageObject\ObjectStateGroupsPage;
+use EzSystems\EzPlatformAdminUi\Behat\PageObject\ObjectStatePage;
 use PHPUnit\Framework\Assert;
 
 class ObjectStatesContext implements Context
@@ -20,41 +19,144 @@ class ObjectStatesContext implements Context
      * @var ObjectStateGroupPage
      */
     private $objectStateGroupPage;
+    /**
+     * @var ObjectStateGroupsPage
+     */
+    private $objectStateGroupsPage;
+    /**
+     * @var ObjectStatePage
+     */
+    private $objectStatePage;
 
-    public function __construct(ObjectStateGroupPage $objectStateGroupPage)
+    public function __construct(
+        ObjectStateGroupPage $objectStateGroupPage,
+        ObjectStateGroupsPage $objectStateGroupsPage,
+        ObjectStatePage $objectStatePage
+    )
     {
         $this->objectStateGroupPage = $objectStateGroupPage;
+        $this->objectStateGroupsPage = $objectStateGroupsPage;
+        $this->objectStatePage = $objectStatePage;
     }
 
     /**
-     * @Then there's :objectStateName on :objectStateGroupName Object States list
+     * @Then there's a :objectStateGroupName Object State group on Object State groups list
      */
-    public function verfyObjectStateIsOnList(string $objectStateName, string $objectStateGroupName): void
+    public function isObjectStateOnTheList(string $objectStateGroupName): void
+    {
+        Assert::assertTrue($this->objectStateGroupsPage->isObjectStateGroupOnTheList($objectStateGroupName));
+    }
+
+    /**
+     * @Then I should be on :objectStateGroupName Object State group page
+     */
+    public function iShouldBeOnRObjectStateGroupPage(string $objectStateGroupName)
+    {
+        $this->objectStateGroupPage->setExpectedObjectStateGroupName($objectStateGroupName);
+        $this->objectStateGroupPage->verifyIsLoaded();
+    }
+
+    /**
+     * @Then I should be on :objectState Object State page
+     */
+    public function iShouldBeOnObjectStatePage(string $objectStateGroup)
+    {
+        $this->objectStatePage->setExpectedObjectStateName($objectStateGroup);
+        $this->objectStatePage->verifyIsLoaded();
+    }
+
+    /**
+     * @Then :objectStateGroupName Object State group has no Object States
+     */
+    public function objectStateGroupIsEmpty(string $objectStateGroupName)
+    {
+        $this->objectStateGroupPage->setExpectedObjectStateGroupName($objectStateGroupName);
+        Assert::assertFalse($this->objectStateGroupPage->hasObjectStates());
+    }
+
+    /**
+     * @Then Object State group has proper attributes
+     */
+    public function objectStateGroupHasAttributes(TableNode $table): void
+    {
+        foreach ($table->getHash() as $row) {
+            Assert::assertTrue($this->objectStateGroupPage->hasAttribute($row['label'], $row['value']));
+        }
+    }
+
+    /**
+     * @Then Object State has proper attributes
+     */
+    public function objectStateHasAttributes(TableNode $table): void
+    {
+        foreach ($table->getHash() as $row) {
+            Assert::assertTrue($this->objectStatePage->hasAttribute($row['label'], $row['value']));
+        }
+    }
+
+    /**
+     * @Then there's no :objectStateName Object State group on Object State groups list
+     */
+    public function noObjectStateOnTheList(string $objectStateGroupName): void
+    {
+        Assert::assertFalse($this->objectStateGroupsPage->isObjectStateGroupOnTheList($objectStateGroupName));
+    }
+
+    /**
+     * @Then I edit :objectStateGroupName from Object State groups list
+     */
+    public function editObjectStateGroupFromList(string $objectStateGroupName)
+    {
+        $this->objectStateGroupsPage->editObjectStateGroup($objectStateGroupName);
+    }
+
+    /**
+     * @Then I start editing Object State :objectStateName from Object State Group
+     */
+    public function editObjectStateFromList(string $objectStateName)
+    {
+        $this->objectStateGroupPage->editObjectState($objectStateName);
+    }
+
+    /**
+     * @Then I edit the Object State
+     */
+    public function editObjectState()
+    {
+        $this->objectStatePage->edit();
+    }
+
+    /**
+     * @Then I edit the Object State group
+     */
+    public function editObjectStateGroup()
+    {
+        $this->objectStateGroupPage->edit();
+    }
+
+    /**
+     * @Then there's no :objectStateName Object State on Object States list for :objectStateGroupName
+     */
+    public function thereIsNoObjectStateOnTheList(string $objectStateName, string $objectStateGroupName): void
     {
         $this->objectStateGroupPage->setExpectedObjectStateGroupName($objectStateGroupName);
         $this->objectStateGroupPage->verifyIsLoaded();
 
-        // refactor
-        Assert::assertTrue(
-            $this->objectStateGroupPage->adminLists['Object states']->table->isElementOnCurrentPage($objectStateName)
+        Assert::assertFalse(
+            $this->objectStateGroupPage->hasObjectState($objectStateName),
         );
     }
 
     /**
-     * @Then there's no :objectStateName on :objectStateGroupName Object States list
+     * @Then there's a :objectStateName Object State on Object States list for :objectStateGroupName
      */
-    public function verifyObjectStateIsNotOnList(string $objectStateName, string $objectStateGroupName): void
+    public function thereIsObjectStateOnTheList(string $objectStateName, string $objectStateGroupName): void
     {
         $this->objectStateGroupPage->setExpectedObjectStateGroupName($objectStateGroupName);
         $this->objectStateGroupPage->verifyIsLoaded();
 
-
-        if ($this->objectStateGroupPage->isListEmpty('Object states')) {
-            return;
-        }
-
-        Assert::assertFalse(
-            $this->objectStateGroupPage->adminLists['Object states']->table->isElementOnCurrentPage($objectStateName),
+        Assert::assertTrue(
+            $this->objectStateGroupPage->hasObjectState($objectStateName),
         );
     }
 
@@ -67,19 +169,58 @@ class ObjectStatesContext implements Context
         $this->objectStateGroupPage->verifyIsLoaded();
 
         // refactor
-        $thisobjectStateGroupPage->adminLists['Object states']->table->clickListElement($objectStateName);
+        $this->objectStateGroupPage->adminLists['Object states']->table->clickListElement($objectStateName);
     }
 
     /**
-     * @When I delete Object State from :objectStateGroupName
+     * @Given I create a new Object State group
      */
-    public function iDeleteObjecStatesFromGroup(string $objectStateGroupName, TableNode $settings): void
+    public function createObjectStateGroup(): void
     {
-        foreach($settings->getHash() as $setting)
-        {
-            $this->objectStateGroupPage->select(['Object state name' => $settings['item']]);
-        }
+        $this->objectStateGroupsPage->createObjectStateGroup();
+    }
 
-        $this->objectStateGroupPage->deleteSelected();
+    /**
+     * @Given I create a new Object State
+     */
+    public function createObjectState(): void
+    {
+        $this->objectStateGroupPage->createObjectState();
+    }
+
+    /**
+     * @When I delete Object State :objectStateName
+     */
+    public function iDeleteObjecState(string $objectStateName): void
+    {
+        $this->objectStateGroupPage->deleteObjectState($objectStateName);
+    }
+
+    /**
+     * @When I delete Object State group :objectStateGroupName
+     */
+    public function iDeleteObjectStatesGroup(string $objectStateGroupName): void
+    {
+        $this->objectStateGroupsPage->deleteObjectStateGroup($objectStateGroupName);
+    }
+
+    /**
+     * @Then I open :objectStateGroupName Object State group page in admin SiteAccess
+     */
+    public function openObjectStateGroupPage(string $objectStateGroupName)
+    {
+        $this->objectStateGroupPage->setExpectedObjectStateGroupName($objectStateGroupName);
+        $this->objectStateGroupPage->open('admin');
+        $this->objectStateGroupPage->verifyIsLoaded();
+    }
+
+    /**
+     * @Then I open :objectStateName Object State page in admin SiteAccess
+     */
+    public function openObjectStatePage(string $objectStateName)
+    {
+        $this->objectStatePage->setExpectedObjectStateName($objectStateName);
+        $this->objectStatePage->open('admin');
+        $this->objectStatePage->verifyIsLoaded();
     }
 }

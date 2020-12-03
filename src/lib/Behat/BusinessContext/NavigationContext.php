@@ -39,14 +39,6 @@ class NavigationContext implements Context
      * @var ContentUpdateItemPage
      */
     private $contentUpdateItemPage;
-    /**
-     * @var ContentTypeGroupPage
-     */
-    private $contentTypeGroupPage;
-    /**
-     * @var ContentTypePage
-     */
-    private $contentTypePage;
 
     public function __construct(
         ArgumentParser $argumentParser,
@@ -54,9 +46,7 @@ class NavigationContext implements Context
         Breadcrumb $breadcrumb,
         ContentViewPage $contentViewPage,
         PageRegistry $pageRegistry,
-        ContentUpdateItemPage $contentUpdateItemPage,
-        ContentTypeGroupPage $contentTypeGroupPage,
-        ContentTypePage $contentTypePage
+        ContentUpdateItemPage $contentUpdateItemPage
     )
     {
         $this->argumentParser = $argumentParser;
@@ -65,8 +55,6 @@ class NavigationContext implements Context
         $this->breadcrumb = $breadcrumb;
         $this->contentViewPage = $contentViewPage;
         $this->contentUpdateItemPage = $contentUpdateItemPage;
-        $this->contentTypeGroupPage = $contentTypeGroupPage;
-        $this->contentTypePage = $contentTypePage;
     }
 
     /**
@@ -75,7 +63,9 @@ class NavigationContext implements Context
      */
     public function openPage(string $pageName): void
     {
-        $this->pageRegistry->get($pageName)->open('admin');
+        $page = $this->pageRegistry->get($pageName);
+        $page->open('admin');
+        $page->verifyIsLoaded();
     }
 
     /**

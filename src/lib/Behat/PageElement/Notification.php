@@ -39,7 +39,7 @@ class Notification extends Component
 
     public function getMessage(): string
     {
-        return $this->getHTMLPage()->find($this->getLocator('alertMessage'))->getText();
+        return $this->getHTMLPage()->setTimeout(20)->find($this->getLocator('alertMessage'))->getText();
     }
 
     public function closeAlert(): void
@@ -53,9 +53,7 @@ class Notification extends Component
 
     public function isVisible(): bool
     {
-        $elements =  $this->getHTMLPage()->findAll($this->getLocator('alert'));
-
-        return $elements->any() ? $elements->single()->isVisible() : false;
+        return $this->getHTMLPage()->findAll($this->getLocator('alert'))->any();
     }
 
     public function verifyIsLoaded(): void

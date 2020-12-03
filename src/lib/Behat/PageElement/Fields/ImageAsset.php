@@ -40,7 +40,11 @@ class ImageAsset extends Image
             $this->notification->closeAlert();
         }
 
-        parent::setValue($parameters);
+        $fieldSelector = $this->getLocator('fieldInput')->withParent($this->parentLocator);
+
+        $this->getHTMLPage()->find($fieldSelector)->attachFile(
+            $this->browser->getRemoteFileUploadPath($parameters['value'])
+        );
 
         $this->notification->verifyAlertSuccess();
         Assert::assertEquals(self::IMAGE_ASSET_NOTIFICATION_MESSAGE, $this->notification->getMessage());

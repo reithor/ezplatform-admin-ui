@@ -165,6 +165,7 @@ class SectionsContext implements Context
     {
         $this->sectionPage->setExpectedSectionName($sectionName);
         $this->sectionPage->open('admin');
+        $this->sectionPage->verifyIsLoaded();
     }
 
     /**

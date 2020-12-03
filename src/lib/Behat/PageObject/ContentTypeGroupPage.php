@@ -48,9 +48,9 @@ class ContentTypeGroupPage extends Page
         $this->dialog = $dialog;
     }
 
-    public function verifyListIsEmpty(): void
+    public function hasContentTypes(): bool
     {
-        Assert::assertTrue($this->table->isEmpty());
+        return $this->getHTMLPage()->findAll($this->getLocator('tableItem'))->any();
     }
 
     public function edit(string $contentTypeName): void
@@ -79,6 +79,11 @@ class ContentTypeGroupPage extends Page
         $this->getHTMLPage()->find($this->getLocator('deleteButton'))->click();
         $this->dialog->verifyIsLoaded();
         $this->dialog->confirm();
+    }
+
+    public function hasAssignedContentItems(string $contentTypeGroupName): bool
+    {
+        return $this->table->getTableRow(['Name' => $contentTypeGroupName])->getCellValue('Number of Content Types') > 0;
     }
 
     protected function getRoute(): string
@@ -122,6 +127,7 @@ class ContentTypeGroupPage extends Page
             new VisibleCSSLocator('listHeader', '.ez-table-header .ez-table-header__headline, header .ez-table__headline, header h5'),
             new VisibleCSSLocator('tableContainer', '.ez-container'),
             new VisibleCSSLocator('deleteButton', '.ez-icon-trash,button[data-original-title^="Delete"]'),
+            new VisibleCSSLocator('tableItem', '.ez-main-container tbody tr'),
         ];
     }
 }

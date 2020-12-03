@@ -42,7 +42,7 @@ class SubitemsGrid extends Table
         return false;
     }
 
-    public function getTableRow(array $elementData): ?TableRow
+    public function getTableRow(array $elementData): TableRow
     {
         $name = array_values($elementData);
 

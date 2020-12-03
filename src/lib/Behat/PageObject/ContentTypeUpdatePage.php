@@ -70,12 +70,11 @@ class ContentTypeUpdatePage extends AdminUpdateItemPage
         $fieldTypeIdentifier =  FieldTypeNameConverter::getFieldTypeIdentifierByName($fieldName);
 
         return $this->getHTMLPage()
-//            ->setTimeout(10)
             ->findAll($this->getLocator('fieldDefinitionContainer'))
             ->filter(function(NodeElement  $element) use ($fieldTypeIdentifier) {
                 return strpos($element->find($this->getLocator('fieldDefinitionName'))->getText(), $fieldTypeIdentifier) !== false;
             })
-            ->single();
+            ->first();
     }
 
 }

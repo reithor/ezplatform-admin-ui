@@ -19,15 +19,14 @@ ezplatform:
                 - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\AdminUpdateContext
                 - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\ContentUpdateContext
                 - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\ContentPreviewContext
-                # - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\LeftMenuContext
                 - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\NotificationContext
                 - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\TrashContext
                 - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\ContentTypeContext
-                # - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\RolesContext
+                - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\RolesContext
                 - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\SystemInfoContext
                 - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\SectionsContext
                 - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\LanguageContext
-                # - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\ObjectStatesContext
+                - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\ObjectStatesContext
                 - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\DashboardContext
                 - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\SearchContext
 

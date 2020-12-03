@@ -54,3 +54,7 @@ services:
   EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\Matrix: ~
 
   EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\Media: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\ContentRelationMultiple: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\ContentRelationSingle: ~

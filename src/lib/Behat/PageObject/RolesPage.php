@@ -7,19 +7,33 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
+use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\LinkedListTable;
 use PHPUnit\Framework\Assert;
 
 class RolesPage extends Page
 {
     /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList
+     * @var Table
      */
-    public $adminList;
+    private $table;
+    /**
+     * @var Dialog
+     */
+    private $dialog;
+
+    public function __construct(Browser $browser, Table $table, Dialog $dialog)
+    {
+        parent::__construct($browser);
+        $this->table = $table;
+        $this->dialog = $dialog;
+    }
 
     public function verifyItemAttribute(string $label, string $value, string $itemName): void
     {
@@ -30,19 +44,32 @@ class RolesPage extends Page
         );
     }
 
-    public function startEditingItem(string $itemName): void
+    public function create(): void
     {
-        $this->adminList->table->clickEditButton($itemName);
+        $this->getHTMLPage()->find($this->getLocator('createButton'))->click();
     }
 
-    public function startAssigningToItem(string $itemName): void
+    public function isRoleOnTheList(string $roleName): bool
     {
-        $this->adminList->clickAssignButton($itemName);
+        return $this->table->hasElement(['Name' => $roleName]);
     }
 
-    public function startCreatingItem(): void
+    public function editRole(string $roleName): void
     {
-        $this->adminList->clickPlusButton();
+        $this->table->getTableRow(['Name' => $roleName])->edit();
+    }
+
+    public function startAssinging(string $roleName): void
+    {
+        $this->table->getTableRow(['Name' => $roleName])->assign();
+    }
+
+    public function deleteRole(string $roleName)
+    {
+        $this->table->getTableRow(['Name' => $roleName])->select();
+        $this->getHTMLPage()->find($this->getLocator('deleteRoleButton'))->click();
+        $this->dialog->verifyIsLoaded();
+        $this->dialog->confirm();
     }
 
     protected function getRoute(): string
@@ -61,18 +88,14 @@ class RolesPage extends Page
             'Roles',
             $this->getHTMLPage()->find($this->getLocator('pageTitle'))->getText()
         );
-
-        $this->adminList->verifyIsLoaded();
-
-        $this->context->waitUntil($this->defaultTimeout, function () {
-            return $this->adminList->table->getItemCount() > 0;
-        });
     }
 
     protected function specifyLocators(): array
     {
         return [
+            new VisibleCSSLocator('createButton', '.ez-icon-create'),
             new VisibleCSSLocator('pageTitle', '.ez-header h1'),
+            new VisibleCSSLocator('deleteRoleButton', '#delete-roles'),
         ];
     }
 }

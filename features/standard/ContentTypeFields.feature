@@ -1,15 +1,15 @@
+@IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
 Feature: Content fields setting and editing
   As an administrator
   In order to manage content on my site
   I want to set, edit, copy and move content items.
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
+  @javascript @APIUser:admin
   Scenario Outline: Create content item with given field
     Given I create a "<fieldName> CT" Content Type in "Content" with "<fieldInternalName>" identifier
       | Field Type  | Name        | Identifier          | Required | Searchable | Translatable | Settings       |
       | <fieldName> | Field       | <fieldInternalName> | no      | no	      | yes          | <fieldSettings>  |
       | Text line   | Name        | name	            | no      | yes	      | yes          |                  |
-      And I open Login page in admin SiteAccess
       And I am logged as admin
       And I'm on Content view Page for root
     When I start creating a new content "<fieldName> CT"
@@ -31,8 +31,8 @@ Feature: Content fields setting and editing
       | ezgmaplocation       | Map location                 |                                                                       | latitude  | 34.1                                                                      | longitude  | -118.2                | address | Los Angeles | Los Angeles            |
       | ezauthor             | Authors                      |                                                                       | name      | Test Name                                                                 | email      | email@example.com     |         |             | Test Name                 |
       | ezboolean            | Checkbox                     |                                                                       | value     | true                                                                      |            |                       |         |             | 1                         |
-#      //| ezobjectrelation     | Content relation (single)    |                                                                       | value     | Media/Images                                                              |            |                       |         |             | Images                    |
-#      //| ezobjectrelationlist | Content relations (multiple) |                                                                       | firstItem | Media/Images                                                              | secondItem | Media/Files           |         |             | Images Files              |
+      | ezobjectrelation     | Content relation (single)    |                                                                       | value     | Media/Images                                                              |            |                       |         |             | Images                    |
+      | ezobjectrelationlist | Content relations (multiple) |                                                                       | firstItem | Media/Images                                                              | secondItem | Media/Files           |         |             | Images Files              |
       | ezcountry            | Country                      |                                                                       | value     | Angola                                                                    |            |                       |         |             | Angola                    |
       | ezdate               | Date                         |                                                                       | value     | 11/23/2019                                                                |            |                       |         |             | Saturday 23 November 2019 |
       | ezdatetime           | Date and time                |                                                                       | date      | 11/23/2019                                                                | time       | 14:45                 |         |             | Sat 2019-23-11 14:45:00   |
@@ -51,7 +51,7 @@ Feature: Content fields setting and editing
       | ezmatrix             | Matrix                       | Min_rows:2,Columns:col1-col2-col3                                     | value     | col1:col2:col3,Ala:miała:kota,Szpak:dziobał:bociana,Bociana:dziobał:szpak |            |                       |         |             | Matrix                    |
       | ezimageasset         | Image Asset                  |                                                                       | value     |  imageasset1.png.zip                                                      |            |                       |         |             | imageasset1.png           |
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
+  @javascript @APIUser:admin
   Scenario: Create an ImageAsset Content item and edit specified field
     Given I create "image" Content items in "/Media/Images/" in "eng-GB"
       | name             | image                                                        |
@@ -59,9 +59,8 @@ Feature: Content fields setting and editing
       And I create a 'Image Asset CT2' Content Type in "Content" with 'ImageAssetCT2' identifier
       | Field Type  | Name         | Identifier        | Required | Searchable | Translatable | Settings        |
       | Image Asset | ImageAField  | imageafield       | yes      | no	       | yes          |                 |
-      And I open Login page in admin SiteAccess
       And I am logged as admin
-      And I go to "Content structure" in "Content" tab
+      And I'm on Content view Page for root
     When I start creating a new content 'Image Asset CT2'
       And I select "Media/Images/ImageAssetImage" from Image Asset Repository for "ImageAField" field
       And I click on the edit action bar button "Publish"
@@ -71,10 +70,9 @@ Feature: Content fields setting and editing
       | label          | value      |
       | ImageAField    | small2.jpg |
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
+  @javascript @APIUser:admin
   Scenario Outline: Edit content item with given field
-    Given I open Login page in admin SiteAccess
-      And I log in as admin
+    Given I am logged as admin
       And I'm on Content view Page for "<oldContentItemName>"
     When I click on the edit action bar button "Edit"
       And I set content fields
@@ -102,7 +100,7 @@ Feature: Content fields setting and editing
       | value     | 12.34                        |            |                          |         |           | 11.11                     | 12.34                        |
       | value     | 0-13-048257-9                |            |                          |         |           | 978-3-16-148410-0         | 0-13-048257-9                |
       | value     | 1234                         |            |                          |         |           | 1111                      | 1234                         |
-      | value     | first keyword, second, edit  |            |                          |         |           | first keyword, second     | first keyword, second, edit  |
+      | value     | first keyword, second, edit  |            |                          |         |           | first keyword, second     | edit, first keyword, second  |
       | value     | Edited Lorem ipsum dolor sit |            |                          |         |           | Lorem ipsum dolor sit     | Edited Lorem ipsum dolor sit |
       | value     | Edited Lorem ipsum dolor     |            |                          |         |           | Lorem ipsum dolor         | Edited Lorem ipsum dolor     |
       | value     | Edited Lorem ipsum           |            |                          |         |           | Lorem ipsum               | Edited Lorem ipsum           |
@@ -114,14 +112,13 @@ Feature: Content fields setting and editing
       | value     | col1:col2:col3,11:12:13,21:22:23,31:32:33 |                         ||         |           | Matrix                    | Matrix                       |
       | value     | imageasset2.png.zip          |            |                          |         |           | imageasset1.png           | imageasset2.png              |
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
+  @javascript @APIUser:admin @contentQuery
   Scenario Outline: Create content item with Content Query field
     Given I create a "<fieldName> CT" Content Type in "Content" with "<fieldInternalName>" identifier
       | Field Type  | Name        | Identifier          | Required | Searchable | Translatable | Settings        |
       | <fieldName> | Field       | <fieldInternalName> | no       | no	        | yes          | <fieldSettings> |
       | Text line   | Name        | name	            | no       | yes	    | yes          |                 |
-    Given I open Login page in admin SiteAccess
-    And I log in as admin
+    Given I am logged as admin
     And I'm on Content view Page for root
     When I start creating a new content "<fieldName> CT"
     And the "Ezcontentquery" field is noneditable
@@ -138,12 +135,10 @@ Feature: Content fields setting and editing
       | fieldInternalName | fieldName     | fieldSettings                                                                                                  | label1 | value1                  |
       | ezcontentquery    | Content query | QueryType-Folders under media,ContentType-folder,ItemsPerPage-100,Parameters-contentTypeId:folder;locationId:43| value  | Images,Files,Multimedia |
 
-  @javascript @APIUser:admin @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
+  @javascript @APIUser:admin @contentQuery
   Scenario: Edit content item with Content Query
-    Given I open Login page in admin SiteAccess
-    And I log in as admin
+    Given I am logged as admin
     And I'm on Content view Page for "Content query"
-    And I navigate to content "Content query" of type "Content query CT" in root path
     When I click on the edit action bar button "Edit"
     And I set content fields
       | label    | <label1>          |
@@ -152,5 +147,5 @@ Feature: Content fields setting and editing
     Then success notification that "Content published." appears
     And I should be on Content view Page for "New Content query"
     And content attributes equal
-      | label    | value                  | fieldTypeIdentifier     |
-      | Field    | Images,Files,Multimedia | ezcontentquery |
+      | label    | value                   | fieldTypeIdentifier |
+      | Field    | Images,Files,Multimedia | ezcontentquery      |

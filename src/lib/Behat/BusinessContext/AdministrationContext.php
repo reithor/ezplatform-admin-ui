@@ -55,22 +55,6 @@ class AdministrationContext implements Context
     }
 
     /**
-     * @Given I go to :itemName :itemType page
-     * @Given I go to :itemName :itemType page from :itemContainer
-     */
-    public function iGoToListItem(string $itemName, string $itemType, string $itemContainer = null): void
-    {
-        throw new \Exception('refactor me ...');
-
-        $pageElement = PageObjectFactory::createPage($this->browserContext, $this->itemCreateMapping[$itemType], $itemContainer);
-        if ($pageElement->adminList->isElementOnTheList($itemName)) {
-            $pageElement->adminList->table->clickListElement($itemName);
-        } else {
-            Assert::fail(sprintf('Element %s is not on the list.', $itemName));
-        }
-    }
-
-    /**
      * @When I delete :itemType from :containerName
      */
     public function iDeleteItemsFromContainer(string $itemType, ?string $containerName = null, TableNode $settings): void

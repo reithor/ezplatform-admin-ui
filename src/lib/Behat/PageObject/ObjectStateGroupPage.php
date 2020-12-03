@@ -6,131 +6,121 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use Behat\Mink\Session;
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
+use eZ\Publish\API\Repository\Repository;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\LinkedListTable;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SimpleTable;
-use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
 use PHPUnit\Framework\Assert;
 
 class ObjectStateGroupPage extends Page
 {
-    /** @var string locator for container of Object States list */
-    public $secondListContainerLocator = 'section:nth-of-type(2)';
-
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList[]
-     */
-    public $adminLists;
-
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList
-     */
-    public $adminList;
     /**
      * @var string
      */
-    protected $expectedObjectStateGroupname;
+    protected $expectedObjectStateGroupName;
     /**
      * @var Dialog
      */
     private $dialog;
+    /**
+     * @var Table
+     */
+    private $table;
+    /**
+     * @var Table
+     */
+    private $attributes;
+    /**
+     * @var Table
+     */
+    private $objectStates;
+    /**
+     * @var Repository
+     */
+    private $repository;
+    /**
+     * @var mixed
+     */
+    private $expectedObjectStateGroupId;
 
-    public function __construct(Browser $browser, Dialog $dialog)
+    public function __construct(Browser $browser, Table $attributes, Table $objectStates, Dialog $dialog, Repository $repository)
     {
         parent::__construct($browser);
         $this->dialog = $dialog;
+        $this->attributes = $attributes->withParentLocator($this->getLocator('propertiesTable'));
+        $this->objectStates = $objectStates->withParentLocator($this->getLocator('objectStatesTable'));
+        $this->repository = $repository;
     }
 
-//    public function qwe(OldBrowserContext $context, string $objectStateGroupName)
-//    {
-//        $this->objectStateGroupName = $objectStateGroupName;
-//        $this->adminLists['Object state group information'] = ElementFactory::createElement($this->context, AdminList::ELEMENT_NAME, 'Object state group information', SimpleTable::ELEMENT_NAME);
-//        $this->adminLists['Object states'] = ElementFactory::createElement($this->context, AdminList::ELEMENT_NAME, 'Object states', LinkedListTable::ELEMENT_NAME, $this->secondListContainerLocator);
-//        $this->adminList = ElementFactory::createElement($this->context, AdminList::ELEMENT_NAME, '', SimpleTable::ELEMENT_NAME);
-//    }
-
-    /**
-     * Verifies if list of Object States is empty.
-     *
-     * @param string $listName
-     */
-    public function verifyListIsEmpty($listName): void
-    {
-        Assert::assertTrue(
-            $this->isListEmpty($listName),
-            '"Object States" list is not empty.'
-        );
-    }
-
-    public function isListEmpty(string $listName): bool
-    {
-        $firstRowValue = $this->adminLists[$listName]->table->getCellValue(1, 1);
-
-        return $this->adminLists[$listName]->table->getItemCount() === 1 &&
-            strpos($firstRowValue, 'There are no Object states yet.') !== false;
-    }
 
     public function editObjectState(string $itemName): void
     {
-        $this->adminLists['Object states']->table->clickEditButton($itemName);
-    }
-
-    public function editCurrentGroup(string $itemName): void
-    {
-        $this->adminLists['Object state group information']->table->clickEditButton($itemName);
+        $this->objectStates->getTableRow(['Object state name' => $itemName])->edit();
     }
 
     public function createObjectState(): void
     {
-        $this->adminLists['Object states']->clickPlusButton();
-    }
-
-    public function verifyItemAttribute(string $label, string $value): void
-    {
-        Assert::assertEquals(
-            $value,
-            $this->adminLists['Object state group information']->table->getTableCellValue($label),
-            sprintf('Attribute "%s" has wrong value.', $label)
-        );
+        $this->getHTMLPage()->find($this->getLocator('createButton'))->click();
     }
 
     public function setExpectedObjectStateGroupName(string $objectStateGroupName): void
     {
-        $this->expectedObjectStateGroupname = $objectStateGroupName;
+        $this->expectedObjectStateGroupName = $objectStateGroupName;
+
+        /** @var \eZ\Publish\API\Repository\Values\ObjectState\ObjectStateGroup[] $objectStateGroups */
+        $objectStateGroups = $this->repository->sudo(function (Repository $repository) {
+            return $this->repository->getObjectStateService()->loadObjectStateGroups();
+        });
+
+       foreach ($objectStateGroups as $objectStateGroup)
+       {
+           if ($objectStateGroup->getName() === $objectStateGroupName) {
+               $this->expectedObjectStateGroupId = $objectStateGroup->id;
+           }
+       }
     }
 
-    public function select(array $array)
+    public function hasObjectStates(): bool
     {
+        return count($this->objectStates->getColumnValues(['Object state name'])) > 0;
     }
 
-    public function deleteSelected()
+    public function hasAttribute($label, $value): bool
     {
-        $objectStateGroupPage->adminLists['Object states']->clickTrashButton();
-        $this->dialog->verifyVisibility();
+        return $this->attributes->hasElement([$label => $value]);
+    }
+
+    public function hasObjectState(string $objectStateName): bool
+    {
+        return $this->objectStates->hasElement(['Object state name' => $objectStateName]);
+    }
+
+    public function deleteObjectState(string $objectStateName)
+    {
+        $this->objectStates->getTableRow(['Object state name' => $objectStateName])->select();
+        $this->getHTMLPage()->find($this->getLocator('deleteButton'))->click();
+        $this->dialog->verifyIsLoaded();
         $this->dialog->confirm();
+    }
+
+    public function edit()
+    {
+        $this->attributes->getTableRowByIndex(0)->edit();
     }
 
     protected function getRoute(): string
     {
-        return '/state/group/'; //TODO: get ID from name
+        return sprintf('/state/group/%d', $this->expectedObjectStateGroupId);
     }
 
     public function verifyIsLoaded(): void
     {
         Assert::assertEquals(
-            sprintf('Object state group: %s', $this->expectedObjectStateGroupname),
+            sprintf('Object state group: %s', $this->expectedObjectStateGroupName),
             $this->getHTMLPage()->find($this->getLocator('pageTitle'))->getText()
         );
-
-        $this->adminLists['Object state group information']->verifyVisibility();
-        $this->adminLists['Object states']->verifyVisibility();
     }
 
     public function getName(): string
@@ -142,6 +132,10 @@ class ObjectStateGroupPage extends Page
     {
         return [
             new VisibleCSSLocator('pageTitle', '.ez-header h1'),
+            new VisibleCSSLocator('propertiesTable', '.ez-container:nth-of-type(1)'),
+            new VisibleCSSLocator('objectStatesTable', '.ez-container:nth-of-type(2)'),
+            new VisibleCSSLocator('createButton', '.ez-icon-create'),
+            new VisibleCSSLocator('deleteButton', '.ez-icon-trash'),
         ];
     }
 }

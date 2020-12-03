@@ -29,6 +29,7 @@ class ContentUpdateContext implements Context
      */
     public function iSetFields(TableNode $table): void
     {
+        $this->contentUpdateItemPage->verifyIsLoaded();
         foreach ($table->getHash() as $row) {
             $values = $this->filterOutNonEmptyValues($row);
             $this->contentUpdateItemPage->fillFieldWithValue($row['label'], $values);

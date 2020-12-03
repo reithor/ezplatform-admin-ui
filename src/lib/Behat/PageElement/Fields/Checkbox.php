@@ -14,8 +14,9 @@ class Checkbox extends FieldTypeComponent
     public function setValue(array $parameters): void
     {
         $fieldSelector = $this->parentLocator->withDescendant($this->getLocator('fieldInput'));
+        $newValue = ($parameters['value'] === "true");
 
-        if ($this->getValue() !== $parameters['value']) {
+        if ($this->getValue() !== $newValue) {
             $this->getHTMLPage()->find($fieldSelector)->click();
         }
     }
@@ -31,8 +32,10 @@ class Checkbox extends FieldTypeComponent
 
     public function verifyValueInItemView(array $values): void
     {
+        $expectedValue = $values['value'] === "true" ? 'Yes' : 'No';
+
         Assert::assertEquals(
-            'Yes',
+            $expectedValue,
             $this->getHTMLPage()->find($this->parentLocator)->getText(),
             'Field has wrong value'
         );
@@ -48,7 +51,7 @@ class Checkbox extends FieldTypeComponent
         return [
             new VisibleCSSLocator('fieldInput', '.ez-data-source__indicator'),
             new VisibleCSSLocator('checkbox', '.ez-data-source__label'),
-            new VisibleCSSLocator('checked', '.is-checked'),
+            new VisibleCSSLocator('checked', 'is-checked'),
         ];
     }
 }

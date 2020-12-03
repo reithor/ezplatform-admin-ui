@@ -50,9 +50,10 @@ class SystemInfoPage extends Page
     public function verifyPackages(array $packages)
     {
         $actualPackageData = $this->table->getColumnValues(['Name']);
+        $names = array_column($actualPackageData, 'Name');
 
         foreach ($packages as $package) {
-            Assert::assertContains($package, $actualPackageData['Name']);
+            Assert::assertContains($package, $names);
         }
     }
 

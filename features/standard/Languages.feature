@@ -1,4 +1,4 @@
-@IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce @test
+@IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
 Feature: Languages management
   As an administrator
   In order to customize my project
@@ -66,10 +66,8 @@ Feature: Languages management
     Then I should be on "Edited Deutsch" Language page
       And notification that "Language" "Deutsch" is updated appears
       And Language has proper attributes
-        | label         | value    |
-        | Name          | Edited Deutsch  |
-        | Language code | de-DE    |
-        | Enabled       | false     |
+        | Name           | Language code   | Enabled |
+        | Edited Deutsch | de-DE           | false   |
 
   @javascript
   Scenario: Language can be enabled
@@ -85,10 +83,8 @@ Feature: Languages management
     Then I should be on "Edited Deutsch" Language page
       And notification that "Language" "Edited Deutsch" is updated appears
       And Language has proper attributes
-        | label         | value          |
-        | Name          | Edited Deutsch |
-        | Language code | de-DE          |
-        | Enabled       | true           |
+        | Name            | Language code   | Enabled |
+        | Edited Deutsch  | de-DE           | true    |
 
   @javascript
   Scenario: Language can be deleted

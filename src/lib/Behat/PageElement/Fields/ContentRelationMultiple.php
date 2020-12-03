@@ -9,7 +9,10 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 use Behat\Mink\Session;
 use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Factory\ElementFactory;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
+use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\ContentRelationTable;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
 use PHPUnit\Framework\Assert;
@@ -20,11 +23,25 @@ class ContentRelationMultiple extends FieldTypeComponent
      * @var UniversalDiscoveryWidget
      */
     private $universalDiscoveryWidget;
+    /**
+     * @var Table
+     */
+    private $table;
 
-    public function __construct(Browser $browser, UniversalDiscoveryWidget $universalDiscoveryWidget)
+    public function __construct(Browser $browser, UniversalDiscoveryWidget $universalDiscoveryWidget, Table $table)
     {
         parent::__construct($browser);
         $this->universalDiscoveryWidget = $universalDiscoveryWidget;
+        $this->table = $table;
+    }
+
+    public function setParentLocator(VisibleCSSLocator $locator): void
+    {
+        parent::setParentLocator($locator);
+        $this->table = $this->table
+            ->withParentLocator($this->parentLocator)
+            ->withRowLocator($this->getLocator('relationRow'))
+            ->withColumnLocator($this->getLocator('columnHeader'));
     }
 
     public function setValue(array $parameters): void
@@ -46,17 +63,19 @@ class ContentRelationMultiple extends FieldTypeComponent
 
     private function removeRedundantRelations(array $wantedRelations): array
     {
-        $contentRelationTableHash = $this->contentRelationTable->getTableHash();
-        foreach ($contentRelationTableHash as $row) {
-            if (!in_array($row['Name'], $wantedRelations)) {
-                $this->contentRelationTable->selectListElement($row['Name']);
+        $currentContentRelations = array_column($this->table->getColumnValues(['Name']), 'Name');
+        foreach ($currentContentRelations as $relationPosition => $currentRelation) {
+            if (!in_array($currentRelation, array_values($wantedRelations), true)) {
+                $this->table->getTableRowByIndex($relationPosition)->select();
             } else {
-                $key = array_search($row['Name'], $wantedRelations);
+                $key = array_search($currentRelation, $wantedRelations, true);
                 unset($wantedRelations[$key]);
             }
         }
 
-        $this->contentRelationTable->clickTrashIcon();
+        $this->getHTMLPage()
+            ->find($this->parentLocator->withDescendant($this->getLocator('removeRelations')))
+            ->click();
 
         return $wantedRelations;
     }
@@ -67,7 +86,9 @@ class ContentRelationMultiple extends FieldTypeComponent
             $selectSelector = $this->parentLocator->withDescendant($this->getLocator('selectContent'));
             $this->getHTMLPage()->find($selectSelector)->click();
         } else {
-            $this->contentRelationTable->clickPlusButton();
+            $this->getHTMLPage()
+                ->find($this->parentLocator->withDescendant($this->getLocator('addRelation')))
+                ->click();
         }
     }
 
@@ -85,7 +106,7 @@ class ContentRelationMultiple extends FieldTypeComponent
         $selectSelector = $this->parentLocator->withDescendant($this->getLocator('selectContent'));
 
         return [
-            $this->getHTMLPage()->find($selectSelector)->getValue()
+            $this->getHTMLPage()->find($selectSelector)->getText()
         ];
     }
 
@@ -99,12 +120,12 @@ class ContentRelationMultiple extends FieldTypeComponent
         $viewPatternRegex = '/Multiple relations:[\w\/,: ]* %s [\w \/,:]*/';
         Assert::assertRegExp(
             sprintf($viewPatternRegex, $firstValue),
-            $this->getHTMLPage()->find($this->getLocator('fieldContainer'))->getText(),
+            $this->getHTMLPage()->find($this->parentLocator)->getText(),
             'Field has wrong value'
         );
         Assert::assertRegExp(
             sprintf($viewPatternRegex, $secondValue),
-            $this->getHTMLPage()->find($this->getLocator('fieldContainer'))->getText(),
+            $this->getHTMLPage()->find($this->parentLocator)->getText(),
             'Field has wrong value'
         );
     }
@@ -120,6 +141,11 @@ class ContentRelationMultiple extends FieldTypeComponent
     {
         return [
             new VisibleCSSLocator('selectContent', '.ez-relations__cta-btn-label'),
+            new VisibleCSSLocator('buttonRemove', '.ez-relations__table-action--remove'),
+            new VisibleCSSLocator('columnHeader', 'tr:not(.ez-relations__table-header) th'),
+            new VisibleCSSLocator('removeRelations', '.ez-relations__table-action--remove'),
+            new VisibleCSSLocator('addRelation', '.ez-relations__table-action--create'),
+            new VisibleCSSLocator('relationRow', '.ez-relations__list tr'),
         ];
     }
 

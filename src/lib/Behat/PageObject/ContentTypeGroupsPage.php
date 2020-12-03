@@ -11,39 +11,55 @@ use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
 use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
 use PHPUnit\Framework\Assert;
 
 class ContentTypeGroupsPage extends Page
 {
-    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList */
-    protected $adminList;
+    /**
+     * @var Table
+     */
+    private $table;
+    /**
+     * @var Dialog
+     */
+    private $dialog;
 
-    public function __construct(Browser $browser, AdminList $adminList)
+    public function __construct(Browser $browser, Table $table, Dialog $dialog)
     {
         parent::__construct($browser);
-        $this->adminList = $adminList;
+        $this->table = $table;
+        $this->dialog = $dialog;
     }
 
     public function edit(string $contentTypeGroupName): void
     {
-        $this->adminList->editItem(['Name' => $contentTypeGroupName]);
-    }
-
-    public function create(): void
-    {
-        $this->getHTMLPage()->find($this->getLocator('createButton'))->click();
-    }
-
-    public function goTo(string $contentTypeGroupName): void
-    {
-        $this->adminList->clickItem(['Name' => $contentTypeGroupName]);
+        $this->table->getTableRow(['Name' => $contentTypeGroupName])->edit();
     }
 
     public function delete(string $contentTypeGroupName): void
     {
-        $this->adminList->selectItem(['Name' => $contentTypeGroupName]);
-        $this->getHTMLPage()->find($this->get('trashButton'))->click();
+        $this->table->getTableRow(['Name' => $contentTypeGroupName])->select();
+        $this->getHTMLPage()->find($this->getLocator('trashButton'))->click();
+        $this->dialog->verifyIsLoaded();
+        $this->dialog->confirm();
+    }
+
+    public function createNew(): void
+    {
+        $this->getHTMLPage()->find($this->getLocator('createButton'))->click();
+    }
+
+    public function isContentTypeGroupOnTheList(string $contentTypeGroupName): bool
+    {
+        return $this->table->hasElement(['Name' => $contentTypeGroupName]);
+    }
+
+    public function canBeSelected(string $contentTypeGroupName): bool
+    {
+        return $this->table->getTableRow(['Name' => $contentTypeGroupName])->canBeSelected();
     }
 
     protected function getRoute(): string
@@ -53,7 +69,6 @@ class ContentTypeGroupsPage extends Page
 
     public function verifyIsLoaded(): void
     {
-        $this->adminList->verifyIsLoaded();
         Assert::assertEquals(
             'Content Type groups',
             $this->getHTMLPage()->find($this->getLocator('pageTitle'))->getText()

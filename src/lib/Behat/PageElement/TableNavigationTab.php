@@ -20,16 +20,13 @@ class TableNavigationTab extends Component
 
     public function goToTab(string $tabName): void
     {
-//        if ($tabName === $this->getActiveTabName()) {
-//            return;
-//        }
-
-        $this->getHTMLPage()->findAll($this->getLocator('navLink'))
+        $this->getHTMLPage()
+            ->findAll($this->getLocator('navLink'))
             ->filter(function(NodeElement $element) use ($tabName) {
                 return strpos($element->getText(), $tabName) !== false;
             })
-            ->single()->click();
-
+            ->first()
+            ->click();
     }
 
     public function verifyIsLoaded(): void

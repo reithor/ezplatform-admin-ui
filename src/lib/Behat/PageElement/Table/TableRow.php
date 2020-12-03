@@ -67,7 +67,7 @@ class TableRow extends Component
         return [
             new VisibleCSSLocator('link', 'a'),
             new VisibleCSSLocator('checkbox', 'input[type=checkbox]'),
-            new VisibleCSSLocator('assign', '[data-original-title="Assign content"]'),
+            new VisibleCSSLocator('assign', '[data-original-title="Assign content"],[data-original-title="Assign to Users/Groups"]'),
             new VisibleCSSLocator('edit', '.ez-icon-edit,[data-original-title="Edit"]'),
         ];
     }
