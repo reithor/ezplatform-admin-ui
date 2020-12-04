@@ -4,13 +4,14 @@
  * @copyright Copyright (C) eZ Systems AS. All rights reserved.
  * @license For full copyright and license information view LICENSE file distributed with this source code.
  */
+declare(strict_types=1);
+
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\TableInterface;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\TableNavigationTab;
 use PHPUnit\Framework\Assert;
 
