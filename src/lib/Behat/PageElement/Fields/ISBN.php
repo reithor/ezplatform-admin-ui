@@ -6,9 +6,7 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
-use PHPUnit\Framework\Assert;
 
 class ISBN extends FieldTypeComponent
 {

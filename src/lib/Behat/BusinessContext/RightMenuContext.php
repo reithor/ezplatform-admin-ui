@@ -20,7 +20,6 @@ class RightMenuContext implements Context
 
     public function __construct(RightMenu $rightMenu)
     {
-
         $this->rightMenu = $rightMenu;
     }
 

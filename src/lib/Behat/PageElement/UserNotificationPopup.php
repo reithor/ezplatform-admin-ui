@@ -17,10 +17,9 @@ class UserNotificationPopup extends Component
     {
         $notifications = $this->getHTMLPage()->findAll($this->getLocator('notificationItem'));
 
-        foreach($notifications as $notification)
-        {
+        foreach ($notifications as $notification) {
             $type = $notification->find($this->getLocator('notificationType'))->getText();
-            if ($type !== $expectedType){
+            if ($type !== $expectedType) {
                 continue;
             }
 
@@ -30,6 +29,7 @@ class UserNotificationPopup extends Component
             }
 
             $notification->click();
+
             return;
         }
 

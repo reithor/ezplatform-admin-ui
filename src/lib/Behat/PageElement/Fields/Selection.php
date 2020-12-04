@@ -23,7 +23,6 @@ class Selection extends FieldTypeComponent
     {
         $fieldSelector = $this->parentLocator->withDescendant($this->getLocator('selectBar'));
 
-
         return [$this->getHTMLPage()->find($fieldSelector)->getValue()];
     }
 

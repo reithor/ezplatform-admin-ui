@@ -7,17 +7,12 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\BusinessContext;
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Tester\Exception\PendingException;
-use Exception;
 use EzSystems\Behat\Browser\Page\PageRegistry;
 use EzSystems\Behat\Core\Behat\ArgumentParser;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Breadcrumb;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UpperMenu;
-use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentTypeGroupPage;
-use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentTypePage;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentUpdateItemPage;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentViewPage;
-use PHPUnit\Framework\Assert;
 
 class NavigationContext implements Context
 {
@@ -33,7 +28,7 @@ class NavigationContext implements Context
     /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Breadcrumb */
     private $breadcrumb;
 
-    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentViewPage  */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentViewPage */
     private $contentViewPage;
     /**
      * @var ContentUpdateItemPage
@@ -47,8 +42,7 @@ class NavigationContext implements Context
         ContentViewPage $contentViewPage,
         PageRegistry $pageRegistry,
         ContentUpdateItemPage $contentUpdateItemPage
-    )
-    {
+    ) {
         $this->argumentParser = $argumentParser;
         $this->pageRegistry = $pageRegistry;
         $this->upperMenu = $upperMenu;
@@ -132,7 +126,6 @@ class NavigationContext implements Context
         $this->iNavigateToContent($contentName, $contentType, $path);
     }
 
-
     /**
      * @Given I go to user notifications
      */
@@ -189,5 +182,4 @@ class NavigationContext implements Context
         $this->contentUpdateItemPage->setExpectedPageTitle($contentItemName);
         $this->contentUpdateItemPage->verifyIsLoaded();
     }
-
 }

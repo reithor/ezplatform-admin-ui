@@ -8,7 +8,6 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
-use PHPUnit\Framework\Assert;
 
 class Dialog extends Component
 {
@@ -31,7 +30,7 @@ class Dialog extends Component
     protected function specifyLocators(): array
     {
         return [
-            new VisibleCSSLocator('confirm','.modal.show button[type="submit"],.modal.show button[data-click]'),
+            new VisibleCSSLocator('confirm', '.modal.show button[type="submit"],.modal.show button[data-click]'),
             new VisibleCSSLocator('decline', '.modal.show .btn-secondary'),
         ];
     }

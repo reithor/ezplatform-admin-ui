@@ -9,7 +9,6 @@ namespace EzSystems\EzPlatformAdminUi\Behat\BusinessContext;
 use Behat\Behat\Context\Context;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UpperMenu;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentUpdateItemPage;
-use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentViewPage;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\DashboardPage;
 use PHPUnit\Framework\Assert;
 

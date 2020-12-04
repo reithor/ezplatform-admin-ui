@@ -30,8 +30,7 @@ class ContentUpdateItemPage extends Page
         Browser $browser,
         RightMenu $rightMenu,
         iterable $fieldTypeComponents
-    )
-    {
+    ) {
         parent::__construct($browser);
         $this->rightMenu = $rightMenu;
         $this->fieldTypeComponents = iterator_to_array($fieldTypeComponents);
@@ -109,8 +108,7 @@ class ContentUpdateItemPage extends Page
         $fieldElements = $this->getHTMLPage()->setTimeout(5)->findAll($this->getLocator('fieldLabel'));
 
         $foundFields = [];
-        foreach ($fieldElements as $fieldPosition => $fieldElement)
-        {
+        foreach ($fieldElements as $fieldPosition => $fieldElement) {
             $fieldText = $fieldElement->getText();
             $foundFields[] = $fieldText;
             if ($fieldText === $fieldName) {

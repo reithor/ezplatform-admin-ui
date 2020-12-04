@@ -54,7 +54,6 @@ class ObjectStateGroupPage extends Page
         $this->repository = $repository;
     }
 
-
     public function editObjectState(string $itemName): void
     {
         $this->objectStates->getTableRow(['Object state name' => $itemName])->edit();
@@ -74,12 +73,11 @@ class ObjectStateGroupPage extends Page
             return $this->repository->getObjectStateService()->loadObjectStateGroups();
         });
 
-       foreach ($objectStateGroups as $objectStateGroup)
-       {
-           if ($objectStateGroup->getName() === $objectStateGroupName) {
-               $this->expectedObjectStateGroupId = $objectStateGroup->id;
-           }
-       }
+        foreach ($objectStateGroups as $objectStateGroup) {
+            if ($objectStateGroup->getName() === $objectStateGroupName) {
+                $this->expectedObjectStateGroupId = $objectStateGroup->id;
+            }
+        }
     }
 
     public function hasObjectStates(): bool

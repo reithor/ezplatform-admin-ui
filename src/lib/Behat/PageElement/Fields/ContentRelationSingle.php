@@ -6,7 +6,6 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use Behat\Mink\Session;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;

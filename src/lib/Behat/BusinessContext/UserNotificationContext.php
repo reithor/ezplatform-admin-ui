@@ -7,7 +7,6 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\BusinessContext;
 
 use Behat\Behat\Context\Context;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UpperMenu;
 use Behat\Gherkin\Node\TableNode;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UserNotificationPopup;

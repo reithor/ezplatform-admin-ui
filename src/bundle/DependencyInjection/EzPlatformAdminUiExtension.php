@@ -40,7 +40,6 @@ class EzPlatformAdminUiExtension extends Extension implements PrependExtensionIn
             $loader->load('services/behat/feature_contexts.yaml');
             $loader->load('services/behat/pages.yaml');
             $loader->load('services/behat/components.yaml');
-
         }
     }
 

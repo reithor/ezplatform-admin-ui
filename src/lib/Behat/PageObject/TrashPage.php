@@ -6,16 +6,13 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use Behat\Mink\Session;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\TableBuilder;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
-use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
 use PHPUnit\Framework\Assert;
 
 class TrashPage extends Page

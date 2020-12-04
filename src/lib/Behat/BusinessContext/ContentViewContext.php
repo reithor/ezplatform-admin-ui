@@ -101,7 +101,7 @@ class ContentViewContext implements Context
     public function verifyImOnContentItemPage(string $contentName, ?string $path = null)
     {
         $path = $this->argumentParser->replaceRootKeyword($path);
-        $this->contentViewPage->setExpectedLocationPath(sprintf("%s/%s", $path, $contentName));
+        $this->contentViewPage->setExpectedLocationPath(sprintf('%s/%s', $path, $contentName));
         $this->contentViewPage->verifyIsLoaded();
     }
 

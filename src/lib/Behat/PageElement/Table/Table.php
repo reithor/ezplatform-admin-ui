@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @copyright Copyright (C) eZ Systems AS. All rights reserved.
+ * @license For full copyright and license information view LICENSE file distributed with this source code.
+ */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Table;
 
 use EzSystems\Behat\Browser\Component\Component;
@@ -15,7 +19,7 @@ use PHPUnit\Framework\Assert;
 
 class Table extends Component implements TableInterface
 {
-    private CONST MAX_PAGE_COUNT = 10;
+    private const MAX_PAGE_COUNT = 10;
 
     /**
      * @var Pagination
@@ -65,8 +69,7 @@ class Table extends Component implements TableInterface
 
         $iterationCount = 0;
 
-        while ($this->pagination->isNextButtonActive() && $iterationCount < self::MAX_PAGE_COUNT)
-        {
+        while ($this->pagination->isNextButtonActive() && $iterationCount < self::MAX_PAGE_COUNT) {
             $this->pagination->clickNextButton();
 
             $hasElementOnCurrentPage = $this->hasElementOnCurrentPage($elementData);
@@ -75,7 +78,7 @@ class Table extends Component implements TableInterface
                 return true;
             }
 
-            $iterationCount++;
+            ++$iterationCount;
         }
 
         return false;
@@ -99,15 +102,15 @@ class Table extends Component implements TableInterface
         $result = [];
 
         foreach ($foundHeaders as $headerPosition => $header) {
-             $columnValues = $this->parentElement
+            $columnValues = $this->parentElement
                  ->findAll($this->getTableCellLocator($headerPosition))
-                 ->map(function(NodeElement $element) {
+                 ->map(function (NodeElement $element) {
                      return $element->getText();
                  });
 
-             foreach ($columnValues as $position => $value) {
-                 $result[$position][$header] = $value;
-             }
+            foreach ($columnValues as $position => $value) {
+                $result[$position][$header] = $value;
+            }
         }
 
         return $result;
@@ -209,7 +212,6 @@ class Table extends Component implements TableInterface
         ];
     }
 
-
     public function withRowLocator(CSSLocator $locator): self
     {
         $rowLocator = new CSSLocator('row', $locator->getSelector());
@@ -275,6 +277,7 @@ class Table extends Component implements TableInterface
 
     /**
      * @param array $elementData
+     *
      * @return array
      */
     private function getHeaderPositions(array $searchedHeaders, array $allHeaders): array

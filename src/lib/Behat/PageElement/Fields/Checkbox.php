@@ -14,7 +14,7 @@ class Checkbox extends FieldTypeComponent
     public function setValue(array $parameters): void
     {
         $fieldSelector = $this->parentLocator->withDescendant($this->getLocator('fieldInput'));
-        $newValue = ($parameters['value'] === "true");
+        $newValue = ($parameters['value'] === 'true');
 
         if ($this->getValue() !== $newValue) {
             $this->getHTMLPage()->find($fieldSelector)->click();
@@ -26,13 +26,13 @@ class Checkbox extends FieldTypeComponent
         $fieldSelector = $this->parentLocator->withDescendant($this->getLocator('fieldInput'));
 
         return [
-            $this->getHTMLPage()->find($fieldSelector)->hasClass($this->getLocator('checked')->getSelector())
+            $this->getHTMLPage()->find($fieldSelector)->hasClass($this->getLocator('checked')->getSelector()),
         ];
     }
 
     public function verifyValueInItemView(array $values): void
     {
-        $expectedValue = $values['value'] === "true" ? 'Yes' : 'No';
+        $expectedValue = $values['value'] === 'true' ? 'Yes' : 'No';
 
         Assert::assertEquals(
             $expectedValue,

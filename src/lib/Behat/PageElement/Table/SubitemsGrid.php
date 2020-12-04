@@ -32,8 +32,7 @@ class SubitemsGrid extends Table
     {
         $name = array_values($elementData);
 
-        foreach ($this->getHTMLPage()->findAll($this->getLocator('listElement')) as $element)
-        {
+        foreach ($this->getHTMLPage()->findAll($this->getLocator('listElement')) as $element) {
             if ($element->getText() === $name) {
                 return true;
             }
@@ -46,8 +45,7 @@ class SubitemsGrid extends Table
     {
         $name = array_values($elementData);
 
-        foreach ($this->getHTMLPage()->findAll($this->getLocator('listElement')) as $element)
-        {
+        foreach ($this->getHTMLPage()->findAll($this->getLocator('listElement')) as $element) {
             if ($element->getText() === $name) {
                 return new TableRow($this->browser, $element, new LocatorCollection([]));
             }

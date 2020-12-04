@@ -85,7 +85,6 @@ class ContentUpdateContext implements Context
     public function verifyArticleMainContentFieldIsSet(string $intro): void
     {
         throw new \Exception('refactor me...');
-
         $updateItemPage = PageObjectFactory::createPage($this->browserContext, ContentUpdateItemPage::PAGE_NAME, '');
         $fieldName = EnvironmentConstants::get('ARTICLE_MAIN_FIELD_NAME');
         $updateItemPage->contentUpdateForm->verifyFieldHasValue(['label' => $fieldName, 'value' => $intro]);

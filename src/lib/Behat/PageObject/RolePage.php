@@ -6,17 +6,13 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use Behat\Mink\Session;
 use eZ\Publish\API\Repository\Repository;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\TableNavigationTab;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
-use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
 use PHPUnit\Framework\Assert;
 
 class RolePage extends Page
@@ -56,8 +52,7 @@ class RolePage extends Page
         Repository $repository,
         Table $policies,
         Table $assignments
-    )
-    {
+    ) {
         parent::__construct($browser);
         $this->tableNavigationTab = $tableNavigationTab;
         $this->dialog = $dialog;
@@ -131,12 +126,11 @@ class RolePage extends Page
         $this->expectedRoleName = $roleName;
 
         /** @var \eZ\Publish\API\Repository\Values\User\Role[] $roles */
-        $roles = $this->repository->sudo(function(Repository $repository) {
+        $roles = $this->repository->sudo(function (Repository $repository) {
             return $repository->getRoleService()->loadRoles();
         });
 
-        foreach ($roles as $role)
-        {
+        foreach ($roles as $role) {
             if ($role->identifier === $roleName) {
                 $this->expectedRoleId = $role->id;
                 break;
@@ -182,14 +176,14 @@ class RolePage extends Page
 
     public function hasPolicies(): bool
     {
-        $this->tableNavigationTab->goToTab("Policies");
+        $this->tableNavigationTab->goToTab('Policies');
 
         return count($this->policies->getColumnValues(['Module'])) > 0;
     }
 
     public function hasAssignments(): bool
     {
-        $this->tableNavigationTab->goToTab("Assignments");
+        $this->tableNavigationTab->goToTab('Assignments');
 
         return count($this->assignments->getColumnValues(['User/Group'])) > 0;
     }

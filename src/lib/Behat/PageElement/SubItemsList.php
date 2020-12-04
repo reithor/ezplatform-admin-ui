@@ -6,18 +6,12 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
-use Behat\Mink\Session;
 use EzSystems\Behat\Browser\Component\Component;
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
-use EzSystems\Behat\Browser\Element\Element;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\SubitemsGrid;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\TableInterface;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SubitemsGridList;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\SubItemsTable;
 use PHPUnit\Framework\Assert;
 
 class SubitemsList extends Component

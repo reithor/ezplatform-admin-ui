@@ -7,7 +7,6 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\Browser\Component\Component;
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Element\Element;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;

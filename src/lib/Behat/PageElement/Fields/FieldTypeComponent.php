@@ -41,6 +41,7 @@ abstract class FieldTypeComponent extends Component implements FieldTypeComponen
             'Field has wrong value'
         );
     }
+
     public function setParentLocator(VisibleCSSLocator $locator): void
     {
         $this->parentLocator = $locator;

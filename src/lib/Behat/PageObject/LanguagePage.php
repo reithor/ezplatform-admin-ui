@@ -6,7 +6,6 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use eZ\Publish\API\Repository\LanguageService;
 use eZ\Publish\API\Repository\Repository;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
@@ -59,7 +58,7 @@ class LanguagePage extends Page
         if (array_key_exists('Enabled', $data)) {
             // Table does not handle returning non-string values
             $hasEnabledField = $this->getHTMLPage()->find($this->getLocator('enabledField'))->hasAttribute('checked');
-            $shouldHaveEnabledField = $data['Enabled'] === "true";
+            $shouldHaveEnabledField = $data['Enabled'] === 'true';
             $hasExpectedEnabledFieldValue = $hasEnabledField === $shouldHaveEnabledField;
             unset($data['Enabled']);
         }
@@ -90,11 +89,10 @@ class LanguagePage extends Page
             return $repository->getContentLanguageService()->loadLanguages();
         });
 
-        foreach ($languages as $language)
-        {
-            if ($language->name === $languageName)
-            {
+        foreach ($languages as $language) {
+            if ($language->name === $languageName) {
                 $this->expectedLanguageId = $language->id;
+
                 return;
             }
         }

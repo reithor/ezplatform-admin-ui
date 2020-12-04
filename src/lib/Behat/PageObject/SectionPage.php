@@ -7,7 +7,6 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use eZ\Publish\API\Repository\Repository;
-use eZ\Publish\API\Repository\SectionService;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
@@ -122,13 +121,14 @@ class SectionPage extends Page
     {
         $this->expectedSectionName = $sectionName;
 
-        $sections = $this->repository->sudo(function(Repository $repository) {
+        $sections = $this->repository->sudo(function (Repository $repository) {
             return $repository->getSectionService()->loadSections();
         });
 
         foreach ($sections as $section) {
             if ($section->name === $sectionName) {
                 $this->expectedSectionId = $section->id;
+
                 return;
             }
         }

@@ -15,7 +15,6 @@ use PHPUnit\Framework\Assert;
 
 class LanguagesPage extends Page
 {
-
     /**
      * @var Table
      */
@@ -67,7 +66,7 @@ class LanguagesPage extends Page
             $this->getHTMLPage()->find($this->getLocator('pageTitle'))->getText()
         );
         Assert::assertEquals(
-            "Languages",
+            'Languages',
             $this->getHTMLPage()->find($this->getLocator('listHeader'))->getText()
         );
     }
@@ -80,7 +79,7 @@ class LanguagesPage extends Page
     protected function specifyLocators(): array
     {
         return [
-            new VisibleCSSLocator('pageTitle',  '.ez-header h1'),
+            new VisibleCSSLocator('pageTitle', '.ez-header h1'),
             new VisibleCSSLocator('listHeader', '.ez-table-header .ez-table-header__headline, header .ez-table__headline, header h5'),
             new VisibleCSSLocator('createButton', '.ez-icon-create'),
             new VisibleCSSLocator('deleteButton', '.ez-icon-trash,button[data-original-title^="Delete"]'),

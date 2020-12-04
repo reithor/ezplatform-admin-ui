@@ -8,7 +8,6 @@ namespace EzSystems\EzPlatformAdminUi\Behat\BusinessContext;
 
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\RolePage;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\RolesPage;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\RoleUpdatePage;
@@ -34,8 +33,7 @@ class RolesContext implements Context
         RolesPage $rolesPage,
         RolePage $rolePage,
         RoleUpdatePage $roleUpdatePage
-    )
-    {
+    ) {
         $this->rolePage = $rolePage;
         $this->roleUpdatePage = $roleUpdatePage;
         $this->rolesPage = $rolesPage;

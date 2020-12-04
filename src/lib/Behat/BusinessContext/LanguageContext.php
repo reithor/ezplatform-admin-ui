@@ -100,7 +100,7 @@ class LanguageContext implements Context
         $this->languagesPage->editLanguage($languageName);
     }
 
-     /**
+    /**
      * @Then I open :languageName Language page in admin SiteAccess
      */
     public function openLanguagePage(string $languageName)

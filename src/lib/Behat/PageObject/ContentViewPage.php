@@ -6,7 +6,6 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use Behat\Mink\Session;
 use EzSystems\Behat\API\Facade\ContentFacade;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
@@ -19,7 +18,6 @@ use EzSystems\EzPlatformAdminUi\Behat\PageElement\LanguagePicker;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\SubitemsList;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UpperMenu;
-use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
 use PHPUnit\Framework\Assert;
 
 class ContentViewPage extends Page
@@ -41,14 +39,13 @@ class ContentViewPage extends Page
      */
     private $contentUpdatePage;
 
-    /** @var string  */
+    /** @var string */
     private $expectedContentType;
     /**
      * @var LanguagePicker
      */
     private $languagePicker;
     /**
-
     /**
      * @var string
      */
@@ -82,8 +79,7 @@ class ContentViewPage extends Page
         ContentFacade $contentFacade,
         Breadcrumb $breadcrumb,
         ContentItemAdminPreview $contentItemAdminPreview
-    )
-    {
+    ) {
         parent::__construct($browser);
 
         $this->rightMenu = $rightMenu;
@@ -123,7 +119,6 @@ class ContentViewPage extends Page
     public function navigateToPath(string $path): void
     {
         throw new \Exception('jak najmniej tego uzywac...');
-
         // $pathArray = explode('/', $path);
         // $menuTab = $pathArray[0] === EnvironmentConstants::get('ROOT_CONTENT_NAME') ? 'Content structure' : $pathArray[0];
 

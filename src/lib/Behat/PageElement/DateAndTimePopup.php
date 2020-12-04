@@ -122,7 +122,7 @@ class DateAndTimePopup extends Component
     protected function specifyLocators(): array
     {
         return [
-            new VisibleCSSLocator('calendarSelectorInline','.flatpickr-calendar.inline'),
+            new VisibleCSSLocator('calendarSelectorInline', '.flatpickr-calendar.inline'),
             new VisibleCSSLocator('calendarSelector', '.flatpickr-calendar'),
             new VisibleCSSLocator('flatpickrSelector', '.flatpickr-input'),
             new VisibleCSSLocator('dateSet', '.date-set'),

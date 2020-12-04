@@ -32,8 +32,7 @@ class ObjectStatesContext implements Context
         ObjectStateGroupPage $objectStateGroupPage,
         ObjectStateGroupsPage $objectStateGroupsPage,
         ObjectStatePage $objectStatePage
-    )
-    {
+    ) {
         $this->objectStateGroupPage = $objectStateGroupPage;
         $this->objectStateGroupsPage = $objectStateGroupsPage;
         $this->objectStatePage = $objectStatePage;

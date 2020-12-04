@@ -6,10 +6,7 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
-use Behat\Mink\Element\NodeElement;
 use EzSystems\Behat\Browser\Component\Component;
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
-use EzSystems\Behat\Browser\Element\Element;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
@@ -36,9 +33,9 @@ class ContentTypePicker extends Component
     protected function specifyLocators(): array
     {
         return [
-            new VisibleCSSLocator('filterInput','.ez-extra-actions__section-content--content-type .ez-instant-filter__input'),
-            new VisibleCSSLocator('filteredItem','.ez-extra-actions__section-content--content-type .ez-instant-filter__group-item:not([hidden])'),
-            new VisibleCSSLocator('headerSelector','.ez-extra-actions--create .ez-extra-actions__header'),
+            new VisibleCSSLocator('filterInput', '.ez-extra-actions__section-content--content-type .ez-instant-filter__input'),
+            new VisibleCSSLocator('filteredItem', '.ez-extra-actions__section-content--content-type .ez-instant-filter__group-item:not([hidden])'),
+            new VisibleCSSLocator('headerSelector', '.ez-extra-actions--create .ez-extra-actions__header'),
         ];
     }
 }

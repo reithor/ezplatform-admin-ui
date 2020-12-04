@@ -6,19 +6,16 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use Behat\Mink\Session;
 use eZ\Publish\API\Repository\ContentTypeService;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
-use EzSystems\EzPlatformAdminUi\Behat\PageObject\Dialogalog as DialogalogAlias;
-use PHPUnit\Framework\Assert;
 
 class ContentTypeGroupPage extends Page
 {
-    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList  */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList */
     protected $adminList;
 
     /** @var string */
@@ -100,15 +97,16 @@ class ContentTypeGroupPage extends Page
             ->find($this->getLocator('listHeader'))
             ->assert()->textEquals(sprintf("Content Types in '%s'", $this->expectedName));
     }
-    
-    public function setExpectedContentTypeGroupName(string $expectedName) {
+
+    public function setExpectedContentTypeGroupName(string $expectedName)
+    {
         $this->expectedName = $expectedName;
         $groups = $this->contentTypeService->loadContentTypeGroups();
 
         foreach ($groups as $group) {
-            if ($group->identifier === $expectedName)
-            {
+            if ($group->identifier === $expectedName) {
                 $this->contentTypeGroupId = $group->id;
+
                 return;
             }
         }
@@ -122,7 +120,7 @@ class ContentTypeGroupPage extends Page
     protected function specifyLocators(): array
     {
         return [
-            new VisibleCSSLocator('pageTitle',  '.ez-header h1'),
+            new VisibleCSSLocator('pageTitle', '.ez-header h1'),
             new VisibleCSSLocator('createButton', '.ez-icon-create'),
             new VisibleCSSLocator('listHeader', '.ez-table-header .ez-table-header__headline, header .ez-table__headline, header h5'),
             new VisibleCSSLocator('tableContainer', '.ez-container'),

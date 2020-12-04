@@ -6,12 +6,10 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Notification;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\TableInterface;
 use PHPUnit\Framework\Assert;

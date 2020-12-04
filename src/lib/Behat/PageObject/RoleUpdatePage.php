@@ -1,17 +1,17 @@
 <?php
 
-
+/**
+ * @copyright Copyright (C) eZ Systems AS. All rights reserved.
+ * @license For full copyright and license information view LICENSE file distributed with this source code.
+ */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use Behat\Mink\Session;
 use Exception;
 use EzSystems\Behat\Browser\Element\NodeElement;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
-use EzSystems\EzPlatformAdminUi\Behat\PageObject\AdminUpdateItemPage;
-use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
 
 class RoleUpdatePage extends AdminUpdateItemPage
 {
@@ -28,8 +28,7 @@ class RoleUpdatePage extends AdminUpdateItemPage
 
     public function selectLimitationValues(string $selectName, array $values): void
     {
-        try
-        {
+        try {
             $baseElement = $this->getHTMLPage()->findAll($this->getLocator('limitationField'))->getByChildElementText($this->getLocator('labelSelector'), $selectName);
             $currentlySelectedElementsCount = count($baseElement->findAll($this->getLocator('limitationDropdownOptionRemove')));
 
@@ -40,8 +39,7 @@ class RoleUpdatePage extends AdminUpdateItemPage
                     find($this->getLocator('limitationDropdownOptionRemove'))->
                     click();
             }
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             // no need to remove current selection
         }
 
@@ -112,7 +110,7 @@ class RoleUpdatePage extends AdminUpdateItemPage
     {
         $buttons = $this->getHTMLPage()
             ->findAll($this->getLocator('button'))
-            ->filter(function(NodeElement $element) {
+            ->filter(function (NodeElement $element) {
                 return $element->getText() === 'Select Locations';
             })
             ->toArray();

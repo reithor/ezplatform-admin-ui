@@ -10,7 +10,6 @@ use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
-use PHPUnit\Framework\Assert;
 
 class DraftConflictDialog extends Component
 {

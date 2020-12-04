@@ -1,6 +1,9 @@
 <?php
 
-
+/**
+ * @copyright Copyright (C) eZ Systems AS. All rights reserved.
+ * @license For full copyright and license information view LICENSE file distributed with this source code.
+ */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use EzSystems\Behat\API\ContentData\FieldTypeNameConverter;
@@ -67,14 +70,13 @@ class ContentTypeUpdatePage extends AdminUpdateItemPage
 
     private function getFieldDefinition($fieldName): NodeElement
     {
-        $fieldTypeIdentifier =  FieldTypeNameConverter::getFieldTypeIdentifierByName($fieldName);
+        $fieldTypeIdentifier = FieldTypeNameConverter::getFieldTypeIdentifierByName($fieldName);
 
         return $this->getHTMLPage()
             ->findAll($this->getLocator('fieldDefinitionContainer'))
-            ->filter(function(NodeElement  $element) use ($fieldTypeIdentifier) {
+            ->filter(function (NodeElement $element) use ($fieldTypeIdentifier) {
                 return strpos($element->find($this->getLocator('fieldDefinitionName'))->getText(), $fieldTypeIdentifier) !== false;
             })
             ->first();
     }
-
 }

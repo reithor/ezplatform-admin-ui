@@ -9,7 +9,6 @@ namespace EzSystems\EzPlatformAdminUi\Behat\BusinessContext;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\AdminUpdateItemPage;
-use PHPUnit\Framework\Assert;
 
 class AdminUpdateContext implements Context
 {

@@ -6,14 +6,11 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use Behat\Mink\Session;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
-use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
 use PHPUnit\Framework\Assert;
 
 class ContentTypeGroupsPage extends Page
@@ -87,7 +84,7 @@ class ContentTypeGroupsPage extends Page
     protected function specifyLocators(): array
     {
         return [
-            new VisibleCSSLocator('pageTitle',  '.ez-header h1'),
+            new VisibleCSSLocator('pageTitle', '.ez-header h1'),
             new VisibleCSSLocator('listHeader', '.ez-table-header .ez-table-header__headline, header .ez-table__headline, header h5'),
             new VisibleCSSLocator('createButton', '.ez-icon-create'),
             new VisibleCSSLocator('trashButton', '.ez-icon-trash,button[data-original-title^="Delete"]'),

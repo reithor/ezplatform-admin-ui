@@ -158,7 +158,7 @@ class SectionsContext implements Context
         );
     }
 
-     /**
+    /**
      * @Then I open :sectionName Section page in admin SiteAccess
      */
     public function openSectionPage(string $sectionName)

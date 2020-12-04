@@ -76,8 +76,7 @@ class ContentTypeContext implements Context
      */
     public function contentTypeHasProperFields(TableNode $table): void
     {
-        foreach ($table->getHash() as $row)
-        {
+        foreach ($table->getHash() as $row) {
             Assert::assertTrue($this->contentTypePage->hasFieldType(
                 ['Name' => $row['fieldName'], 'Type' => $row['fieldType']]
             ));
@@ -105,7 +104,7 @@ class ContentTypeContext implements Context
      */
     public function thereSAOnContentTypesGroupList($contentTypeGroupName)
     {
-        Assert::assertTrue( $this->contentTypeGroupsPage->isContentTypeGroupOnTheList($contentTypeGroupName));
+        Assert::assertTrue($this->contentTypeGroupsPage->isContentTypeGroupOnTheList($contentTypeGroupName));
     }
 
     /**
@@ -121,7 +120,7 @@ class ContentTypeContext implements Context
      */
     public function iAddField(string $fieldName): void
     {
-         $this->contentTypeUpdatePage->addFieldDefinition($fieldName);
+        $this->contentTypeUpdatePage->addFieldDefinition($fieldName);
     }
 
     /**

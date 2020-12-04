@@ -7,7 +7,6 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use eZ\Publish\API\Repository\ContentTypeService;
-use EzSystems\Behat\Browser\Element\NodeElement;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
@@ -93,13 +92,12 @@ class ContentTypePage extends Page
             ->find($this->getLocator('pageTitle'))
             ->assert()->textEquals($this->expectedContentTypeName);
     }
-    
+
     public function setExpectedContentTypeName(string $contentTypeName): void
     {
         $this->expectedContentTypeName = $contentTypeName;
 
-        foreach ($this->contentTypeService->loadContentTypeGroups() as $group)
-        {
+        foreach ($this->contentTypeService->loadContentTypeGroups() as $group) {
             foreach ($this->contentTypeService->loadContentTypes($group) as $contentType) {
                 if ($contentType->getName() === $contentTypeName) {
                     $this->expectedContenTypeId = $contentType->id;

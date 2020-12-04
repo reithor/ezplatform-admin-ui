@@ -6,9 +6,7 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
-use Exception;
 use EzSystems\Behat\Browser\Component\Component;
-use EzSystems\Behat\Browser\Element\NodeElement;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
@@ -46,7 +44,7 @@ class Notification extends Component
     {
         $closeButtons = $this->getHTMLPage()->findAll($this->getLocator('closeAlert'));
 
-        foreach($closeButtons as $closeButton) {
+        foreach ($closeButtons as $closeButton) {
             $closeButton->click();
         }
     }

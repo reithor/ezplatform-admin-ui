@@ -34,7 +34,6 @@ class SystemInfoPage extends Page
         $this->table = $table
             ->withParentLocator($this->getLocator('packagesTable'))
             ->endConfiguration();
-
     }
 
     public function goToTab(string $tabName)

@@ -6,14 +6,9 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use Behat\Mink\Session;
-use EzSystems\Behat\Browser\Context\OldBrowserContext;
-use EzSystems\Behat\Browser\Factory\ElementFactory;
-use EzSystems\Behat\Browser\Locator\CSSLocator;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\Tables\ContentRelationTable;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
 use PHPUnit\Framework\Assert;
 
@@ -106,7 +101,7 @@ class ContentRelationMultiple extends FieldTypeComponent
         $selectSelector = $this->parentLocator->withDescendant($this->getLocator('selectContent'));
 
         return [
-            $this->getHTMLPage()->find($selectSelector)->getText()
+            $this->getHTMLPage()->find($selectSelector)->getText(),
         ];
     }
 

@@ -22,7 +22,7 @@ class TableNavigationTab extends Component
     {
         $this->getHTMLPage()
             ->findAll($this->getLocator('navLink'))
-            ->filter(function(NodeElement $element) use ($tabName) {
+            ->filter(function (NodeElement $element) use ($tabName) {
                 return strpos($element->getText(), $tabName) !== false;
             })
             ->first()
@@ -37,8 +37,8 @@ class TableNavigationTab extends Component
     protected function specifyLocators(): array
     {
         return [
-            new VisibleCSSLocator('activeNavLink','.ez-tabs .active'),
-            new VisibleCSSLocator('navLink','.ez-tabs .nav-link'),
+            new VisibleCSSLocator('activeNavLink', '.ez-tabs .active'),
+            new VisibleCSSLocator('navLink', '.ez-tabs .nav-link'),
         ];
     }
 }

@@ -30,8 +30,7 @@ class ContentItemAdminPreview extends Component
         $fieldValueSelector = $nthFieldSelector->withDescendant($this->getLocator('fieldValue'));
         $fieldTypeIdentifier = $fieldTypeIdentifier ?? $this->detectFieldTypeIdentifier($fieldValueSelector);
 
-        foreach($this->fieldTypeComponents as $fieldTypeComponent)
-        {
+        foreach ($this->fieldTypeComponents as $fieldTypeComponent) {
             if ($fieldTypeComponent->getFieldTypeIdentifier() === $fieldTypeIdentifier) {
                 $fieldTypeComponent->setParentLocator($fieldValueSelector);
                 $fieldTypeComponent->verifyValueInItemView($expectedValues);
@@ -43,18 +42,17 @@ class ContentItemAdminPreview extends Component
 
     private function getFieldPosition(string $fieldLabel): int
     {
-        $searchText = sprintf("%s:", $fieldLabel);
+        $searchText = sprintf('%s:', $fieldLabel);
 
         $fields = $this->getHTMLPage()->findAll($this->getLocator('fieldName'));
 
         $fieldPosition = 1;
         foreach ($fields as $field) {
-            if ($field->getText() === $searchText)
-            {
+            if ($field->getText() === $searchText) {
                 return $fieldPosition;
             }
 
-            $fieldPosition++;
+            ++$fieldPosition;
         }
     }
 
