@@ -19,19 +19,19 @@ class ContentViewContext implements Context
 {
     private $argumentParser;
     /**
-     * @var ContentViewPage
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentViewPage
      */
     private $contentViewPage;
     /**
-     * @var LeftMenu
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\LeftMenu
      */
     private $leftMenu;
     /**
-     * @var UniversalDiscoveryWidget
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget
      */
     private $universalDiscoveryWidget;
     /**
-     * @var DraftConflictDialog
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\DraftConflictDialog
      */
     private $draftConflictDialog;
 

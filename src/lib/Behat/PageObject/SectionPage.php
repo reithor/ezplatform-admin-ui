@@ -51,11 +51,11 @@ class SectionPage extends Page
      */
     private $sectionInformationTable;
     /**
-     * @var Dialog
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog
      */
     private $dialog;
     /**
-     * @var Repository
+     * @var \eZ\Publish\API\Repository\Repository
      */
     private $repository;
 

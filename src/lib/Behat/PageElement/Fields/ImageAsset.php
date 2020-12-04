@@ -15,11 +15,11 @@ use PHPUnit\Framework\Assert;
 class ImageAsset extends Image
 {
     /**
-     * @var UniversalDiscoveryWidget
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget
      */
     private $universalDiscoveryWidget;
     /**
-     * @var Notification
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Notification
      */
     private $notification;
 

@@ -16,7 +16,7 @@ class Time extends FieldTypeComponent
     private const VALUE_TIME_FORMAT = 'G:i';
 
     /**
-     * @var DateAndTimePopup
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\DateAndTimePopup
      */
     private $dateAndTimePopup;
 

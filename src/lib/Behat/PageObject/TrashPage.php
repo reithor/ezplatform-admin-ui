@@ -23,11 +23,11 @@ class TrashPage extends Page
     public $dialog;
 
     /**
-     * @var UniversalDiscoveryWidget
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget
      */
     private $universalDiscoveryWidget;
     /**
-     * @var RightMenu
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu
      */
     private $rightMenu;
     /**

@@ -15,11 +15,11 @@ use PHPUnit\Framework\Assert;
 class NotificationContext implements Context
 {
     /**
-     * @var Notification
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Notification
      */
     private $notification;
     /**
-     * @var ArgumentParser
+     * @var \EzSystems\Behat\Core\Behat\ArgumentParser
      */
     private $argumentParser;
 

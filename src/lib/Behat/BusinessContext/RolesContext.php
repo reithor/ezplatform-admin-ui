@@ -16,16 +16,16 @@ use PHPUnit\Framework\Assert;
 class RolesContext implements Context
 {
     /**
-     * @var RolesPage
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\RolesPage
      */
     private $rolesPage;
 
     /**
-     * @var RolePage
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\RolePage
      */
     private $rolePage;
     /**
-     * @var RoleUpdatePage
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\RoleUpdatePage
      */
     private $roleUpdatePage;
 

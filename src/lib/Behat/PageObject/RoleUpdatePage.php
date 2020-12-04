@@ -16,7 +16,7 @@ use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
 class RoleUpdatePage extends AdminUpdateItemPage
 {
     /**
-     * @var UniversalDiscoveryWidget
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget
      */
     private $universalDiscoveryWidget;
 

@@ -17,7 +17,7 @@ class UserNotificationContext implements Context
     /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\UpperMenu */
     private $upperMenu;
     /**
-     * @var UserNotificationPopup
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\UserNotificationPopup
      */
     private $userNotificationPopup;
 

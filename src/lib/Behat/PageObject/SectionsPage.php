@@ -17,12 +17,12 @@ use PHPUnit\Framework\Assert;
 class SectionsPage extends Page
 {
     /**
-     * @var TableInterface
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\TableInterface
      */
     private $table;
 
     /**
-     * @var Dialog
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog
      */
     private $dialog;
 

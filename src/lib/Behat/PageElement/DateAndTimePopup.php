@@ -36,7 +36,7 @@ class DateAndTimePopup extends Component
      */
     private $isInline;
     /**
-     * @var VisibleCSSLocator
+     * @var \EzSystems\Behat\Browser\Locator\VisibleCSSLocator
      */
     private $parentSelector;
 
@@ -47,7 +47,7 @@ class DateAndTimePopup extends Component
     }
 
     /**
-     * @param DateTime $date Date to set
+     * @param \DateTime $date Date to set
      */
     public function setDate(DateTime $date, string $dateFormat = self::DATETIME_FORMAT): void
     {

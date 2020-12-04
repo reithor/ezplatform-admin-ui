@@ -15,11 +15,11 @@ use PHPUnit\Framework\Assert;
 class ContentRelationSingle extends FieldTypeComponent
 {
     /**
-     * @var UniversalDiscoveryWidget
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget
      */
     private $universalDiscoveryWidget;
     /**
-     * @var Table
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
      */
     private $table;
 

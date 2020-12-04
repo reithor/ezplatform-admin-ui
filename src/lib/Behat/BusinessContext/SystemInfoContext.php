@@ -18,7 +18,7 @@ class SystemInfoContext implements Context
     ];
 
     /**
-     * @var SystemInfoPage
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\SystemInfoPage
      */
     private $systemInfoPage;
 

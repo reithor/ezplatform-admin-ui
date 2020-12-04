@@ -16,7 +16,7 @@ use PHPUnit\Framework\Assert;
 
 class SubitemsList extends Component
 {
-    /** @var Table */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table */
     protected $table;
 
     protected $isGridViewEnabled;

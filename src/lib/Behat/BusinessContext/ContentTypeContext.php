@@ -17,19 +17,19 @@ use PHPUnit\Framework\Assert;
 class ContentTypeContext implements Context
 {
     /**
-     * @var ContentTypePage
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentTypePage
      */
     private $contentTypePage;
     /**
-     * @var ContentTypeUpdatePage
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentTypeUpdatePage
      */
     private $contentTypeUpdatePage;
     /**
-     * @var ContentTypeGroupPage
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentTypeGroupPage
      */
     private $contentTypeGroupPage;
     /**
-     * @var ContentTypeGroupsPage
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentTypeGroupsPage
      */
     private $contentTypeGroupsPage;
 

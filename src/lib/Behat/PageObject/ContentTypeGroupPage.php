@@ -21,7 +21,7 @@ class ContentTypeGroupPage extends Page
     /** @var string */
     protected $expectedName;
     /**
-     * @var ContentTypeService
+     * @var \eZ\Publish\API\Repository\ContentTypeService
      */
     private $contentTypeService;
     /**
@@ -29,11 +29,11 @@ class ContentTypeGroupPage extends Page
      */
     private $contentTypeGroupId;
     /**
-     * @var Table
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
      */
     private $table;
     /**
-     * @var Dialog
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog
      */
     private $dialog;
 

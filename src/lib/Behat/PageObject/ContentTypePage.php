@@ -19,7 +19,7 @@ class ContentTypePage extends Page
      */
     private $expectedContentTypeName;
     /**
-     * @var ContentTypeService
+     * @var \eZ\Publish\API\Repository\ContentTypeService
      */
     private $contentTypeService;
     /**
@@ -31,15 +31,15 @@ class ContentTypePage extends Page
      */
     private $expectedContenTypeId;
     /**
-     * @var Table
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
      */
     private $contentTypeDataTable;
     /**
-     * @var Table
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
      */
     private $globalPropertiesTable;
     /**
-     * @var Table
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
      */
     private $fieldTable;
 

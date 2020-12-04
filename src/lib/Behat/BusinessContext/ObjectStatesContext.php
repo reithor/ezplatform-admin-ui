@@ -16,15 +16,15 @@ use PHPUnit\Framework\Assert;
 class ObjectStatesContext implements Context
 {
     /**
-     * @var ObjectStateGroupPage
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ObjectStateGroupPage
      */
     private $objectStateGroupPage;
     /**
-     * @var ObjectStateGroupsPage
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ObjectStateGroupsPage
      */
     private $objectStateGroupsPage;
     /**
-     * @var ObjectStatePage
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ObjectStatePage
      */
     private $objectStatePage;
 

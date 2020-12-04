@@ -14,7 +14,7 @@ use PHPUnit\Framework\Assert;
 class RightMenuContext implements Context
 {
     /**
-     * @var RightMenu
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu
      */
     private $rightMenu;
 

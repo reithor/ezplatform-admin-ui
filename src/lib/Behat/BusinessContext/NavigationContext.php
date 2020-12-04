@@ -31,7 +31,7 @@ class NavigationContext implements Context
     /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentViewPage */
     private $contentViewPage;
     /**
-     * @var ContentUpdateItemPage
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentUpdateItemPage
      */
     private $contentUpdateItemPage;
 

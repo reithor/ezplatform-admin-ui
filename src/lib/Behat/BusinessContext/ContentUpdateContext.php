@@ -15,7 +15,7 @@ use PHPUnit\Framework\Assert;
 class ContentUpdateContext implements Context
 {
     /**
-     * @var ContentUpdateItemPage
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentUpdateItemPage
      */
     private $contentUpdateItemPage;
 

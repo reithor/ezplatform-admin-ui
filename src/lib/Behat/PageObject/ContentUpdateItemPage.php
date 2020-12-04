@@ -16,7 +16,7 @@ use PHPUnit\Framework\Assert;
 class ContentUpdateItemPage extends Page
 {
     /**
-     * @var RightMenu
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu
      */
     private $rightMenu;
 

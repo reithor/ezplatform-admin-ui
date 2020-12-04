@@ -14,7 +14,7 @@ use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
 class DraftConflictDialog extends Component
 {
     /**
-     * @var Table
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
      */
     private $table;
 

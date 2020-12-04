@@ -15,7 +15,7 @@ class Date extends FieldTypeComponent
 {
     private const DATE_FORMAT = 'm/d/Y';
     /**
-     * @var DateAndTimePopup
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\DateAndTimePopup
      */
     private $dateAndTimePopup;
 

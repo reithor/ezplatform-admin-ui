@@ -22,18 +22,18 @@ class Table extends Component implements TableInterface
     private const MAX_PAGE_COUNT = 10;
 
     /**
-     * @var Pagination
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Pagination
      */
     private $pagination;
     /**
-     * @var DocumentElement
+     * @var \EzSystems\Behat\Browser\Element\DocumentElement
      */
     private $parentElement;
 
     /** @var bool */
     private $parentLocatorChanged;
     /**
-     * @var VisibleCSSLocator
+     * @var \EzSystems\Behat\Browser\Locator\VisibleCSSLocator
      */
     private $parentLocator;
 
@@ -298,7 +298,7 @@ class Table extends Component implements TableInterface
      * @param array $foundHeaders
      * @param array $elementData
      *
-     * @return NodeElement|null
+     * @return \EzSystems\Behat\Browser\Element\NodeElement|null
      */
     private function getMatchingTableRow(array $foundHeaders, array $elementData): ?NodeElement
     {

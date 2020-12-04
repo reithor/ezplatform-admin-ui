@@ -14,7 +14,7 @@ class UDWContext implements Context
 {
     private $argumentParser;
     /**
-     * @var UniversalDiscoveryWidget
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget
      */
     private $universalDiscoveryWidget;
 

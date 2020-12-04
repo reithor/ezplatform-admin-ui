@@ -20,7 +20,7 @@ class ObjectStatePage extends Page
      */
     private $expectedObjectStateName;
     /**
-     * @var Repository
+     * @var \eZ\Publish\API\Repository\Repository
      */
     private $repository;
     /**
@@ -28,7 +28,7 @@ class ObjectStatePage extends Page
      */
     private $expectedObjectStateId;
     /**
-     * @var Table
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
      */
     private $table;
 

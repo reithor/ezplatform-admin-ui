@@ -13,7 +13,7 @@ use EzSystems\EzPlatformAdminUi\Behat\PageObject\AdminUpdateItemPage;
 class AdminUpdateContext implements Context
 {
     /**
-     * @var AdminUpdateItemPage
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\AdminUpdateItemPage
      */
     private $adminUpdateItemPage;
 

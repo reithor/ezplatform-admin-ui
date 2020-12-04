@@ -21,23 +21,23 @@ class ObjectStateGroupPage extends Page
      */
     protected $expectedObjectStateGroupName;
     /**
-     * @var Dialog
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog
      */
     private $dialog;
     /**
-     * @var Table
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
      */
     private $table;
     /**
-     * @var Table
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
      */
     private $attributes;
     /**
-     * @var Table
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
      */
     private $objectStates;
     /**
-     * @var Repository
+     * @var \eZ\Publish\API\Repository\Repository
      */
     private $repository;
     /**

@@ -13,7 +13,7 @@ use PHPUnit\Framework\Assert;
 class SearchContext implements Context
 {
     /**
-     * @var SearchPage
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\SearchPage
      */
     private $searchPage;
 

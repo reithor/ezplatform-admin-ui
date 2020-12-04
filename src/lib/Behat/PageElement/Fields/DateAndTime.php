@@ -17,7 +17,7 @@ class DateAndTime extends FieldTypeComponent
 
     private const FIELD_DISPLAY_FORMAT = 'd/m/Y G:i';
     /**
-     * @var DateAndTimePopup
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\DateAndTimePopup
      */
     private $dateAndTimePopup;
 

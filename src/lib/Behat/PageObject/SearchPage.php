@@ -16,7 +16,7 @@ use PHPUnit\Framework\Assert;
 class SearchPage extends Page
 {
     /**
-     * @var TableInterface
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\TableInterface
      */
     private $table;
 

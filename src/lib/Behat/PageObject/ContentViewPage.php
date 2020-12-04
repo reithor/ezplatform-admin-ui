@@ -22,16 +22,16 @@ use PHPUnit\Framework\Assert;
 
 class ContentViewPage extends Page
 {
-    /** @var RightMenu Element representing the right menu */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu Element representing the right menu */
     private $rightMenu;
 
-    /** @var SubitemsList */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\SubitemsList */
     private $subItemList;
 
     /** @var string */
     private $locationPath;
     /**
-     * @var ContentTypePicker
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\ContentTypePicker
      */
     private $contentTypePicker;
     /**
@@ -42,7 +42,7 @@ class ContentViewPage extends Page
     /** @var string */
     private $expectedContentType;
     /**
-     * @var LanguagePicker
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\LanguagePicker
      */
     private $languagePicker;
     /**
@@ -51,20 +51,20 @@ class ContentViewPage extends Page
      */
     private $expectedContentName;
     /**
-     * @var Dialog
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog
      */
     private $dialog;
     /**
-     * @var ContentFacade
+     * @var \EzSystems\Behat\API\Facade\ContentFacade
      */
     private $contentFacade;
     private $route;
     /**
-     * @var Breadcrumb
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Breadcrumb
      */
     private $breadcrumb;
     /**
-     * @var ContentItemAdminPreview
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\ContentItemAdminPreview
      */
     private $contentItemAdminPreview;
 

@@ -15,16 +15,16 @@ use PHPUnit\Framework\Assert;
 class DashboardContext implements Context
 {
     /**
-     * @var UpperMenu
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\UpperMenu
      */
     private $upperMenu;
     /**
-     * @var DashboardPage
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\DashboardPage
      */
     private $dashboardPage;
 
     /**
-     * @var ContentUpdateItemPage
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentUpdateItemPage
      */
     private $contentUpdateItemPage;
 

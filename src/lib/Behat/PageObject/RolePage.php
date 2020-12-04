@@ -27,21 +27,21 @@ class RolePage extends Page
      */
     private $expectedRoleName;
     /**
-     * @var TableNavigationTab
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\TableNavigationTab
      */
     private $tableNavigationTab;
     /**
-     * @var Repository
+     * @var \eZ\Publish\API\Repository\Repository
      */
     private $repository;
 
     private $expectedRoleId;
     /**
-     * @var Table
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
      */
     private $policies;
     /**
-     * @var Table
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
      */
     private $assignments;
 

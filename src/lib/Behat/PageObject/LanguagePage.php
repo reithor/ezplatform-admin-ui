@@ -21,11 +21,11 @@ class LanguagePage extends Page
      */
     private $expectedLanguageName;
     /**
-     * @var Table
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
      */
     private $table;
     /**
-     * @var Dialog
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog
      */
     private $dialog;
     /**
@@ -33,7 +33,7 @@ class LanguagePage extends Page
      */
     private $expectedLanguageId;
     /**
-     * @var Repository
+     * @var \eZ\Publish\API\Repository\Repository
      */
     private $repository;
 

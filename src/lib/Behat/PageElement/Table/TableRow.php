@@ -15,11 +15,11 @@ use EzSystems\Behat\Browser\Page\Browser;
 class TableRow extends Component
 {
     /**
-     * @var NodeElement
+     * @var \EzSystems\Behat\Browser\Element\NodeElement
      */
     private $element;
     /**
-     * @var LocatorCollection
+     * @var \EzSystems\Behat\Browser\Locator\LocatorCollection
      */
     private $locatorCollection;
 

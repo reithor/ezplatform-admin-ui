@@ -15,11 +15,11 @@ use PHPUnit\Framework\Assert;
 class SectionsContext implements Context
 {
     /**
-     * @var SectionPage
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\SectionPage
      */
     private $sectionPage;
     /**
-     * @var SectionsPage
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\SectionsPage
      */
     private $sectionsPage;
 

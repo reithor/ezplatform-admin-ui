@@ -12,7 +12,7 @@ use EzSystems\EzPlatformAdminUi\Behat\PageElement\LeftMenu;
 class LeftMenuContext implements Context
 {
     /**
-     * @var LeftMenu
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\LeftMenu
      */
     private $leftMenu;
 

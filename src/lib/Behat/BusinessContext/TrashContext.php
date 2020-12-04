@@ -14,7 +14,7 @@ use PHPUnit\Framework\Assert;
 class TrashContext implements Context
 {
     /**
-     * @var TrashPage
+     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\TrashPage
      */
     private $trashPage;
 
