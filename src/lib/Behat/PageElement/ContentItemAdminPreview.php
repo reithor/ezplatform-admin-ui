@@ -79,17 +79,20 @@ class ContentItemAdminPreview extends Component
             ->find($fieldValueLocator->withDescendant($this->getLocator('fieldValueContainer')))
             ->getAttribute('class');
 
-        switch ($fieldClass) {
-            case 'ez-table':
-                return 'ezmatrix';
-            case 'ez-scrollable-table-wrapper mb-0':
-                return 'ezuser';
-            case '':
-                return 'ezboolean';
-            default:
-                $fieldTypeIdentifierRegex = '/ez[a-z]*-field/';
-                preg_match($fieldTypeIdentifierRegex, $fieldClass, $matches);
-                return explode('-', $matches[0])[0];
+        if (strpos($fieldClass, 'ez-table') !== false) {
+            return 'ezmatrix';
         }
+
+        if ($fieldClass === '') {
+            return 'ezboolean';
+        }
+
+        if ($fieldClass === 'ez-scrollable-table-wrapper mb-0') {
+            return 'ezuser';
+        }
+
+        $fieldTypeIdentifierRegex = '/ez[a-z]*-field/';
+        preg_match($fieldTypeIdentifierRegex, $fieldClass, $matches);
+        return explode('-', $matches[0])[0];
     }
 }

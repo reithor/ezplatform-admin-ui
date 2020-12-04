@@ -1,4 +1,7 @@
 ezplatform:
+    extensions:
+        Behat\MinkExtension:
+            files_path: '%paths.base%/vendor/ezsystems/ezplatform-admin-ui/src/lib/Behat/TestFiles/'
     suites:
         adminui:
             paths:
