@@ -1,4 +1,4 @@
-@IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce @test
+@IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
 Feature: Object States management
   As an administrator
   In order to customize my project

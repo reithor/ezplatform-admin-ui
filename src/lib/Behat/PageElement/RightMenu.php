@@ -29,7 +29,7 @@ class RightMenu extends Component
 
     public function isButtonVisible(string $buttonName): bool
     {
-        return $this->getHTMLPage()->findAll($this->getLocator('menuButton'))->hasByText($buttonName);
+        return $this->getHTMLPage()->findAll($this->getLocator('menuButton'))->getByText($buttonName)->any();
     }
 
     public function verifyIsLoaded(): void
