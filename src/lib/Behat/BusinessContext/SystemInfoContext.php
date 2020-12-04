@@ -14,14 +14,7 @@ use EzSystems\EzPlatformAdminUi\Behat\PageObject\SystemInfoPage;
 
 class SystemInfoContext implements Context
 {
-    private $systemInfoTableMapping = [
-        'Bundles' => 'Symfony Kernel',
-        'Packages' => 'Composer',
-    ];
-
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\SystemInfoPage
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\SystemInfoPage */
     private $systemInfoPage;
 
     public function __construct(SystemInfoPage $systemInfoPage)
@@ -47,22 +40,11 @@ class SystemInfoContext implements Context
     }
 
     /**
-     * @Then I see :tableName table with given records
-     */
-    public function iSeeRecordsInSystemInformation(string $tableName, TableNode $records): void
-    {
-        $this->systemInfoPage->verifyPackages();
-    }
-
-    /**
      * @Then I see listed packages
      */
     public function iSeeListedPackages(TableNode $packages): void
     {
-        $packageNames = array_map(function (array $row) {
-            return $row['Name'];
-        }, $packages->getHash());
-
+        $packageNames = array_column($packages->getHash(), 'Name');
         $this->systemInfoPage->verifyPackages($packageNames);
     }
 
@@ -71,10 +53,7 @@ class SystemInfoContext implements Context
      */
     public function iSeeListedBundles(TableNode $bundles): void
     {
-        $bundleNames = array_map(function (array $row) {
-            return $row['Name'];
-        }, $bundles->getHash());
-
+        $bundleNames = array_column($bundles->getHash(), 'Name');
         $this->systemInfoPage->verifyBundles($bundleNames);
     }
 }

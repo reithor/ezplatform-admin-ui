@@ -21,20 +21,16 @@ class Table extends Component implements TableInterface
 {
     private const MAX_PAGE_COUNT = 10;
 
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Pagination
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Pagination */
     private $pagination;
-    /**
-     * @var \EzSystems\Behat\Browser\Element\DocumentElement
-     */
+
+    /** @var \EzSystems\Behat\Browser\Element\DocumentElement */
     private $parentElement;
 
     /** @var bool */
     private $parentLocatorChanged;
-    /**
-     * @var \EzSystems\Behat\Browser\Locator\VisibleCSSLocator
-     */
+
+    /** @var \EzSystems\Behat\Browser\Locator\VisibleCSSLocator */
     private $parentLocator;
 
     public function __construct(Browser $browser, Pagination $pagination)

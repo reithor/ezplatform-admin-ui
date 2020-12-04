@@ -32,9 +32,8 @@ class NavigationContext implements Context
 
     /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentViewPage */
     private $contentViewPage;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentUpdateItemPage
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentUpdateItemPage */
     private $contentUpdateItemPage;
 
     public function __construct(
@@ -134,23 +133,6 @@ class NavigationContext implements Context
     public function iGoToUserNotifications()
     {
         $this->upperMenu->chooseFromUserDropdown('View Notifications');
-    }
-
-    /**
-     * @Then I should be redirected to root in default view
-     */
-    public function iShouldBeRedirectedToRootInDefaultView(): void
-    {
-        // MOVE ME TO PAGE BUILDER
-//        if (EnvironmentConstants::get('ROOT_CONTENT_TYPE') === 'Landing page') {
-//            $previewType = PageObjectFactory::getPreviewType(EnvironmentConstants::get('ROOT_CONTENT_TYPE'));
-//            $pageEditor = PageObjectFactory::createPage($this->browserContext, PageBuilderEditor::PAGE_NAME, $previewType);
-//            $pageEditor->pagePreview->setTitle(EnvironmentConstants::get('ROOT_CONTENT_NAME'));
-//            $pageEditor->waitUntilLoaded();
-//            $pageEditor->verifyIsLoaded();
-//        } else {
-        $this->contentItemPage = $this->argumentParser->replaceRootKeyword('root');
-        $this->contentItemPage->verifyIsLoaded();
     }
 
     /**

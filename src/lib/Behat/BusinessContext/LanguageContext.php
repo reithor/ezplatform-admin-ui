@@ -16,13 +16,10 @@ use PHPUnit\Framework\Assert;
 
 class LanguageContext implements Context
 {
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\LanguagesPage
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\LanguagesPage */
     private $languagesPage;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\LanguagePage
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\LanguagePage */
     private $languagePage;
 
     public function __construct(LanguagePage $languagePage, LanguagesPage $languagesPage)

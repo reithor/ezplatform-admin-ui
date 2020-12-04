@@ -13,12 +13,11 @@ use Behat\Gherkin\Node\TableNode;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\NonEditableField;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentUpdateItemPage;
 use PHPUnit\Framework\Assert;
+use EzSystems\EzPlatformAdminUi\Behat\PageObject\UserCreationPage;
 
 class ContentUpdateContext implements Context
 {
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentUpdateItemPage
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentUpdateItemPage */
     private $contentUpdateItemPage;
 
     public function __construct(ContentUpdateItemPage $contentUpdateItemPage)
@@ -45,6 +44,19 @@ class ContentUpdateContext implements Context
     {
         $field = $this->contentUpdateItemPage->getField($fieldName);
         Assert::assertEquals(NonEditableField::EXPECTED_NON_EDITABLE_TEXT, $field->getValue()[0]);
+    }
+
+    /**
+     * @When I set content fields for user
+     */
+    public function iSetFieldsForUser(TableNode $table): void
+    {
+        $updateItemPage = PageObjectFactory::createPage($this->browserContext, UserCreationPage::PAGE_NAME, '');
+        $updateItemPage->verifyIsLoaded();
+        foreach ($table->getHash() as $row) {
+            $values = $this->filterOutNonEmptyValues($row);
+            $updateItemPage->contentUpdateForm->fillFieldWithValue($row['label'], $values);
+        }
     }
 
     /**
@@ -79,16 +91,5 @@ class ContentUpdateContext implements Context
     public function iClickCloseButton(): void
     {
         $this->contentUpdateItemPage->close();
-    }
-
-    /**
-     * @Then article main content field is set to :intro
-     */
-    public function verifyArticleMainContentFieldIsSet(string $intro): void
-    {
-        throw new \Exception('refactor me...');
-        $updateItemPage = PageObjectFactory::createPage($this->browserContext, ContentUpdateItemPage::PAGE_NAME, '');
-        $fieldName = EnvironmentConstants::get('ARTICLE_MAIN_FIELD_NAME');
-        $updateItemPage->contentUpdateForm->verifyFieldHasValue(['label' => $fieldName, 'value' => $intro]);
     }
 }

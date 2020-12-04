@@ -16,9 +16,7 @@ use PHPUnit\Framework\Assert;
 
 class SearchPage extends Page
 {
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\TableInterface
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\TableInterface */
     private $table;
 
     public function __construct(Browser $browser, Table $table)

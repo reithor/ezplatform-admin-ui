@@ -15,9 +15,7 @@ use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
 
 class DraftConflictDialog extends Component
 {
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table */
     private $table;
 
     public function __construct(Browser $browser, Table $table)

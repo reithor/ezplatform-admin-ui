@@ -18,25 +18,19 @@ use PHPUnit\Framework\Assert;
 
 class LanguagePage extends Page
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $expectedLanguageName;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table */
     private $table;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog */
     private $dialog;
-    /**
-     * @var int
-     */
+
+    /** @var int */
     private $expectedLanguageId;
-    /**
-     * @var \eZ\Publish\API\Repository\Repository
-     */
+
+    /** @var \eZ\Publish\API\Repository\Repository */
     private $repository;
 
     public function __construct(Browser $browser, Table $table, Dialog $dialog, Repository $repository)

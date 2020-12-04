@@ -32,42 +32,33 @@ class ContentViewPage extends Page
 
     /** @var string */
     private $locationPath;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\ContentTypePicker
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\ContentTypePicker */
     private $contentTypePicker;
-    /**
-     * @var ContentUpdateItemPage
-     */
+
+    /** @var ContentUpdateItemPage */
     private $contentUpdatePage;
 
     /** @var string */
     private $expectedContentType;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\LanguagePicker
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\LanguagePicker */
     private $languagePicker;
     /**
-    /**
-     * @var string
-     */
+    /** @var string */
     private $expectedContentName;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog */
     private $dialog;
-    /**
-     * @var \EzSystems\Behat\API\Facade\ContentFacade
-     */
+
+    /** @var \EzSystems\Behat\API\Facade\ContentFacade */
     private $contentFacade;
     private $route;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Breadcrumb
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Breadcrumb */
     private $breadcrumb;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\ContentItemAdminPreview
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\ContentItemAdminPreview */
     private $contentItemAdminPreview;
 
     public function __construct(

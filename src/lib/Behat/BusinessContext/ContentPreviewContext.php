@@ -13,9 +13,7 @@ use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentPreviewPage;
 
 class ContentPreviewContext implements Context
 {
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentPreviewPage
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentPreviewPage */
     private $contentPreviewPage;
 
     public function __construct(ContentPreviewPage $contentPreviewPage)

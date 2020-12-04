@@ -17,9 +17,7 @@ use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
 
 class ContentTypeUpdatePage extends AdminUpdateItemPage
 {
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Notification
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Notification */
     private $notification;
 
     public function __construct(Browser $browser, RightMenu $rightMenu, Notification $notification)

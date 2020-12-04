@@ -20,21 +20,17 @@ use PHPUnit\Framework\Assert;
 class ContentViewContext implements Context
 {
     private $argumentParser;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentViewPage
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentViewPage */
     private $contentViewPage;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\LeftMenu
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\LeftMenu */
     private $leftMenu;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget */
     private $universalDiscoveryWidget;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\DraftConflictDialog
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\DraftConflictDialog */
     private $draftConflictDialog;
 
     public function __construct(

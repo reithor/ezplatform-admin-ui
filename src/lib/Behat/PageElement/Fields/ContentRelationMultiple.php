@@ -16,13 +16,10 @@ use PHPUnit\Framework\Assert;
 
 class ContentRelationMultiple extends FieldTypeComponent
 {
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget */
     private $universalDiscoveryWidget;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table */
     private $table;
 
     public function __construct(Browser $browser, UniversalDiscoveryWidget $universalDiscoveryWidget, Table $table)

@@ -14,9 +14,7 @@ use EzSystems\EzPlatformAdminUi\Behat\PageObject\AdminUpdateItemPage;
 
 class AdminUpdateContext implements Context
 {
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\AdminUpdateItemPage
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\AdminUpdateItemPage */
     private $adminUpdateItemPage;
 
     public function __construct(AdminUpdateItemPage $adminUpdateItemPage)

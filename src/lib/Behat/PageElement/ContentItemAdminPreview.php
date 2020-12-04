@@ -27,14 +27,14 @@ class ContentItemAdminPreview extends Component
     public function verifyFieldHasValues(string $fieldLabel, array $expectedValues, ?string $fieldTypeIdentifier)
     {
         $fieldPosition = $this->getFieldPosition($fieldLabel);
-        $nthFieldSelector = new VisibleCSSLocator('', sprintf($this->getLocator('nthFieldContainer')->getSelector(), $fieldPosition));
+        $nthFieldLocator = new VisibleCSSLocator('', sprintf($this->getLocator('nthFieldContainer')->getLocator(), $fieldPosition));
 
-        $fieldValueSelector = $nthFieldSelector->withDescendant($this->getLocator('fieldValue'));
-        $fieldTypeIdentifier = $fieldTypeIdentifier ?? $this->detectFieldTypeIdentifier($fieldValueSelector);
+        $fieldValueLocator = $nthFieldLocator->withDescendant($this->getLocator('fieldValue'));
+        $fieldTypeIdentifier = $fieldTypeIdentifier ?? $this->detectFieldTypeIdentifier($fieldValueLocator);
 
         foreach ($this->fieldTypeComponents as $fieldTypeComponent) {
             if ($fieldTypeComponent->getFieldTypeIdentifier() === $fieldTypeIdentifier) {
-                $fieldTypeComponent->setParentLocator($fieldValueSelector);
+                $fieldTypeComponent->setParentLocator($fieldValueLocator);
                 $fieldTypeComponent->verifyValueInItemView($expectedValues);
 
                 return;
@@ -72,10 +72,10 @@ class ContentItemAdminPreview extends Component
         ];
     }
 
-    private function detectFieldTypeIdentifier(CSSLocator $fieldValueSelector)
+    private function detectFieldTypeIdentifier(CSSLocator $fieldValueLocator)
     {
         $fieldClass = $this->getHTMLPage()
-            ->find($fieldValueSelector->withDescendant($this->getLocator('fieldValueContainer')))
+            ->find($fieldValueLocator->withDescendant($this->getLocator('fieldValueContainer')))
             ->getAttribute('class');
 
         if (strpos($fieldClass, 'ez-table') !== false) {

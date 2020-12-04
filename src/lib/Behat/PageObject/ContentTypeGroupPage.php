@@ -22,21 +22,17 @@ class ContentTypeGroupPage extends Page
 
     /** @var string */
     protected $expectedName;
-    /**
-     * @var \eZ\Publish\API\Repository\ContentTypeService
-     */
+
+    /** @var \eZ\Publish\API\Repository\ContentTypeService */
     private $contentTypeService;
-    /**
-     * @var mixed
-     */
+
+    /** @var mixed */
     private $contentTypeGroupId;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table */
     private $table;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog */
     private $dialog;
 
     public function __construct(Browser $browser, ContentTypeService $contentTypeService, Table $table, Dialog $dialog)

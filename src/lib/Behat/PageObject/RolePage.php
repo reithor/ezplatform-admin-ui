@@ -19,32 +19,24 @@ use PHPUnit\Framework\Assert;
 
 class RolePage extends Page
 {
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog */
     public $dialog;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $expectedRoleName;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\TableNavigationTab
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\TableNavigationTab */
     private $tableNavigationTab;
-    /**
-     * @var \eZ\Publish\API\Repository\Repository
-     */
+
+    /** @var \eZ\Publish\API\Repository\Repository */
     private $repository;
 
     private $expectedRoleId;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table */
     private $policies;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table */
     private $assignments;
 
     public function __construct(

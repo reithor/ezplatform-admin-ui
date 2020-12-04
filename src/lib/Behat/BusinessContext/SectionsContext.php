@@ -16,13 +16,10 @@ use PHPUnit\Framework\Assert;
 
 class SectionsContext implements Context
 {
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\SectionPage
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\SectionPage */
     private $sectionPage;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\SectionsPage
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\SectionsPage */
     private $sectionsPage;
 
     public function __construct(SectionPage $sectionPage, SectionsPage $sectionsPage)

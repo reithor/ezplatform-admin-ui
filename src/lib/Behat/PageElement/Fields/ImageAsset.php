@@ -16,13 +16,10 @@ use PHPUnit\Framework\Assert;
 
 class ImageAsset extends Image
 {
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget */
     private $universalDiscoveryWidget;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Notification
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Notification */
     private $notification;
 
     public function __construct(Browser $browser, UniversalDiscoveryWidget $universalDiscoveryWidget, Notification $notification)

@@ -17,18 +17,13 @@ use PHPUnit\Framework\Assert;
 
 class RolesContext implements Context
 {
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\RolesPage
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\RolesPage */
     private $rolesPage;
 
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\RolePage
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\RolePage */
     private $rolePage;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\RoleUpdatePage
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\RoleUpdatePage */
     private $roleUpdatePage;
 
     public function __construct(
@@ -159,14 +154,6 @@ class RolesContext implements Context
     }
 
     /**
-     * @When  I delete the role
-     */
-    public function deleteRole(): void
-    {
-        $this->rolePage->delete();
-    }
-
-    /**
      * @Given there's no :roleName Role on Roles list
      */
     public function thereSNoRoleOnRoleList(string $roleName)
@@ -239,14 +226,6 @@ class RolesContext implements Context
         $this->rolePage->setExpectedRoleName($roleName);
         $this->rolePage->open('admin');
         $this->rolePage->verifyIsLoaded();
-    }
-
-    /**
-     * @Then I start editing the Role
-     */
-    public function editRole()
-    {
-        $this->rolePage->edit();
     }
 
     /**

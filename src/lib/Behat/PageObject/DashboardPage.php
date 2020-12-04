@@ -15,9 +15,7 @@ use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
 
 class DashboardPage extends Page
 {
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table */
     private $table;
 
     public function __construct(Browser $browser, Table $table)

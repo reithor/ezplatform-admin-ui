@@ -16,33 +16,25 @@ use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
 
 class ContentTypePage extends Page
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $expectedContentTypeName;
-    /**
-     * @var \eZ\Publish\API\Repository\ContentTypeService
-     */
+
+    /** @var \eZ\Publish\API\Repository\ContentTypeService */
     private $contentTypeService;
-    /**
-     * @var mixed
-     */
+
+    /** @var mixed */
     private $expectedContenTypeGroupId;
-    /**
-     * @var mixed
-     */
+
+    /** @var mixed */
     private $expectedContenTypeId;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table */
     private $contentTypeDataTable;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table */
     private $globalPropertiesTable;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table */
     private $fieldTable;
 
     public function __construct(

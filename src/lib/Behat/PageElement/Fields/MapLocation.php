@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 declare(strict_types=1);
 
-
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;

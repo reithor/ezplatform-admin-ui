@@ -14,9 +14,7 @@ use PHPUnit\Framework\Assert;
 
 abstract class FieldTypeComponent extends Component implements FieldTypeComponentInterface
 {
-    /**
-     * @var \EzSystems\Behat\Browser\Locator\VisibleCSSLocator
-     */
+    /** @var \EzSystems\Behat\Browser\Locator\VisibleCSSLocator */
     protected $parentLocator;
 
     public function setValue(array $parameters): void

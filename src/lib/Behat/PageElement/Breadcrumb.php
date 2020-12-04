@@ -9,11 +9,9 @@ declare(strict_types=1);
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\Browser\Component\Component;
-use EzSystems\Behat\Browser\Element\Element;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
-/** Element that describes breadcrumb */
 class Breadcrumb extends Component
 {
     public function clickBreadcrumbItem(string $itemName): void
@@ -34,11 +32,6 @@ class Breadcrumb extends Component
     public function verifyIsLoaded(): void
     {
         Assert::assertTrue($this->getHTMLPage()->find($this->getLocator('breadcrumbItem'))->isVisible());
-    }
-
-    public function getName(): string
-    {
-        return 'Breadcrumb';
     }
 
     protected function specifyLocators(): array

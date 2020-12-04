@@ -15,9 +15,8 @@ use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
 class UDWContext implements Context
 {
     private $argumentParser;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget */
     private $universalDiscoveryWidget;
 
     public function __construct(ArgumentParser $argumentParser, UniversalDiscoveryWidget $universalDiscoveryWidget)

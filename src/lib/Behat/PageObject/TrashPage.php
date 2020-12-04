@@ -19,22 +19,16 @@ use PHPUnit\Framework\Assert;
 
 class TrashPage extends Page
 {
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog */
     public $dialog;
 
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget */
     private $universalDiscoveryWidget;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu */
     private $rightMenu;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table */
     private $table;
 
     public function __construct(

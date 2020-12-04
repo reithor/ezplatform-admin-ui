@@ -17,13 +17,10 @@ use PHPUnit\Framework\Assert;
 
 class ObjectStateGroupsPage extends Page
 {
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table */
     private $table;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog */
     private $dialog;
 
     public function __construct(Browser $browser, Table $table, Dialog $dialog)

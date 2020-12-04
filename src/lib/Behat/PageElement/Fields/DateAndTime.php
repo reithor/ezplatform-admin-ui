@@ -18,9 +18,8 @@ class DateAndTime extends FieldTypeComponent
     private const VIEW_DATE_TIME_FORMAT = 'n/j/y, g:i A';
 
     private const FIELD_DISPLAY_FORMAT = 'd/m/Y G:i';
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\DateAndTimePopup
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\DateAndTimePopup */
     private $dateAndTimePopup;
 
     public function __construct(Browser $browser, DateAndTimePopup $dateAndTimePopup)

@@ -21,44 +21,31 @@ class SectionPage extends Page
     /** @var string locator for container of Content list */
     public $secondListContainerLocator = 'section:nth-of-type(2)';
 
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList[]
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList[] */
     public $adminLists;
 
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList */
     public $adminList;
 
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog[]
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog[] */
     public $dialogs;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $expectedSectionName;
 
     /** @var int */
     private $expectedSectionId;
 
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\TableInterface
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\TableInterface */
     private $contentItemsTable;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\TableInterface
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\TableInterface */
     private $sectionInformationTable;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog */
     private $dialog;
-    /**
-     * @var \eZ\Publish\API\Repository\Repository
-     */
+
+    /** @var \eZ\Publish\API\Repository\Repository */
     private $repository;
 
     public function __construct(

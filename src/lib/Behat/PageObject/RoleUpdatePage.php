@@ -17,9 +17,7 @@ use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
 
 class RoleUpdatePage extends AdminUpdateItemPage
 {
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget */
     private $universalDiscoveryWidget;
 
     public function __construct(Browser $browser, RightMenu $rightMenu, UniversalDiscoveryWidget $universalDiscoveryWidget)

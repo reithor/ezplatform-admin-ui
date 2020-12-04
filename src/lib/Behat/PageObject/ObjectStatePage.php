@@ -17,21 +17,16 @@ use PHPUnit\Framework\Assert;
 
 class ObjectStatePage extends Page
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $expectedObjectStateName;
-    /**
-     * @var \eZ\Publish\API\Repository\Repository
-     */
+
+    /** @var \eZ\Publish\API\Repository\Repository */
     private $repository;
-    /**
-     * @var mixed
-     */
+
+    /** @var mixed */
     private $expectedObjectStateId;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table */
     private $table;
 
     public function __construct(Browser $browser, Repository $repository, Table $table)

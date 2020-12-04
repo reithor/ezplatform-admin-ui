@@ -18,33 +18,25 @@ use PHPUnit\Framework\Assert;
 
 class ObjectStateGroupPage extends Page
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $expectedObjectStateGroupName;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog */
     private $dialog;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table */
     private $table;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table */
     private $attributes;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table */
     private $objectStates;
-    /**
-     * @var \eZ\Publish\API\Repository\Repository
-     */
+
+    /** @var \eZ\Publish\API\Repository\Repository */
     private $repository;
-    /**
-     * @var mixed
-     */
+
+    /** @var mixed */
     private $expectedObjectStateGroupId;
 
     public function __construct(Browser $browser, Table $attributes, Table $objectStates, Dialog $dialog, Repository $repository)

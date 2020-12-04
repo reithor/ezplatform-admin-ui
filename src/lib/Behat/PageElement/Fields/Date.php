@@ -16,9 +16,8 @@ use PHPUnit\Framework\Assert;
 class Date extends FieldTypeComponent
 {
     private const DATE_FORMAT = 'm/d/Y';
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\DateAndTimePopup
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\DateAndTimePopup */
     private $dateAndTimePopup;
 
     public function __construct(Browser $browser, DateAndTimePopup $dateAndTimePopup)

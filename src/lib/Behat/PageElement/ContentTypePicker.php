@@ -27,11 +27,6 @@ class ContentTypePicker extends Component
         $this->getHTMLPage()->find($this->getLocator('filterInput'))->clear();
     }
 
-    public function getName(): string
-    {
-        return 'Content Type picker';
-    }
-
     protected function specifyLocators(): array
     {
         return [

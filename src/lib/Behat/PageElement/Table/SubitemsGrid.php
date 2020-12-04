@@ -53,6 +53,6 @@ class SubitemsGrid extends Table
             }
         }
 
-        return null;
+        throw new \Exception('Table row with given data was not found!');
     }
 }

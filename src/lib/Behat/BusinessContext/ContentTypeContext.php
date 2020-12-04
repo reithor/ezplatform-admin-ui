@@ -18,21 +18,16 @@ use PHPUnit\Framework\Assert;
 
 class ContentTypeContext implements Context
 {
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentTypePage
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentTypePage */
     private $contentTypePage;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentTypeUpdatePage
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentTypeUpdatePage */
     private $contentTypeUpdatePage;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentTypeGroupPage
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentTypeGroupPage */
     private $contentTypeGroupPage;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentTypeGroupsPage
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentTypeGroupsPage */
     private $contentTypeGroupsPage;
 
     public function __construct(

@@ -16,13 +16,10 @@ use PHPUnit\Framework\Assert;
 /** Context for actions on notifications */
 class NotificationContext implements Context
 {
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Notification
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Notification */
     private $notification;
-    /**
-     * @var \EzSystems\Behat\Core\Behat\ArgumentParser
-     */
+
+    /** @var \EzSystems\Behat\Core\Behat\ArgumentParser */
     private $argumentParser;
 
     public function __construct(Notification $notification, ArgumentParser $argumentParser)
@@ -53,15 +50,6 @@ class NotificationContext implements Context
         $this->notification->verifyAlertSuccess();
         $this->notification->verifyMessage($message);
         $this->notification->closeAlert();
-    }
-
-    /**
-     * @Then success notification that :content has been copied to root node appears
-     */
-    public function copiedToRootAppears(string $content): void
-    {
-        $expectedMessage = sprintf("'%s' copied to '%s'", $content, $this->argumentParser->replaceRootKeyword('root'));
-        $this->specificNotificationAppears($expectedMessage);
     }
 
     /**

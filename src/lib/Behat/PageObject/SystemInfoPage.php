@@ -17,14 +17,10 @@ use PHPUnit\Framework\Assert;
 
 class SystemInfoPage extends Page
 {
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\TableNavigationTab
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\TableNavigationTab */
     protected $tableNavigationTab;
 
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\TableInterface
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\TableInterface */
     private $table;
 
     public function __construct(Browser $browser, TableNavigationTab $tableNavigationTab, Table $table)

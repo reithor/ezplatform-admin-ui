@@ -17,17 +17,13 @@ use PHPUnit\Framework\Assert;
 
 class ObjectStatesContext implements Context
 {
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ObjectStateGroupPage
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ObjectStateGroupPage */
     private $objectStateGroupPage;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ObjectStateGroupsPage
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ObjectStateGroupsPage */
     private $objectStateGroupsPage;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ObjectStatePage
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ObjectStatePage */
     private $objectStatePage;
 
     public function __construct(
@@ -159,18 +155,6 @@ class ObjectStatesContext implements Context
         Assert::assertTrue(
             $this->objectStateGroupPage->hasObjectState($objectStateName),
         );
-    }
-
-    /**
-     * @Given I go to :objectStateName Object State page from :objectStateGroupName
-     */
-    public function iGoToObjectState(string $objectStateName, string $objectStateGroupName): void
-    {
-        $this->objectStateGroupPage->setExpectedObjectStateGroupName($objectStateGroupName);
-        $this->objectStateGroupPage->verifyIsLoaded();
-
-        // refactor
-        $this->objectStateGroupPage->adminLists['Object states']->table->clickListElement($objectStateName);
     }
 
     /**

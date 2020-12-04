@@ -14,9 +14,7 @@ use PHPUnit\Framework\Assert;
 
 class SearchContext implements Context
 {
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\SearchPage
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\SearchPage */
     private $searchPage;
 
     public function __construct(SearchPage $searchPage)

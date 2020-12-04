@@ -17,15 +17,12 @@ use PHPUnit\Framework\Assert;
 
 class ContentUpdateItemPage extends Page
 {
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu
-     */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu */
     private $rightMenu;
 
     private $pageTitle;
-    /**
-     * @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\FieldTypeComponent[]
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\FieldTypeComponent[] */
     private $fieldTypeComponents;
 
     public function __construct(
