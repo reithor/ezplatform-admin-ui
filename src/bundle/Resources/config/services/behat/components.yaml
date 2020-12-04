@@ -7,8 +7,6 @@ services:
     autoconfigure: true
     public: true
 
-  EzSystems\EzPlatformAdminUi\Behat\PageElement\AdminList: ~
-
   EzSystems\EzPlatformAdminUi\Behat\PageElement\DateAndTimePopup: ~
 
   EzSystems\EzPlatformAdminUi\Behat\PageElement\Notification: ~
@@ -37,13 +35,11 @@ services:
 
   EzSystems\EzPlatformAdminUi\Behat\PageElement\LanguagePicker: ~
 
-  EzSystems\EzPlatformAdminUi\Behat\PageElement\SubitemsList: ~
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\SubItemsList: ~
 
   EzSystems\EzPlatformAdminUi\Behat\PageElement\LeftMenu: ~
 
   EzSystems\EzPlatformAdminUi\Behat\PageElement\TableNavigationTab: ~
-
-  #tables
 
   EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table:
     shared: false

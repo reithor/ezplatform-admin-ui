@@ -46,12 +46,34 @@ class UniversalDiscoveryWidget extends Component
         $this->getHTMLPage()->find($this->getLocator('cancelButton'))->click();
     }
 
+    public function openPreview(): void
+    {
+        $this->getHTMLPage()->find($this->getLocator('previewButton'))->click();
+    }
+
+    public function verifyIsLoaded(): void
+    {
+        $expectedTabTitles = ['Browse', 'Bookmarks', 'Search'];
+
+        $tabs = $this->getHTMLPage()->findAll($this->getLocator('categoryTabSelector'));
+        $foundExpectedTitles = [];
+        foreach ($tabs as $tab) {
+            $tabText = $tab->getText();
+            if (in_array($tabText, $expectedTabTitles)) {
+                $foundExpectedTitles[] = $tabText;
+            }
+        }
+
+        Assert::assertEquals($expectedTabTitles, $foundExpectedTitles);
+    }
+
     protected function isMultiSelect(): bool
     {
         return $this->getHTMLPage()
             ->setTimeout(self::SHORT_TIMEOUT)
             ->findAll($this->getLocator('multiSelectAddButton'))
-            ->any();
+            ->any()
+        ;
     }
 
     protected function addItemToMultiSelection(string $itemName, int $level): void
@@ -80,7 +102,7 @@ class UniversalDiscoveryWidget extends Component
         }
 
         // when the tree is loaded further for the already selected item we need to make sure it's reloaded properly
-        $willNextLevelBeReloaded = $alreadySelectedItemName !== null && $this->isNextLevelDisplayed($level);
+        $willNextLevelBeReloaded = null !== $alreadySelectedItemName && $this->isNextLevelDisplayed($level);
 
         if ($willNextLevelBeReloaded) {
             $currentItems = $this->getItemsFromLevel($level + 1);
@@ -100,11 +122,6 @@ class UniversalDiscoveryWidget extends Component
         }
     }
 
-    public function openPreview(): void
-    {
-        $this->getHTMLPage()->find($this->getLocator('previewButton'))->click();
-    }
-
     protected function getItemsFromLevel(int $level): array
     {
         $levelItemsSelector = new CSSLocator('css', sprintf($this->getLocator('treeLevelElementsFormat')->getSelector(), $level));
@@ -114,50 +131,6 @@ class UniversalDiscoveryWidget extends Component
                 return $element->getText();
             }
         );
-    }
-
-    private function getCurrentlySelectedItemName(int $level): ?string
-    {
-        $selectedElementSelector = new CSSLocator(
-            'selectedElement',
-            sprintf($this->getLocator('treeLevelSelectedFormat')->getSelector(), $level)
-        );
-
-        $elements = $this->getHTMLPage()->setTimeout(self::SHORT_TIMEOUT)->findAll($selectedElementSelector);
-
-        return $elements->any() ? $elements->first()->getText() : null;
-    }
-
-    private function isNextLevelDisplayed(int $currentLevel): bool
-    {
-        return $this->getHTMLPage()->
-            setTimeout(self::SHORT_TIMEOUT)->
-            findAll(
-                new CSSLocator(
-                    'css',
-                    sprintf($this->getLocator('treeLevelElementsFormat')->getSelector(), $currentLevel + 1))
-            )->any();
-    }
-
-    public function verifyIsLoaded(): void
-    {
-        $expectedTabTitles = ['Browse', 'Bookmarks', 'Search'];
-
-        $tabs = $this->getHTMLPage()->findAll($this->getLocator('categoryTabSelector'));
-        $foundExpectedTitles = [];
-        foreach ($tabs as $tab) {
-            $tabText = $tab->getText();
-            if (in_array($tabText, $expectedTabTitles)) {
-                $foundExpectedTitles[] = $tabText;
-            }
-        }
-
-        Assert::assertEquals($expectedTabTitles, $foundExpectedTitles);
-    }
-
-    public function getName(): string
-    {
-        return 'Universal discovery widget';
     }
 
     protected function specifyLocators(): array
@@ -180,5 +153,29 @@ class UniversalDiscoveryWidget extends Component
             new CSSLocator('currentlySelectedItemAddedFormat', '.c-finder-branch:nth-of-type(%d) .c-finder-leaf--marked .c-toggle-selection-button.c-toggle-selection-button--selected'),
             new CSSLocator('currentlySelectedAddItemButtonFormat', '.c-finder-branch:nth-of-type(%d) .c-finder-leaf--marked .c-toggle-selection-button'),
         ];
+    }
+
+    private function getCurrentlySelectedItemName(int $level): ?string
+    {
+        $selectedElementSelector = new CSSLocator(
+            'selectedElement',
+            sprintf($this->getLocator('treeLevelSelectedFormat')->getSelector(), $level)
+        );
+
+        $elements = $this->getHTMLPage()->setTimeout(self::SHORT_TIMEOUT)->findAll($selectedElementSelector);
+
+        return $elements->any() ? $elements->first()->getText() : null;
+    }
+
+    private function isNextLevelDisplayed(int $currentLevel): bool
+    {
+        return $this->getHTMLPage()->
+            setTimeout(self::SHORT_TIMEOUT)->
+            findAll(
+                new CSSLocator(
+                    'css',
+                    sprintf($this->getLocator('treeLevelElementsFormat')->getSelector(), $currentLevel + 1)
+                )
+            )->any();
     }
 }

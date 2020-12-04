@@ -47,11 +47,6 @@ class UpperMenu extends Component
         Assert::assertTrue($this->getHTMLPage()->find($this->getLocator('menuButton'))->isVisible());
     }
 
-    public function getName(): string
-    {
-        return 'Upper menu';
-    }
-
     protected function specifyLocators(): array
     {
         return [

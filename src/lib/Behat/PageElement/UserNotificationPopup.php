@@ -46,11 +46,6 @@ class UserNotificationPopup extends Component
         );
     }
 
-    public function getName(): string
-    {
-        return 'User notification popup';
-    }
-
     protected function specifyLocators(): array
     {
         return [

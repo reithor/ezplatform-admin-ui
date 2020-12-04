@@ -58,3 +58,5 @@ services:
   EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\ContentRelationMultiple: ~
 
   EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\ContentRelationSingle: ~
+
+  EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\User: ~

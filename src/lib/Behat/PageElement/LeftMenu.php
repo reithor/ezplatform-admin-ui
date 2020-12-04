@@ -24,11 +24,6 @@ class LeftMenu extends Component
         Assert::assertTrue($this->getHTMLPage()->find($this->getLocator('menuSelector'))->isVisible());
     }
 
-    public function getName(): string
-    {
-        return 'Left menu';
-    }
-
     public function browse(): void
     {
         $this->clickButton('Browse');

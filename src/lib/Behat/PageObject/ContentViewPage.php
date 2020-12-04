@@ -8,7 +8,8 @@ declare(strict_types=1);
 
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use EzSystems\Behat\API\Facade\ContentFacade;
+use eZ\Publish\API\Repository\Repository;
+use eZ\Publish\API\Repository\Values\Content\URLAlias;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
@@ -18,8 +19,7 @@ use EzSystems\EzPlatformAdminUi\Behat\PageElement\ContentTypePicker;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\LanguagePicker;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\SubitemsList;
-use EzSystems\EzPlatformAdminUi\Behat\PageElement\UpperMenu;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\SubItemsList;
 use PHPUnit\Framework\Assert;
 
 class ContentViewPage extends Page
@@ -27,7 +27,7 @@ class ContentViewPage extends Page
     /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu Element representing the right menu */
     private $rightMenu;
 
-    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\SubitemsList */
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\SubItemsList */
     private $subItemList;
 
     /** @var string */
@@ -51,8 +51,6 @@ class ContentViewPage extends Page
     /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog */
     private $dialog;
 
-    /** @var \EzSystems\Behat\API\Facade\ContentFacade */
-    private $contentFacade;
     private $route;
 
     /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Breadcrumb */
@@ -60,18 +58,27 @@ class ContentViewPage extends Page
 
     /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\ContentItemAdminPreview */
     private $contentItemAdminPreview;
+    /**
+     * @var UserUpdatePage
+     */
+    private $userUpdatePage;
+    /**
+     * @var Repository
+     */
+    private $repository;
 
     public function __construct(
         Browser $browser,
         RightMenu $rightMenu,
-        SubitemsList $subItemList,
+        SubItemsList $subItemList,
         ContentTypePicker $contentTypePicker,
         ContentUpdateItemPage $contentUpdatePage,
         LanguagePicker $languagePicker,
         Dialog $dialog,
-        ContentFacade $contentFacade,
+        Repository $repository,
         Breadcrumb $breadcrumb,
-        ContentItemAdminPreview $contentItemAdminPreview
+        ContentItemAdminPreview $contentItemAdminPreview,
+        UserUpdatePage $userUpdatePage
     ) {
         parent::__construct($browser);
 
@@ -82,9 +89,10 @@ class ContentViewPage extends Page
         $this->contentUpdatePage = $contentUpdatePage;
         $this->languagePicker = $languagePicker;
         $this->dialog = $dialog;
-        $this->contentFacade = $contentFacade;
         $this->breadcrumb = $breadcrumb;
         $this->contentItemAdminPreview = $contentItemAdminPreview;
+        $this->userUpdatePage = $userUpdatePage;
+        $this->repository = $repository;
     }
 
     public function startCreatingContent(string $contentTypeName): ContentUpdateItemPage
@@ -97,11 +105,20 @@ class ContentViewPage extends Page
         return $this->contentUpdatePage;
     }
 
+    public function startCreatingUser(): UserUpdatePage
+    {
+        $this->rightMenu->clickButton('Create');
+        $this->contentTypePicker->verifyIsLoaded();
+        $this->contentTypePicker->select('User');
+        $this->userUpdatePage->verifyIsLoaded();
+
+        return $this->userUpdatePage;
+    }
+
     public function goToSubItem(string $contentName, string $contentType): void
     {
-        if ($this->subItemList->canBeSorted()) {
-            $this->subItemList->sortBy('Modified', false);
-        }
+        throw new \Exception('jak najmniej tego uzywac...');
+        $this->subItemList->sortBy('Modified', false);
 
         $this->subItemList->clickListElement($contentName, $contentType);
 
@@ -136,12 +153,26 @@ class ContentViewPage extends Page
 
     public function setExpectedLocationPath(string $locationPath)
     {
-        $content = $this->contentFacade->getContentByLocationURL($locationPath);
+        [$this->expectedContentType, $this->expectedContentName, $contentId, $contentMainLocationId] = $this->getContentData($locationPath);
+        $this->route = sprintf('/view/content/%s/full/1/%s', $contentId, $contentMainLocationId);
+    }
 
-        $this->locationPath = $locationPath;
-        $this->expectedContentType = $content->getContentType()->getName();
-        $this->expectedContentName = $content->getName();
-        $this->route = sprintf('/view/content/%s/full/1/%s', $content->id, $content->contentInfo->getMainLocation()->id);
+    private function getContentData(string $locationPath): array
+    {
+        return $this->repository->sudo(function (Repository $repository) use ($locationPath) {
+            $urlAlias = $repository->getURLAliasService()->lookup($locationPath);
+            Assert::assertEquals(URLAlias::LOCATION, $urlAlias->type);
+
+            $content = $repository->getLocationService()
+                ->loadLocation($urlAlias->destination)
+                ->getContent();
+
+            return [
+                $content->getContentType()->getName(),
+                $content->getName(),
+                $content->id,
+                $content->contentInfo->getMainLocation()->id];
+        });
     }
 
     public function verifyIsLoaded(): void

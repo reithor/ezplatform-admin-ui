@@ -12,6 +12,7 @@ use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\NonEditableField;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentUpdateItemPage;
+use EzSystems\EzPlatformAdminUi\Behat\PageObject\UserUpdatePage;
 use PHPUnit\Framework\Assert;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\UserCreationPage;
 
@@ -20,9 +21,13 @@ class ContentUpdateContext implements Context
     /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentUpdateItemPage */
     private $contentUpdateItemPage;
 
-    public function __construct(ContentUpdateItemPage $contentUpdateItemPage)
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\UserUpdatePage */
+    private $userUpdatePage;
+
+    public function __construct(ContentUpdateItemPage $contentUpdateItemPage, UserUpdatePage $userUpdatePage)
     {
         $this->contentUpdateItemPage = $contentUpdateItemPage;
+        $this->userUpdatePage = $userUpdatePage;
     }
 
     /**
@@ -51,11 +56,10 @@ class ContentUpdateContext implements Context
      */
     public function iSetFieldsForUser(TableNode $table): void
     {
-        $updateItemPage = PageObjectFactory::createPage($this->browserContext, UserCreationPage::PAGE_NAME, '');
-        $updateItemPage->verifyIsLoaded();
+        $this->userUpdatePage->verifyIsLoaded();
         foreach ($table->getHash() as $row) {
             $values = $this->filterOutNonEmptyValues($row);
-            $updateItemPage->contentUpdateForm->fillFieldWithValue($row['label'], $values);
+            $this->userUpdatePage->fillFieldWithValue($row['label'], $values);
         }
     }
 

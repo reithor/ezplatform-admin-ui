@@ -12,13 +12,14 @@ use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Locator\CSSLocator;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
+use Traversable;
 
 class ContentItemAdminPreview extends Component
 {
     /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\FieldTypeComponentInterface[] */
     private $fieldTypeComponents;
 
-    public function __construct(Browser $browser, iterable $fieldTypeComponents)
+    public function __construct(Browser $browser, Traversable $fieldTypeComponents)
     {
         parent::__construct($browser);
         $this->fieldTypeComponents = iterator_to_array($fieldTypeComponents);
@@ -78,17 +79,17 @@ class ContentItemAdminPreview extends Component
             ->find($fieldValueLocator->withDescendant($this->getLocator('fieldValueContainer')))
             ->getAttribute('class');
 
-        if (strpos($fieldClass, 'ez-table') !== false) {
-            return 'ezmatrix';
+        switch ($fieldClass) {
+            case 'ez-table':
+                return 'ezmatrix';
+            case 'ez-scrollable-table-wrapper mb-0':
+                return 'ezuser';
+            case '':
+                return 'ezboolean';
+            default:
+                $fieldTypeIdentifierRegex = '/ez[a-z]*-field/';
+                preg_match($fieldTypeIdentifierRegex, $fieldClass, $matches);
+                return explode('-', $matches[0])[0];
         }
-
-        if ($fieldClass === '') {
-            return 'ezboolean';
-        }
-
-        $fieldTypeIdentifierRegex = '/ez[a-z]*-field/';
-        preg_match($fieldTypeIdentifierRegex, $fieldClass, $matches);
-
-        return explode('-', $matches[0])[0];
     }
 }

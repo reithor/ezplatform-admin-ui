@@ -38,11 +38,6 @@ class RightMenu extends Component
         Assert::assertTrue($this->getHTMLPage()->find($this->getLocator('menuButton'))->isVisible());
     }
 
-    public function getName(): string
-    {
-        return 'Right menu';
-    }
-
     protected function specifyLocators(): array
     {
         return [

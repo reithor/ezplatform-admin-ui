@@ -5,6 +5,7 @@
  * @license For full copyright and license information view LICENSE file distributed with this source code.
  */
 declare(strict_types=1);
+
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\Browser\Component\Component;
@@ -15,7 +16,7 @@ use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\TableInterface;
 use PHPUnit\Framework\Assert;
 
-class SubItemsList extends Component
+class SubitemsList extends Component
 {
     /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table */
     protected $table;

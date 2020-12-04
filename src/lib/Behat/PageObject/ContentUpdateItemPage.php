@@ -14,6 +14,7 @@ use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\FieldTypeComponent;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
 use PHPUnit\Framework\Assert;
+use Traversable;
 
 class ContentUpdateItemPage extends Page
 {
@@ -28,7 +29,7 @@ class ContentUpdateItemPage extends Page
     public function __construct(
         Browser $browser,
         RightMenu $rightMenu,
-        iterable $fieldTypeComponents
+        Traversable $fieldTypeComponents
     ) {
         parent::__construct($browser);
         $this->rightMenu = $rightMenu;
@@ -37,14 +38,12 @@ class ContentUpdateItemPage extends Page
 
     public function verifyIsLoaded(): void
     {
-        if ($this->pageTitle) {
-            Assert::assertEquals(
-                $this->pageTitle,
-                $this->getHTMLPage()
-                    ->setTimeout(10)
-                    ->find($this->getLocator('pageTitle'))->getText()
-            );
-        }
+        Assert::assertEquals(
+            $this->pageTitle,
+            $this->getHTMLPage()
+                ->setTimeout(10)
+                ->find($this->getLocator('pageTitle'))->getText()
+        );
 
         $this->rightMenu->verifyIsLoaded();
         Assert::assertTrue($this->getHTMLPage()->setTimeout(10)->find($this->getLocator('formElement'))->isVisible());
