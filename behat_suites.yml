@@ -4,7 +4,7 @@ ezplatform:
             paths:
               - '%paths.base%/vendor/ezsystems/ezplatform-admin-ui/features/standard'
             filters:
-                tags: "@common,~@broken"
+                tags: "~@broken"
             contexts: 
                 - EzSystems\Behat\API\Context\ContentTypeContext
                 - EzSystems\Behat\API\Context\ContentContext
