@@ -16,7 +16,7 @@ use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\TableInterface;
 use PHPUnit\Framework\Assert;
 
-class SubitemsList extends Component
+class SubItemsList extends Component
 {
     /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table */
     protected $table;

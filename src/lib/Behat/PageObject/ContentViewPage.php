@@ -66,6 +66,10 @@ class ContentViewPage extends Page
      * @var Repository
      */
     private $repository;
+    /**
+     * @var mixed
+     */
+    private $expectedIsContainer;
 
     public function __construct(
         Browser $browser,
@@ -153,8 +157,9 @@ class ContentViewPage extends Page
 
     public function setExpectedLocationPath(string $locationPath)
     {
-        [$this->expectedContentType, $this->expectedContentName, $contentId, $contentMainLocationId] = $this->getContentData($locationPath);
+        [$this->expectedContentType, $this->expectedContentName, $contentId, $contentMainLocationId, $isContainer] = $this->getContentData($locationPath);
         $this->route = sprintf('/view/content/%s/full/1/%s', $contentId, $contentMainLocationId);
+        $this->expectedIsContainer = $isContainer;
     }
 
     private function getContentData(string $locationPath): array
@@ -171,13 +176,17 @@ class ContentViewPage extends Page
                 $content->getContentType()->getName(),
                 $content->getName(),
                 $content->id,
-                $content->contentInfo->getMainLocation()->id];
+                $content->contentInfo->getMainLocation()->id,
+                $content->getContentType()->isContainer,
+            ];
         });
     }
 
     public function verifyIsLoaded(): void
     {
-        $this->subItemList->verifyIsLoaded();
+        if ($this->expectedIsContainer) {
+            $this->subItemList->verifyIsLoaded();
+        }
         $this->rightMenu->verifyIsLoaded();
 
         Assert::assertContains(

@@ -28,7 +28,7 @@ class ContentItemAdminPreview extends Component
     public function verifyFieldHasValues(string $fieldLabel, array $expectedValues, ?string $fieldTypeIdentifier)
     {
         $fieldPosition = $this->getFieldPosition($fieldLabel);
-        $nthFieldLocator = new VisibleCSSLocator('', sprintf($this->getLocator('nthFieldContainer')->getLocator(), $fieldPosition));
+        $nthFieldLocator = new VisibleCSSLocator('', sprintf($this->getLocator('nthFieldContainer')->getSelector(), $fieldPosition));
 
         $fieldValueLocator = $nthFieldLocator->withDescendant($this->getLocator('fieldValue'));
         $fieldTypeIdentifier = $fieldTypeIdentifier ?? $this->detectFieldTypeIdentifier($fieldValueLocator);

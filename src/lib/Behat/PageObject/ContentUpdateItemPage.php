@@ -38,12 +38,14 @@ class ContentUpdateItemPage extends Page
 
     public function verifyIsLoaded(): void
     {
-        Assert::assertEquals(
-            $this->pageTitle,
-            $this->getHTMLPage()
-                ->setTimeout(10)
-                ->find($this->getLocator('pageTitle'))->getText()
-        );
+        if ($this->pageTitle !== null) {
+            Assert::assertEquals(
+                $this->pageTitle,
+                $this->getHTMLPage()
+                    ->setTimeout(10)
+                    ->find($this->getLocator('pageTitle'))->getText()
+            );
+        }
 
         $this->rightMenu->verifyIsLoaded();
         Assert::assertTrue($this->getHTMLPage()->setTimeout(10)->find($this->getLocator('formElement'))->isVisible());
