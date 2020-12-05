@@ -16,8 +16,12 @@ class ContentTypePicker extends Component
 {
     public function select(string $contentTypeName): void
     {
+        $countBeforeFiltering = $this->getDisplayedItemsCount();
         $this->getHTMLPage()->find($this->getLocator('filterInput'))->setValue($contentTypeName);
         $this->getHTMLPage()->setTimeout(5)->findAll($this->getLocator('filteredItem'))->getByText($contentTypeName)->click();
+        $this->waitUntil(3, function () use ($countBeforeFiltering) {
+            return $this->getDisplayedItemsCount() < $countBeforeFiltering;
+        });
     }
 
     public function verifyIsLoaded(): void
@@ -25,6 +29,11 @@ class ContentTypePicker extends Component
         $headerText = $this->getHTMLPage()->find($this->getLocator('headerSelector'))->getText();
         Assert::assertEquals('Create content', $headerText);
         $this->getHTMLPage()->find($this->getLocator('filterInput'))->clear();
+    }
+
+    protected function getDisplayedItemsCount(): int
+    {
+        return $this->getHTMLPage()->findAll($this->getLocator('filteredItem'))->count();
     }
 
     protected function specifyLocators(): array

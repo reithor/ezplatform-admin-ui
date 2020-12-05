@@ -18,7 +18,6 @@ class RightMenu extends Component
     public function clickButton(string $buttonName): void
     {
         $this->getHTMLPage()
-            ->setTimeout(5)
             ->findAll($this->getLocator('menuButton'))
             ->assert()->hasElements()
             ->getByText($buttonName)
@@ -42,7 +41,10 @@ class RightMenu extends Component
 
     public function verifyIsLoaded(): void
     {
-        $this->getHTMLPage()->find($this->getLocator('menuButton'))->assert()->isVisible();
+        $this->getHTMLPage()
+            ->setTimeout(5)
+            ->find($this->getLocator('menuButton'))
+            ->assert()->isVisible();
     }
 
     protected function specifyLocators(): array

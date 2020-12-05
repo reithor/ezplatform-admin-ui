@@ -46,9 +46,8 @@ class ContentUpdateItemPage extends Page
                     ->find($this->getLocator('pageTitle'))->getText()
             );
         }
-
-        $this->rightMenu->verifyIsLoaded();
         $this->getHTMLPage()->setTimeout(10)->find($this->getLocator('formElement'))->assert()->isVisible();
+        $this->rightMenu->verifyIsLoaded();
     }
 
     public function setExpectedPageTitle(string $title)
