@@ -100,7 +100,7 @@ Feature: Content fields setting and editing
       | value     | 12.34                        |            |                          |         |           | 11.11                     | 12.34                        |
       | value     | 0-13-048257-9                |            |                          |         |           | 978-3-16-148410-0         | 0-13-048257-9                |
       | value     | 1234                         |            |                          |         |           | 1111                      | 1234                         |
-      | value     | first keyword, second, edit  |            |                          |         |           | first keyword, second     | edit, first keyword, second  |
+      | value     | first keyword, second, edit  |            |                          |         |           | first keyword, second     | first keyword, second, edit  |
       | value     | Edited Lorem ipsum dolor sit |            |                          |         |           | Lorem ipsum dolor sit     | Edited Lorem ipsum dolor sit |
       | value     | Edited Lorem ipsum dolor     |            |                          |         |           | Lorem ipsum dolor         | Edited Lorem ipsum dolor     |
       | value     | Edited Lorem ipsum           |            |                          |         |           | Lorem ipsum               | Edited Lorem ipsum           |

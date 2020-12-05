@@ -26,7 +26,9 @@ class MapLocation extends FieldTypeComponent
         $expectedLatitude = $parameters['latitude'];
 
         // wait until OpenStreetMap responds with data
-        $this->getHTMLPage()->setTimeout(self::OPEN_STREET_MAP_TIMEOUT)->waitUntil(
+        // double check if it's needed
+
+        $this->waitUntil(self::OPEN_STREET_MAP_TIMEOUT,
             function () use ($expectedLatitude, $expectedLongitude) {
                 $currentValue = $this->getValue();
 

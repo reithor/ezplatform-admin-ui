@@ -114,7 +114,9 @@ class NavigationContext implements Context
             $this->contentViewPage->setExpectedLocationPath($path);
             $this->contentViewPage->verifyIsLoaded();
         }
+        $expectedContentPath = $path ? sprintf("%s/%s", $path, $contentName) : $contentName;
         $this->contentViewPage->goToSubItem($contentName, $contentType);
+        $this->contentViewPage->setExpectedLocationPath($expectedContentPath);
         $this->contentViewPage->verifyIsLoaded();
     }
 

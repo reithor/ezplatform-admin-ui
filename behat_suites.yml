@@ -39,7 +39,7 @@ ezplatform:
             contexts:
                 - EzSystems\Behat\Browser\Context\BrowserContext
                 - EzSystems\Behat\Browser\Context\Hooks
-                - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\AuthenticationContext
+                - EzSystems\Behat\Browser\Context\AuthenticationContext
                 - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\NavigationContext
                 - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\ContentViewContext
                 - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\ContentUpdateContext

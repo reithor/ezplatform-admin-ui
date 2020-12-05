@@ -2,20 +2,21 @@
 Feature: Verify that an Editor with Subtree limitations can perform all his tasks
 
   Background:
-    Given I open Login page
+    Given I open Login page in admin SiteAccess
     And I log in as "SubtreeEditor" with password "Passw0rd-42"
     And I go to "Content structure" in "Content" tab
 
+  @test
   Scenario Outline: I can create and publish Content in locations I'm allowed
     Given I navigate to content "<parentContentItemName>" of type "DedicatedFolder" in "<contentPath>"
-    And I start creating a new content "DedicatedFolder"
+    And I start creating a new Content "DedicatedFolder"
     And I set content fields
       | label      | value         |
       | Name       | <contentName> |
       | Short name | <contentName> |
     When I click on the edit action bar button "Publish"
     Then success notification that "Content published." appears
-    And I should be on content container page "<contentName>" of type "DedicatedFolder" in "<newContentPath>"
+    And I'm on Content view Page for "<newContentPath>/<contentName>"
 
     Examples:
       | parentContentItemName | contentPath                         | contentName | newContentPath                                   |

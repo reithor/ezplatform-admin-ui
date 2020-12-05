@@ -48,7 +48,7 @@ class ContentUpdateItemPage extends Page
         }
 
         $this->rightMenu->verifyIsLoaded();
-        Assert::assertTrue($this->getHTMLPage()->setTimeout(10)->find($this->getLocator('formElement'))->isVisible());
+        $this->getHTMLPage()->setTimeout(10)->find($this->getLocator('formElement'))->assert()->isVisible();
     }
 
     public function setExpectedPageTitle(string $title)

@@ -35,14 +35,15 @@ Feature: Content items creation
 
   @javascript
   Scenario: Content draft can be saved and then published
-    When I'm on Content view Page for root
+    Given I'm on Content view Page for root
       And I start creating a new content "Folder"
       And I set content fields
         | label | value                 |
         | Name  | TestFolderSavePublish |
-      And I click on the edit action bar button "Save"
+      When I click on the edit action bar button "Save"
       And I should be on Content update page for "TestFolderSavePublish"
       And I click on the edit action bar button "Publish"
+    Then success notification that "Content published." appears
     And I should be on Content view Page for "TestFolderSavePublish"
 
   @javascript @APIUser:admin

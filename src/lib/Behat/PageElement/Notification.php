@@ -58,13 +58,10 @@ class Notification extends Component
 
     public function verifyIsLoaded(): void
     {
-        Assert::assertTrue(
-            $this
-                ->getHTMLPage()
-                ->setTimeout(20)
-                ->find($this->getLocator('alert'))
-                ->isVisible()
-        );
+        $this->getHTMLPage()
+            ->setTimeout(20)
+            ->find($this->getLocator('alert'))
+            ->assert()->isVisible();
     }
 
     public function verifyMessage(string $expectedMessage)

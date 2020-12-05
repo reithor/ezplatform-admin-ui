@@ -8,7 +8,9 @@ declare(strict_types=1);
 
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
+use eZ\Publish\API\Repository\Exceptions\NotFoundException;
 use eZ\Publish\API\Repository\Repository;
+use eZ\Publish\API\Repository\Values\Content\Content;
 use eZ\Publish\API\Repository\Values\Content\URLAlias;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
@@ -165,12 +167,7 @@ class ContentViewPage extends Page
     private function getContentData(string $locationPath): array
     {
         return $this->repository->sudo(function (Repository $repository) use ($locationPath) {
-            $urlAlias = $repository->getURLAliasService()->lookup($locationPath);
-            Assert::assertEquals(URLAlias::LOCATION, $urlAlias->type);
-
-            $content = $repository->getLocationService()
-                ->loadLocation($urlAlias->destination)
-                ->getContent();
+            $content = $this->loadContent($repository, $locationPath);
 
             return [
                 $content->getContentType()->getName(),
@@ -182,18 +179,40 @@ class ContentViewPage extends Page
         });
     }
 
+    private function loadContent(Repository $repository, string $locationPath): Content
+    {
+        try {
+            $urlAlias = $repository->getURLAliasService()->lookup($locationPath);
+            Assert::assertEquals(URLAlias::LOCATION, $urlAlias->type);
+
+            return $repository->getLocationService()
+                ->loadLocation($urlAlias->destination)
+                ->getContent();
+        } catch (NotFoundException $exception) {
+            // Sometimes we try to load the Content right after clicking the action button and the app is too slow to create the data...
+            sleep(3);
+            $urlAlias = $repository->getURLAliasService()->lookup($locationPath);
+            Assert::assertEquals(URLAlias::LOCATION, $urlAlias->type);
+
+            return $repository->getLocationService()
+                ->loadLocation($urlAlias->destination)
+                ->getContent();
+        }
+    }
+
     public function verifyIsLoaded(): void
     {
-        if ($this->expectedIsContainer) {
-            $this->subItemList->verifyIsLoaded();
-        }
+        $this->getHTMLPage()->find($this->getLocator('mainContainer'))->assert()->isVisible();
         $this->rightMenu->verifyIsLoaded();
-
         Assert::assertContains(
             $this->expectedContentName,
             $this->breadcrumb->getBreadcrumb(),
             'Breadcrumb shows invalid path'
         );
+
+        if ($this->expectedIsContainer) {
+            $this->subItemList->verifyIsLoaded();
+        }
 
         Assert::assertEquals(
             $this->expectedContentName,
@@ -244,6 +263,7 @@ class ContentViewPage extends Page
         return [
             new VisibleCSSLocator('pageTitle', '.ez-page-title h1'),
             new VisibleCSSLocator('contentType', '.ez-page-title h4'),
+            new VisibleCSSLocator('mainContainer', '#ez-tab-list-content-location-view'),
         ];
     }
 

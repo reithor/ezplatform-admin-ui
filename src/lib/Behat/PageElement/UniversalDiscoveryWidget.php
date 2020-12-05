@@ -116,7 +116,7 @@ class UniversalDiscoveryWidget extends Component
 
         if ($willNextLevelBeReloaded) {
             // Wait until the items displayed previously disappear or change
-            $this->getHTMLPage()->waitUntil(function () use ($currentItems, $level) {
+            $this->waitUntil(self::LONG_TIMEOUT, function () use ($currentItems, $level) {
                 return !$this->isNextLevelDisplayed($level) || $this->getItemsFromLevel($level + 1) !== $currentItems;
             });
         }
