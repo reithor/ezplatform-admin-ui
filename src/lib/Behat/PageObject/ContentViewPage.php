@@ -142,15 +142,15 @@ class ContentViewPage extends Page
 
     public function navigateToPath(string $path, string $menuTab): void
     {
-         $this->upperMenu->goToTab('Content');
-         $this->upperMenu->goToSubTab($menuTab);
+        $this->upperMenu->goToTab('Content');
+        $this->upperMenu->goToSubTab($menuTab);
 
-         $this->verifyIsLoaded();
+        $this->verifyIsLoaded();
 
         $pathParts = explode('/', $path);
         $pathSize = count($pathParts);
 
-        for ($i = 1; $i < $pathSize; $i++) {
+        for ($i = 1; $i < $pathSize; ++$i) {
             $this->goToSubItem($pathParts[$i]);
         }
     }

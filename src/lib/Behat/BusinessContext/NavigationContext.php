@@ -109,10 +109,9 @@ class NavigationContext implements Context
         $expectedContentPath = sprintf('%s/%s', $path, $contentName);
         $pathParts = explode('/', $expectedContentPath);
         if ($pathParts[0] === 'root') {
-            $menuTab =  'Content structure';
+            $menuTab = 'Content structure';
             $startingLocation = '/';
-        }
-        else {
+        } else {
             $menuTab = $pathParts[0];
             $startingLocation = $pathParts[0];
         }

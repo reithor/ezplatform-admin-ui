@@ -11,7 +11,6 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Element\NodeElement;
 use EzSystems\Behat\Browser\Locator\CSSLocator;
-use PHPUnit\Framework\Assert;
 
 class RightMenu extends Component
 {
@@ -33,7 +32,7 @@ class RightMenu extends Component
     {
         return $this->getHTMLPage()
             ->findAll($this->getLocator('menuButton'))
-            ->filter(function(NodeElement $element) use ($buttonName) {
+            ->filter(function (NodeElement $element) use ($buttonName) {
                 return $element->getText() === $buttonName;
             })
             ->any();
