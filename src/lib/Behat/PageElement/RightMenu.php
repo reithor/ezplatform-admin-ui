@@ -35,7 +35,7 @@ class RightMenu extends Component
 
     public function verifyIsLoaded(): void
     {
-        Assert::assertTrue($this->getHTMLPage()->find($this->getLocator('menuButton'))->isVisible());
+        $this->getHTMLPage()->find($this->getLocator('menuButton'))->assert()->isVisible();
     }
 
     protected function specifyLocators(): array
