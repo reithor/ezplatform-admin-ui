@@ -14,7 +14,6 @@ use EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\NonEditableField;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\ContentUpdateItemPage;
 use EzSystems\EzPlatformAdminUi\Behat\PageObject\UserUpdatePage;
 use PHPUnit\Framework\Assert;
-use EzSystems\EzPlatformAdminUi\Behat\PageObject\UserCreationPage;
 
 class ContentUpdateContext implements Context
 {

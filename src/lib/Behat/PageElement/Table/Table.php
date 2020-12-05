@@ -151,7 +151,7 @@ class Table extends Component implements TableInterface
         $foundHeaders = $this->getHeaderPositions($searchedHeaders, $allHeaders);
         $rowElement = $this->getMatchingTableRow($foundHeaders, $elementData);
 
-        while ($rowElement === null && $this->pagination->isNextButtonActive()){
+        while ($rowElement === null && $this->pagination->isNextButtonActive()) {
             $this->pagination->clickNextButton();
             $rowElement = $this->getMatchingTableRow($foundHeaders, $elementData);
         }
