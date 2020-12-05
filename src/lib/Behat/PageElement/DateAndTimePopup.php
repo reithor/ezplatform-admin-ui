@@ -10,7 +10,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use DateTime;
 use EzSystems\Behat\Browser\Component\Component;
-use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\Behat\Browser\Page\TestEnvironment;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
@@ -39,9 +39,9 @@ class DateAndTimePopup extends Component
     /** @var \EzSystems\Behat\Browser\Locator\VisibleCSSLocator */
     private $parentLocator;
 
-    public function __construct(Browser $browser)
+    public function __construct(TestEnvironment $testEnv)
     {
-        parent::__construct($browser);
+        parent::__construct($testEnv);
         $this->parentLocator = VisibleCSSLocator::empty();
     }
 
@@ -50,7 +50,7 @@ class DateAndTimePopup extends Component
      */
     public function setDate(DateTime $date, string $dateFormat = self::DATETIME_FORMAT): void
     {
-        $this->browser->getSession()->executeScript(
+        $this->testEnv->getSession()->executeScript(
             sprintf(
                 self::ADD_CALLBACK_TO_DATEPICKER_SCRIPT_FORMAT,
                 $this->parentLocator->getSelector()
@@ -63,7 +63,7 @@ class DateAndTimePopup extends Component
             $date->format($dateFormat),
             $dateFormat
         );
-        $this->browser->getSession()->getDriver()->executeScript($dateScript);
+        $this->testEnv->getSession()->getDriver()->executeScript($dateScript);
 
         Assert::assertTrue(
             $this->getHTMLPage()
@@ -86,7 +86,7 @@ class DateAndTimePopup extends Component
                 $this->parentLocator->getSelector(),
                 $this->getLocator('flatpickrSelector')->getSelector()
             );
-            $currentDate = $this->browser->getSession()->getDriver()->evaluateScript($currentDateScript);
+            $currentDate = $this->testEnv->getSession()->getDriver()->evaluateScript($currentDateScript);
         }
 
         $valueToSet = $isTimeOnly ? sprintf('%s:%s:00', $hour, $minute) : sprintf('%s, %s:%s:00', explode(',', $currentDate)[0], $hour, $minute);
@@ -100,7 +100,7 @@ class DateAndTimePopup extends Component
             $format
         );
 
-        $this->browser->getSession()->getDriver()->executeScript($timeScript);
+        $this->testEnv->getSession()->getDriver()->executeScript($timeScript);
     }
 
     public function shouldBeInline(bool $isLine): void

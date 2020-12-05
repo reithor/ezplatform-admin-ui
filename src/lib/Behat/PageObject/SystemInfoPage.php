@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\Behat\Browser\Page\TestEnvironment;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
@@ -23,9 +23,9 @@ class SystemInfoPage extends Page
     /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\TableInterface */
     private $table;
 
-    public function __construct(Browser $browser, TableNavigationTab $tableNavigationTab, Table $table)
+    public function __construct(TestEnvironment $testEnv, TableNavigationTab $tableNavigationTab, Table $table)
     {
-        parent::__construct($browser);
+        parent::__construct($testEnv);
 
         $this->tableNavigationTab = $tableNavigationTab;
         $this->table = $table

@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\Behat\Browser\Page\TestEnvironment;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\DateAndTimePopup;
 use PHPUnit\Framework\Assert;
@@ -20,9 +20,9 @@ class Time extends FieldTypeComponent
     /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\DateAndTimePopup */
     private $dateAndTimePopup;
 
-    public function __construct(Browser $browser, DateAndTimePopup $dateAndTimePopup)
+    public function __construct(TestEnvironment $testEnv, DateAndTimePopup $dateAndTimePopup)
     {
-        parent::__construct($browser);
+        parent::__construct($testEnv);
         $this->dateAndTimePopup = $dateAndTimePopup;
     }
 

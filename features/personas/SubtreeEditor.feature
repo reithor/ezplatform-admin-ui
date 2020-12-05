@@ -1,4 +1,4 @@
-@javascript @subtreeEditor
+@javascript @subtreeEditor @IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
 Feature: Verify that an Editor with Subtree limitations can perform all his tasks
 
   Background:

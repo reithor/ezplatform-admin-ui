@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use eZ\Publish\API\Repository\Repository;
-use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\Behat\Browser\Page\TestEnvironment;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
@@ -33,9 +33,9 @@ class LanguagePage extends Page
     /** @var \eZ\Publish\API\Repository\Repository */
     private $repository;
 
-    public function __construct(Browser $browser, Table $table, Dialog $dialog, Repository $repository)
+    public function __construct(TestEnvironment $testEnv, Table $table, Dialog $dialog, Repository $repository)
     {
-        parent::__construct($browser);
+        parent::__construct($testEnv);
         $this->table = $table;
         $this->dialog = $dialog;
         $this->repository = $repository;

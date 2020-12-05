@@ -12,7 +12,7 @@ use eZ\Publish\API\Repository\Exceptions\NotFoundException;
 use eZ\Publish\API\Repository\Repository;
 use eZ\Publish\API\Repository\Values\Content\Content;
 use eZ\Publish\API\Repository\Values\Content\URLAlias;
-use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\Behat\Browser\Page\TestEnvironment;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\Behat\Core\Behat\ArgumentParser;
@@ -80,7 +80,7 @@ class ContentViewPage extends Page
     private $argumentParser;
 
     public function __construct(
-        Browser $browser,
+        TestEnvironment $testEnv,
         RightMenu $rightMenu,
         SubItemsList $subItemList,
         ContentTypePicker $contentTypePicker,
@@ -94,7 +94,7 @@ class ContentViewPage extends Page
         UpperMenu $upperMenu,
         ArgumentParser $argumentParser
     ) {
-        parent::__construct($browser);
+        parent::__construct($testEnv);
 
         $this->rightMenu = $rightMenu;
         $this->subItemList = $subItemList;

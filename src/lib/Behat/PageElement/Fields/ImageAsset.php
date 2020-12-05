@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\Behat\Browser\Page\TestEnvironment;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Notification;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
@@ -22,9 +22,9 @@ class ImageAsset extends Image
     /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Notification */
     private $notification;
 
-    public function __construct(Browser $browser, UniversalDiscoveryWidget $universalDiscoveryWidget, Notification $notification)
+    public function __construct(TestEnvironment $testEnv, UniversalDiscoveryWidget $universalDiscoveryWidget, Notification $notification)
     {
-        parent::__construct($browser);
+        parent::__construct($testEnv);
         $this->universalDiscoveryWidget = $universalDiscoveryWidget;
         $this->notification = $notification;
     }
@@ -42,7 +42,7 @@ class ImageAsset extends Image
         $fieldSelector = $this->getLocator('fieldInput')->withParent($this->parentLocator);
 
         $this->getHTMLPage()->find($fieldSelector)->attachFile(
-            $this->browser->getRemoteFileUploadPath($parameters['value'])
+            $this->testEnv->getRemoteFileUploadPath($parameters['value'])
         );
 
         $this->notification->verifyAlertSuccess();

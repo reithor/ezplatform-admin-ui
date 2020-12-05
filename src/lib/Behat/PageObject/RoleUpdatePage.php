@@ -9,8 +9,8 @@ declare(strict_types=1);
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use Exception;
-use EzSystems\Behat\Browser\Element\NodeElement;
-use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\Behat\Browser\Element\ElementInterface;
+use EzSystems\Behat\Browser\Page\TestEnvironment;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
@@ -20,9 +20,9 @@ class RoleUpdatePage extends AdminUpdateItemPage
     /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget */
     private $universalDiscoveryWidget;
 
-    public function __construct(Browser $browser, RightMenu $rightMenu, UniversalDiscoveryWidget $universalDiscoveryWidget)
+    public function __construct(TestEnvironment $testEnv, RightMenu $rightMenu, UniversalDiscoveryWidget $universalDiscoveryWidget)
     {
-        parent::__construct($browser, $rightMenu);
+        parent::__construct($testEnv, $rightMenu);
         $this->universalDiscoveryWidget = $universalDiscoveryWidget;
     }
 
@@ -110,7 +110,7 @@ class RoleUpdatePage extends AdminUpdateItemPage
     {
         $buttons = $this->getHTMLPage()
             ->findAll($this->getLocator('button'))
-            ->filter(function (NodeElement $element) {
+            ->filter(function (ElementInterface $element) {
                 return $element->getText() === 'Select Locations';
             })
             ->toArray();

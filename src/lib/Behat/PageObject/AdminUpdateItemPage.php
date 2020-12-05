@@ -8,9 +8,9 @@ declare(strict_types=1);
 
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use EzSystems\Behat\Browser\Element\NodeElement;
+use EzSystems\Behat\Browser\Element\ElementInterface;
 use EzSystems\Behat\Browser\Locator\XPathLocator;
-use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\Behat\Browser\Page\TestEnvironment;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
@@ -21,9 +21,9 @@ class AdminUpdateItemPage extends Page
     /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu */
     protected $rightMenu;
 
-    public function __construct(Browser $browser, RightMenu $rightMenu)
+    public function __construct(TestEnvironment $testEnv, RightMenu $rightMenu)
     {
-        parent::__construct($browser);
+        parent::__construct($testEnv);
         $this->rightMenu = $rightMenu;
     }
 
@@ -72,7 +72,7 @@ class AdminUpdateItemPage extends Page
         ];
     }
 
-    private function getField(string $fieldName): NodeElement
+    private function getField(string $fieldName): ElementInterface
     {
         return $this->getHTMLPage()
             ->findAll(new XPathLocator('input', '//label/..'))

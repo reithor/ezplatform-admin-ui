@@ -10,7 +10,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use eZ\Publish\API\Repository\Repository;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
-use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\Behat\Browser\Page\TestEnvironment;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
@@ -40,14 +40,14 @@ class RolePage extends Page
     private $assignments;
 
     public function __construct(
-        Browser $browser,
+        TestEnvironment $testEnv,
         TableNavigationTab $tableNavigationTab,
         Dialog $dialog,
         Repository $repository,
         Table $policies,
         Table $assignments
     ) {
-        parent::__construct($browser);
+        parent::__construct($testEnv);
         $this->tableNavigationTab = $tableNavigationTab;
         $this->dialog = $dialog;
         $this->repository = $repository;

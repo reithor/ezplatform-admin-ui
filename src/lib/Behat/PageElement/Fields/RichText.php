@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Element\NodeElement;
+use EzSystems\Behat\Browser\Element\ElementInterface;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 use Exception;
@@ -25,7 +25,7 @@ class RichText extends FieldTypeComponent
     public function setValue(array $parameters): void
     {
         $this->getFieldInput();
-        $this->browser->getSession()->getDriver()->executeScript(
+        $this->testEnv->getSession()->getDriver()->executeScript(
             sprintf($this->setAlloyEditorValueScript, $this->richtextId, $parameters['value'])
         );
     }
@@ -60,7 +60,7 @@ class RichText extends FieldTypeComponent
     public function insertNewLine(): void
     {
         $this->getFieldInput();
-        $this->browser->getSession()->getDriver()->executeScript(
+        $this->testEnv->getSession()->getDriver()->executeScript(
             sprintf($this->executeAlloyEditorScript, $this->richtextId, 'enter')
         );
     }
@@ -68,7 +68,7 @@ class RichText extends FieldTypeComponent
     public function insertLine($value, $style = ''): void
     {
         $this->getFieldInput();
-        $this->browser->getSession()->getDriver()->executeScript(
+        $this->testEnv->getSession()->getDriver()->executeScript(
             sprintf($this->insertAlloyEditorValueScript, $this->richtextId, $value)
         );
 
@@ -85,7 +85,7 @@ class RichText extends FieldTypeComponent
         );
     }
 
-    private function getFieldInput(): NodeElement
+    private function getFieldInput(): ElementInterface
     {
         $fieldInput = $this->getHTMLPage()->find($this->getLocator('fieldInput'));
         $this->richtextId = $fieldInput->getAttribute('id');

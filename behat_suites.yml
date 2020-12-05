@@ -13,7 +13,7 @@ ezplatform:
                 - EzSystems\Behat\API\Context\ContentContext
                 - EzSystems\Behat\API\Context\TestContext
                 - EzSystems\Behat\API\Context\TrashContext
-                - EzSystems\Behat\Browser\Context\Hooks
+                - EzSystems\Behat\Browser\Context\DebuggingContext
                 - EzSystems\Behat\Browser\Context\AuthenticationContext
                 - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\NavigationContext
                 - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\RightMenuContext
@@ -37,8 +37,7 @@ ezplatform:
             paths:
                 - '%paths.base%/vendor/ezsystems/ezplatform-admin-ui/features/personas'
             contexts:
-                 
-                - EzSystems\Behat\Browser\Context\Hooks
+                - EzSystems\Behat\Browser\Context\DebuggingContext
                 - EzSystems\Behat\Browser\Context\AuthenticationContext
                 - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\NavigationContext
                 - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\ContentViewContext

@@ -18,7 +18,7 @@ class Media extends FieldTypeComponent
     {
         $fieldSelector = $this->getLocator('fieldInput')->withParent($this->parentLocator);
         $this->getHTMLPage()->find($fieldSelector)->attachFile(
-            $this->browser->getRemoteFileUploadPath($parameters['value'])
+            $this->testEnv->getRemoteFileUploadPath($parameters['value'])
         );
     }
 

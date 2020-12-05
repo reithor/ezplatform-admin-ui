@@ -9,22 +9,22 @@ declare(strict_types=1);
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Table;
 
 use EzSystems\Behat\Browser\Component\Component;
-use EzSystems\Behat\Browser\Element\NodeElement;
+use EzSystems\Behat\Browser\Element\ElementInterface;
 use EzSystems\Behat\Browser\Locator\LocatorCollection;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
-use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\Behat\Browser\Page\TestEnvironment;
 
 class TableRow extends Component
 {
-    /** @var \EzSystems\Behat\Browser\Element\NodeElement */
+    /** @var \EzSystems\Behat\Browser\Element\ElementInterface */
     private $element;
 
     /** @var \EzSystems\Behat\Browser\Locator\LocatorCollection */
     private $locatorCollection;
 
-    public function __construct(Browser $browser, NodeElement $element, LocatorCollection $locatorCollection)
+    public function __construct(TestEnvironment $testEnv, ElementInterface $element, LocatorCollection $locatorCollection)
     {
-        parent::__construct($browser);
+        parent::__construct($testEnv);
         $this->element = $element;
         $this->locatorCollection = $locatorCollection;
     }

@@ -7,15 +7,15 @@
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
-use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\Behat\Browser\Page\TestEnvironment;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
 use Traversable;
 
 class UserUpdatePage extends ContentUpdateItemPage
 {
-    public function __construct(Browser $browser, RightMenu $rightMenu, Traversable $fieldTypeComponents)
+    public function __construct(TestEnvironment $testEnv, RightMenu $rightMenu, Traversable $fieldTypeComponents)
     {
-        parent::__construct($browser, $rightMenu, $fieldTypeComponents);
+        parent::__construct($testEnv, $rightMenu, $fieldTypeComponents);
         $this->locators->replace(
             new VisibleCSSLocator(
                 'formElement',

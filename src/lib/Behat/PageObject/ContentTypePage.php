@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use eZ\Publish\API\Repository\ContentTypeService;
-use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\Behat\Browser\Page\TestEnvironment;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
@@ -38,12 +38,12 @@ class ContentTypePage extends Page
     private $fieldTable;
 
     public function __construct(
-        Browser $browser,
+        TestEnvironment $testEnv,
         ContentTypeService $contentTypeService,
         Table $contentTypeDataTable,
         Table $fieldTable)
     {
-        parent::__construct($browser);
+        parent::__construct($testEnv);
         $this->contentTypeService = $contentTypeService;
         $this->contentTypeDataTable = $contentTypeDataTable->withParentLocator($this->getLocator('contentTypeDataTable'));
         $this->fieldTable = $fieldTable->withParentLocator($this->getLocator('contentFieldsTable'));

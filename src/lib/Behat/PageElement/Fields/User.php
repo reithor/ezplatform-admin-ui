@@ -6,16 +6,16 @@
  */
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Element\NodeElement;
+use EzSystems\Behat\Browser\Element\ElementInterface;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
-use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\Behat\Browser\Page\TestEnvironment;
 use PHPUnit\Framework\Assert;
 
 class User extends FieldTypeComponent
 {
-    public function __construct(Browser $browser)
+    public function __construct(TestEnvironment $testEnv)
     {
-        parent::__construct($browser);
+        parent::__construct($testEnv);
     }
 
     protected function specifyLocators(): array
@@ -94,7 +94,7 @@ class User extends FieldTypeComponent
     {
         [$actualUsername, $actualEmail, $actualEnabled] = $this->getHTMLPage()
             ->findAll($this->parentLocator->withDescendant(new VisibleCSSLocator('userViewField', 'tr td:nth-of-type(2)')))
-            ->map(function (NodeElement $element) {
+            ->map(function (ElementInterface $element) {
                 return $element->getText();
             });
 

@@ -1,4 +1,4 @@
-@IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce
+@IbexaOSS @IbexaContent @IbexaExperience @IbexaCommerce @test
 Feature: Sections management
   As an administrator
   In order to customize my website
@@ -34,28 +34,34 @@ Feature: Sections management
         | Name         | Identifier            |
         | Test Section | TestSectionIdentifier |
 
-  @javascript
+  @javascript @APIUser:admin
   Scenario: Content item assignation can be discarded
-    Given I open "Sections" page in admin SiteAccess
+    Given I create "Folder" Content items
+      | name          | short_name    | parentPath     | language |
+      | TestSection   | TestSection   | root           | eng-GB   |
+    And I open "Sections" page in admin SiteAccess
     And there's a "Test Section" on Sections list
     When I start assigning to "Test Section" from Sections page
-      And I select content "Media/Images" through UDW
+      And I select content "root/TestSection" through UDW
       And I close the UDW window
     Then I should be on "Sections" page
       And the "Test Section" on Sections list has no assigned Content Items
 
-  @javascript
+  @javascript @APIUser:admin
   Scenario: Content item can be assigned to section from the Sections list
-    Given I open "Sections" page in admin SiteAccess
+    Given I create "Folder" Content items
+      | name          | short_name    | parentPath     | language |
+      | TestSection   | TestSection   | Media          | eng-GB   |
+    And I open "Sections" page in admin SiteAccess
     And there's a "Test Section" on Sections list
     When I start assigning to "Test Section" from Sections page
-      And I select content "Media/Images" through UDW
-      And I confirm the selection in UDW
+      And I select content "Media/TestSection" through UDW
+    And I confirm the selection in UDW
     Then success notification that "1 Content items assigned to 'Test Section'" appears
     Then I should be on "Test Section" Section page
       And content items list in section "Test Section" contains items
-        | Name   | Content Type | Path  |
-        | Images | Folder       | Media |
+        | Name        | Content Type | Path  |
+        | TestSection | Folder       | Media |
 
   @javascript
   Scenario: Changes can be discarded while editing Section
@@ -115,13 +121,13 @@ Feature: Sections management
   Scenario: Content item can be reassigned to section from the Sections details
     Given I open "Media" Section page in admin SiteAccess
     When I start assigning to "Media" Section
-      And I select content "Media/Images" through UDW
+      And I select content "Media/TestSection" through UDW
       And I confirm the selection in UDW
     Then success notification that "1 Content items assigned to 'Media'" appears
     Then I should be on "Media" Section page
     And content items list in section "Media" contains items
-      | Name   | Content Type | Path  |
-      | Images | Folder       | Media |
+      | Name        | Content Type | Path  |
+      | TestSection | Folder       | Media |
     And I open "Test Section edited2" Section page in admin SiteAccess
     And the "Test Section edited2" has no assigned Content Items
 

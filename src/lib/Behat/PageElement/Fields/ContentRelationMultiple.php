@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
-use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\Behat\Browser\Page\TestEnvironment;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\UniversalDiscoveryWidget;
 use PHPUnit\Framework\Assert;
@@ -22,9 +22,9 @@ class ContentRelationMultiple extends FieldTypeComponent
     /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table */
     private $table;
 
-    public function __construct(Browser $browser, UniversalDiscoveryWidget $universalDiscoveryWidget, Table $table)
+    public function __construct(TestEnvironment $testEnv, UniversalDiscoveryWidget $universalDiscoveryWidget, Table $table)
     {
-        parent::__construct($browser);
+        parent::__construct($testEnv);
         $this->universalDiscoveryWidget = $universalDiscoveryWidget;
         $this->table = $table;
     }

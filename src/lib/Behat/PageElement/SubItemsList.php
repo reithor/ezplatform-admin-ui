@@ -10,7 +10,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Locator\CSSLocator;
-use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\Behat\Browser\Page\TestEnvironment;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\SubitemsGrid;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
@@ -27,9 +27,9 @@ class SubItemsList extends Component
     /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\SubitemsGrid */
     private $grid;
 
-    public function __construct(Browser $browser, Table $table, SubitemsGrid $grid)
+    public function __construct(TestEnvironment $testEnv, Table $table, SubitemsGrid $grid)
     {
-        parent::__construct($browser);
+        parent::__construct($testEnv);
         $this->table = $table->withParentLocator($this->getLocator('table'))->endConfiguration();
         $this->grid = $grid;
     }

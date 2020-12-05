@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\Browser\Component\Component;
-use EzSystems\Behat\Browser\Element\NodeElement;
+use EzSystems\Behat\Browser\Element\ElementInterface;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
@@ -24,7 +24,7 @@ class TableNavigationTab extends Component
     {
         $this->getHTMLPage()
             ->findAll($this->getLocator('navLink'))
-            ->filter(function (NodeElement $element) use ($tabName) {
+            ->filter(function (ElementInterface $element) use ($tabName) {
                 return strpos($element->getText(), $tabName) !== false;
             })
             ->first()

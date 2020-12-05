@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use eZ\Publish\API\Repository\ContentTypeService;
-use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\Behat\Browser\Page\TestEnvironment;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
@@ -35,9 +35,9 @@ class ContentTypeGroupPage extends Page
     /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog */
     private $dialog;
 
-    public function __construct(Browser $browser, ContentTypeService $contentTypeService, Table $table, Dialog $dialog)
+    public function __construct(TestEnvironment $testEnv, ContentTypeService $contentTypeService, Table $table, Dialog $dialog)
     {
-        parent::__construct($browser);
+        parent::__construct($testEnv);
         $this->contentTypeService = $contentTypeService;
         $this->table = $table->withParentLocator($this->getLocator('tableContainer'));
         $this->dialog = $dialog;

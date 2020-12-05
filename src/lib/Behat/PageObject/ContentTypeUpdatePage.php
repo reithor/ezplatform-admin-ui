@@ -9,9 +9,9 @@ declare(strict_types=1);
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
 use EzSystems\Behat\API\ContentData\FieldTypeNameConverter;
-use EzSystems\Behat\Browser\Element\NodeElement;
+use EzSystems\Behat\Browser\Element\ElementInterface;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
-use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\Behat\Browser\Page\TestEnvironment;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Notification;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
 
@@ -20,9 +20,9 @@ class ContentTypeUpdatePage extends AdminUpdateItemPage
     /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Notification */
     private $notification;
 
-    public function __construct(Browser $browser, RightMenu $rightMenu, Notification $notification)
+    public function __construct(TestEnvironment $testEnv, RightMenu $rightMenu, Notification $notification)
     {
-        parent::__construct($browser, $rightMenu);
+        parent::__construct($testEnv, $rightMenu);
         $this->notification = $notification;
     }
 
@@ -68,13 +68,13 @@ class ContentTypeUpdatePage extends AdminUpdateItemPage
         $this->notification->closeAlert();
     }
 
-    private function getFieldDefinition($fieldName): NodeElement
+    private function getFieldDefinition($fieldName): ElementInterface
     {
         $fieldTypeIdentifier = FieldTypeNameConverter::getFieldTypeIdentifierByName($fieldName);
 
         return $this->getHTMLPage()
             ->findAll($this->getLocator('fieldDefinitionContainer'))
-            ->filter(function (NodeElement $element) use ($fieldTypeIdentifier) {
+            ->filter(function (ElementInterface $element) use ($fieldTypeIdentifier) {
                 return strpos($element->find($this->getLocator('fieldDefinitionName'))->getText(), $fieldTypeIdentifier) !== false;
             })
             ->first();

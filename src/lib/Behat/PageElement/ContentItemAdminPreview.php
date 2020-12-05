@@ -10,7 +10,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Locator\CSSLocator;
-use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\Behat\Browser\Page\TestEnvironment;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use Traversable;
 
@@ -19,9 +19,9 @@ class ContentItemAdminPreview extends Component
     /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields\FieldTypeComponentInterface[] */
     private $fieldTypeComponents;
 
-    public function __construct(Browser $browser, Traversable $fieldTypeComponents)
+    public function __construct(TestEnvironment $testEnv, Traversable $fieldTypeComponents)
     {
-        parent::__construct($browser);
+        parent::__construct($testEnv);
         $this->fieldTypeComponents = iterator_to_array($fieldTypeComponents);
     }
 

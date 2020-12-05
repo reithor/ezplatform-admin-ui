@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Element\NodeElement;
+use EzSystems\Behat\Browser\Element\ElementInterface;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\Behat\Browser\Locator\LocatorInterface;
 use PHPUnit\Framework\Assert;
@@ -88,7 +88,7 @@ class Matrix extends FieldTypeComponent
     {
         $parsedTable = '';
 
-        $headers = $this->getHTMLPage()->findAll($headerSelector)->map(function (NodeElement $element) {
+        $headers = $this->getHTMLPage()->findAll($headerSelector)->map(function (ElementInterface $element) {
             return $element->getText();
         });
 
@@ -99,7 +99,7 @@ class Matrix extends FieldTypeComponent
             $parsedTable .= ',';
             $cellValues = $row
                 ->findAll(new VisibleCSSLocator('cell', 'td'))
-                ->map(function (NodeElement $element) { return $element->getText();});
+                ->map(function (ElementInterface $element) { return $element->getText();});
             $parsedTable .= implode(':', $cellValues);
         }
 

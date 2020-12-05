@@ -10,7 +10,7 @@ namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\Browser\Component\Component;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
-use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\Behat\Browser\Page\TestEnvironment;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table;
 
 class DraftConflictDialog extends Component
@@ -18,9 +18,9 @@ class DraftConflictDialog extends Component
     /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\Table */
     private $table;
 
-    public function __construct(Browser $browser, Table $table)
+    public function __construct(TestEnvironment $testEnv, Table $table)
     {
-        parent::__construct($browser);
+        parent::__construct($testEnv);
         $this->table = $table->withParentLocator($this->getLocator('table'))->endConfiguration();
     }
 

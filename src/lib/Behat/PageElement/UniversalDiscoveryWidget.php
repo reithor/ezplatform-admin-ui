@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\Browser\Component\Component;
-use EzSystems\Behat\Browser\Element\NodeElement;
+use EzSystems\Behat\Browser\Element\ElementInterface;
 use EzSystems\Behat\Browser\Locator\CSSLocator;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
@@ -127,7 +127,7 @@ class UniversalDiscoveryWidget extends Component
         $levelItemsSelector = new CSSLocator('css', sprintf($this->getLocator('treeLevelElementsFormat')->getSelector(), $level));
 
         return $this->getHTMLPage()->setTimeout(self::LONG_TIMEOUT)->findAll($levelItemsSelector)->map(
-            function (NodeElement $element) {
+            function (ElementInterface $element) {
                 return $element->getText();
             }
         );

@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Table;
 
 use EzSystems\Behat\Browser\Component\Component;
-use EzSystems\Behat\Browser\Element\NodeElement;
+use EzSystems\Behat\Browser\Element\ElementInterface;
 use EzSystems\Behat\Browser\Locator\CSSLocator;
 use EzSystems\Behat\Browser\Locator\LocatorCollection;
 use EzSystems\Behat\Browser\Locator\LocatorInterface;
-use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\Behat\Browser\Page\TestEnvironment;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Pagination;
 use PHPUnit\Framework\Assert;
 
@@ -33,9 +33,9 @@ class Table extends Component implements TableInterface
     /** @var \EzSystems\Behat\Browser\Locator\VisibleCSSLocator */
     private $parentLocator;
 
-    public function __construct(Browser $browser, Pagination $pagination)
+    public function __construct(TestEnvironment $testEnv, Pagination $pagination)
     {
-        parent::__construct($browser);
+        parent::__construct($testEnv);
         $this->pagination = $pagination;
         $this->parentLocatorChanged = true;
         $this->parentLocator = $this->getLocator('parent');
@@ -87,7 +87,7 @@ class Table extends Component implements TableInterface
         }
 
         $allHeaders = $this->parentElement->findAll($this->getLocator('columnHeader'))
-            ->map(function (NodeElement $element) {
+            ->map(function (ElementInterface $element) {
                 return $element->getText();
             });
 
@@ -100,7 +100,7 @@ class Table extends Component implements TableInterface
         foreach ($foundHeaders as $headerPosition => $header) {
             $columnValues = $this->parentElement
                  ->findAll($this->getTableCellLocator($headerPosition))
-                 ->map(function (NodeElement $element) {
+                 ->map(function (ElementInterface $element) {
                      return $element->getText();
                  });
 
@@ -126,7 +126,7 @@ class Table extends Component implements TableInterface
         $searchedHeaders = array_keys($elementData);
 
         $allHeaders = $this->parentElement->setTimeout(0)->findAll($this->getLocator('columnHeader'))
-            ->map(function (NodeElement $element) {
+            ->map(function (ElementInterface $element) {
                 return $element->getText();
             });
 
@@ -138,13 +138,17 @@ class Table extends Component implements TableInterface
     public function getTableRow(array $elementData): TableRow
     {
         if ($this->isEmpty()) {
-            throw new \Exception('Table row with given data was not found!');
+            throw new \Exception(
+                'Table row with given data was not found! Keys: %s, Values: %s',
+                implode(',', array_keys($elementData)),
+                implode(',', array_values($elementData)),
+                );
         }
 
         $searchedHeaders = array_keys($elementData);
 
         $allHeaders = $this->parentElement->findAll($this->getLocator('columnHeader'))
-            ->map(function (NodeElement $element) {
+            ->map(function (ElementInterface $element) {
                 return $element->getText();
             });
 
@@ -166,11 +170,14 @@ class Table extends Component implements TableInterface
         });
 
         if ($rowElement) {
-            return new TableRow($this->browser, $rowElement, new LocatorCollection($filteredCellLocators));
+            return new TableRow($this->testEnv, $rowElement, new LocatorCollection($filteredCellLocators));
         }
 
-        throw new \Exception('Table row with given data was not found!');
-    }
+        throw new \Exception(
+            'Table row with given data was not found! Keys: %s, Values: %s',
+            implode(',', array_keys($elementData)),
+            implode(',', array_values($elementData)),
+        );    }
 
     public function getTableRowByIndex(int $rowIndex): TableRow
     {
@@ -182,7 +189,7 @@ class Table extends Component implements TableInterface
         }
 
         $allHeaders = $this->parentElement->findAll($this->getLocator('columnHeader'))
-            ->map(function (NodeElement $element) {
+            ->map(function (ElementInterface $element) {
                 return $element->getText();
             });
 
@@ -195,7 +202,7 @@ class Table extends Component implements TableInterface
             return $locator->getIdentifier() !== '';
         });
 
-        return new TableRow($this->browser, $rowElement, new LocatorCollection($filteredCellLocators));
+        return new TableRow($this->testEnv, $rowElement, new LocatorCollection($filteredCellLocators));
     }
 
     public function verifyIsLoaded(): void
@@ -299,9 +306,9 @@ class Table extends Component implements TableInterface
      * @param array $foundHeaders
      * @param array $elementData
      *
-     * @return \EzSystems\Behat\Browser\Element\NodeElement|null
+     * @return \EzSystems\Behat\Browser\Element\ElementInterface|null
      */
-    private function getMatchingTableRow(array $foundHeaders, array $elementData): ?NodeElement
+    private function getMatchingTableRow(array $foundHeaders, array $elementData): ?ElementInterface
     {
         foreach ($this->parentElement->setTimeout(0)->findAll($this->getLocator('row')) as $row) {
             foreach ($foundHeaders as $headerPosition => $header) {

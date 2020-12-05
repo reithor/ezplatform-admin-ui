@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\Browser\Component\Component;
-use EzSystems\Behat\Browser\Element\NodeElement;
+use EzSystems\Behat\Browser\Element\ElementInterface;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
@@ -23,7 +23,7 @@ class LanguagePicker extends Component
     public function getLanguages(): array
     {
         return $this->getHTMLPage()->findAll($this->getLocator('languageSelector'))->map(
-            function (NodeElement $element) {
+            function (ElementInterface $element) {
                 return $element->getText();
             }
         );

@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace EzSystems\EzPlatformAdminUi\Behat\PageObject;
 
-use EzSystems\Behat\Browser\Page\Browser;
+use EzSystems\Behat\Browser\Page\TestEnvironment;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
@@ -32,13 +32,13 @@ class TrashPage extends Page
     private $table;
 
     public function __construct(
-        Browser $browser,
+        TestEnvironment $testEnv,
         UniversalDiscoveryWidget $universalDiscoveryWidget,
         Dialog $dialog,
         RightMenu $rightMenu,
         Table $table)
     {
-        parent::__construct($browser);
+        parent::__construct($testEnv);
         $this->universalDiscoveryWidget = $universalDiscoveryWidget;
         $this->dialog = $dialog;
         $this->rightMenu = $rightMenu;

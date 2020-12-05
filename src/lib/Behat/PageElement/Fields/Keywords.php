@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement\Fields;
 
-use EzSystems\Behat\Browser\Element\NodeElement;
+use EzSystems\Behat\Browser\Element\ElementInterface;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use PHPUnit\Framework\Assert;
 
@@ -39,7 +39,7 @@ SCRIPT;
             }, explode(',', $parameters['value'])
         ));
 
-        $this->browser->getSession()->getDriver()->executeScript(sprintf($this->setKeywordsValueScript, $parsedValue));
+        $this->testEnv->getSession()->getDriver()->executeScript(sprintf($this->setKeywordsValueScript, $parsedValue));
     }
 
     public function verifyValueInItemView(array $values): void
@@ -48,7 +48,7 @@ SCRIPT;
 
         $actualValues = $this->getHTMLPage()
             ->findAll($this->parentLocator->withDescendant($this->getLocator('keywordItem')))
-            ->map(static function (NodeElement $element) {
+            ->map(static function (ElementInterface $element) {
                 return $element->getText();
             });
         sort($actualValues);
