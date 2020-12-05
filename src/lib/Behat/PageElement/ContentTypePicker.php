@@ -18,10 +18,10 @@ class ContentTypePicker extends Component
     {
         $countBeforeFiltering = $this->getDisplayedItemsCount();
         $this->getHTMLPage()->find($this->getLocator('filterInput'))->setValue($contentTypeName);
-        $this->getHTMLPage()->setTimeout(5)->findAll($this->getLocator('filteredItem'))->getByText($contentTypeName)->click();
         $this->waitUntil(3, function () use ($countBeforeFiltering) {
             return $this->getDisplayedItemsCount() < $countBeforeFiltering;
         });
+        $this->getHTMLPage()->setTimeout(5)->findAll($this->getLocator('filteredItem'))->getByText($contentTypeName)->click();
     }
 
     public function verifyIsLoaded(): void
