@@ -37,7 +37,7 @@ ezplatform:
             paths:
                 - '%paths.base%/vendor/ezsystems/ezplatform-admin-ui/features/personas'
             contexts:
-                - EzSystems\Behat\Browser\Context\BrowserContext
+                 
                 - EzSystems\Behat\Browser\Context\Hooks
                 - EzSystems\Behat\Browser\Context\AuthenticationContext
                 - EzSystems\EzPlatformAdminUi\Behat\BusinessContext\NavigationContext
