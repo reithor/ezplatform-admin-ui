@@ -111,7 +111,7 @@ Feature: Sections management
     And the "Test Section edited2" on Sections list has assigned Content Items
     Then Section "Test Section edited2" cannot be selected
 
-  @javascript @APIUser:admin
+  @javascript
   Scenario: Content item can be reassigned to section from the Sections details
     Given I open "Media" Section page in admin SiteAccess
     When I start assigning to "Media" Section
@@ -125,7 +125,7 @@ Feature: Sections management
     And I open "Test Section edited2" Section page in admin SiteAccess
     And the "Test Section edited2" has no assigned Content Items
 
-  @javascript @common
+  @javascript
   Scenario: Empty section can be deleted
     Given I open "Sections" page in admin SiteAccess
     And the "Test Section edited2" on Sections list has no assigned Content Items
@@ -133,7 +133,7 @@ Feature: Sections management
     Then notification that "Section" "Test Section edited2" is removed appears
       And there's no "Test Section edited2" on Sections list
 
-  @javascript @common
+  @javascript
   Scenario: Section can be deleted from section details
     Given I open "Sections" page in admin SiteAccess
     And I create a new Section

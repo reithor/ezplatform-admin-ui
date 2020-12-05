@@ -27,6 +27,7 @@ class AdminUpdateContext implements Context
      */
     public function iSetFields(TableNode $table): void
     {
+        $this->adminUpdateItemPage->verifyIsLoaded();
         foreach ($table->getHash() as $row) {
             $this->adminUpdateItemPage->fillFieldWithValue($row['label'], $row['value']);
         }
