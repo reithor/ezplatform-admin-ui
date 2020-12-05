@@ -177,7 +177,8 @@ class Table extends Component implements TableInterface
             'Table row with given data was not found! Keys: %s, Values: %s',
             implode(',', array_keys($elementData)),
             implode(',', array_values($elementData)),
-        );    }
+        );
+    }
 
     public function getTableRowByIndex(int $rowIndex): TableRow
     {
