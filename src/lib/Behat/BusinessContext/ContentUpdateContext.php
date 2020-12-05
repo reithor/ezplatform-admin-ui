@@ -39,7 +39,6 @@ class ContentUpdateContext implements Context
             $values = $this->filterOutNonEmptyValues($row);
             $this->contentUpdateItemPage->fillFieldWithValue($row['label'], $values);
         }
-        $this->contentUpdateItemPage->verifyIsLoaded();
     }
 
     /**
