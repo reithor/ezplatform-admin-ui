@@ -103,30 +103,22 @@ class NavigationContext implements Context
 
     /**
      * @Given I navigate to content :contentName of type :contentType in :path
-     * @Given I navigate to content :contentName of type :contentType
      */
     public function iNavigateToContent(string $contentName, string $contentType, string $path = null)
     {
-        if ($path !== null) {
-            $path = $this->argumentParser->replaceRootKeyword($path);
-
-            $this->contentViewPage->navigateToPath($path);
-            $this->contentViewPage->setExpectedLocationPath($path);
-            $this->contentViewPage->verifyIsLoaded();
+        $expectedContentPath = sprintf('%s/%s', $path, $contentName);
+        $pathParts = explode('/', $expectedContentPath);
+        if ($pathParts[0] === 'root') {
+            $menuTab =  'Content structure';
+            $startingLocation = '/';
         }
-        $expectedContentPath = $path ? sprintf('%s/%s', $path, $contentName) : $contentName;
-        $this->contentViewPage->goToSubItem($contentName, $contentType);
-        $this->contentViewPage->setExpectedLocationPath($expectedContentPath);
-        $this->contentViewPage->verifyIsLoaded();
-    }
-
-    /**
-     * @Given I navigate to content :contentName of type :contentType in root path
-     */
-    public function iNavigateToContentInRoot(string $contentName, string $contentType)
-    {
-        $path = $this->argumentParser->replaceRootKeyword('root');
-        $this->iNavigateToContent($contentName, $contentType, $path);
+        else {
+            $menuTab = $pathParts[0];
+            $startingLocation = $pathParts[0];
+        }
+        $expectedContentPath = $this->argumentParser->replaceRootKeyword($expectedContentPath);
+        $this->contentViewPage->setExpectedLocationPath($startingLocation);
+        $this->contentViewPage->navigateToPath($expectedContentPath, $menuTab);
     }
 
     /**
@@ -144,7 +136,6 @@ class NavigationContext implements Context
     public function iMOnContentViewPageFor(string $path)
     {
         $path = $this->argumentParser->parseUrl($path);
-        $path = $this->argumentParser->replaceRootKeyword($path);
         $this->contentViewPage->setExpectedLocationPath($path);
         $this->contentViewPage->open('admin');
         $this->contentViewPage->verifyIsLoaded();

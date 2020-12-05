@@ -90,7 +90,7 @@ class UniversalDiscoveryWidget extends Component
 
     protected function selectTreeBranch(string $itemName, int $level): void
     {
-        $treeLevelLocator = new VisibleCSSLocator('treeLevelLocator', sprintf($this->getLocator('treeLevelFormat')->getSelector(), $level));
+        $treeLevelLocator = new VisibleCSSLocator('treeLevelLocator', sprintf($this->getLocator('treeLevelElementsFormat')->getSelector(), $level));
         $this->getHTMLPage()->setTimeout(self::LONG_TIMEOUT)->find($treeLevelLocator)->assert()->isVisible();
 
         $alreadySelectedItemName = $this->getCurrentlySelectedItemName($level);

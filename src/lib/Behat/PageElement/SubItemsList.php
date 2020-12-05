@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\Browser\Component\Component;
+use EzSystems\Behat\Browser\Locator\CSSLocator;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Table\SubitemsGrid;
@@ -42,14 +43,14 @@ class SubItemsList extends Component
         $this->getHTMLPage()->findAll($this->getLocator('horizontalHeaders'))->getByText($columnName)->click();
         $isSortedDescending = $this->getHTMLPage()->findAll($this->getLocator('sortingOrderDescending'))->any();
 
-        if ($isSortedDescending && $ascending) {
+        if (!$isSortedDescending && !$ascending) {
             $this->getHTMLPage()->findAll($this->getLocator('horizontalHeaders'))->getByText($columnName)->click();
         }
 
         $verificationLocator = $ascending ?
             $this->getLocator('sortingOrderAscending') : $this->getLocator('sortingOrderDescending');
 
-        $this->getHTMLPage()->find($verificationLocator)->assert()->isVisible();
+        $this->getHTMLPage()->setTimeout(5)->find($verificationLocator);
     }
 
     public function shouldHaveGridViewEnabled(bool $enabled): void
@@ -77,13 +78,18 @@ class SubItemsList extends Component
         return $this->isGridViewEnabled ? $this->grid : $this->table;
     }
 
+    public function goTo(string $itemName): void
+    {
+        $this->getTable()->getTableRow(['Name' => $itemName])->goToItem();
+    }
+
     protected function specifyLocators(): array
     {
         return [
             new VisibleCSSLocator('table', '.m-sub-items'),
             new VisibleCSSLocator('horizontalHeaders', '.m-sub-items .c-table-view__cell--head'),
-            new VisibleCSSLocator('sortingOrderAscending', '.m-sub-items .c-table-view__cell--head.m-sub-items .c-table-view__cell--sorted-asc'),
-            new VisibleCSSLocator('sortingOrderDescending', '.m-sub-items .c-table-view__cell--head.m-sub-items .c-table-view__cell--sorted-desc'),
+            new CSSLocator('sortingOrderAscending', '.m-sub-items .c-table-view__cell--head.c-table-view__cell--sorted-asc'),
+            new CSSLocator('sortingOrderDescending', '.m-sub-items .c-table-view__cell--head.c-table-view__cell--sorted-desc'),
         ];
     }
 }

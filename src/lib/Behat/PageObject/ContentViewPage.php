@@ -15,6 +15,7 @@ use eZ\Publish\API\Repository\Values\Content\URLAlias;
 use EzSystems\Behat\Browser\Page\Browser;
 use EzSystems\Behat\Browser\Page\Page;
 use EzSystems\Behat\Browser\Locator\VisibleCSSLocator;
+use EzSystems\Behat\Core\Behat\ArgumentParser;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\Breadcrumb;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\ContentItemAdminPreview;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\ContentTypePicker;
@@ -22,6 +23,7 @@ use EzSystems\EzPlatformAdminUi\Behat\PageElement\Dialog;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\LanguagePicker;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\RightMenu;
 use EzSystems\EzPlatformAdminUi\Behat\PageElement\SubItemsList;
+use EzSystems\EzPlatformAdminUi\Behat\PageElement\UpperMenu;
 use PHPUnit\Framework\Assert;
 
 class ContentViewPage extends Page
@@ -60,18 +62,22 @@ class ContentViewPage extends Page
 
     /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\ContentItemAdminPreview */
     private $contentItemAdminPreview;
-    /**
-     * @var UserUpdatePage
-     */
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageObject\UserUpdatePage */
     private $userUpdatePage;
-    /**
-     * @var Repository
-     */
+
+    /** @var \eZ\Publish\API\Repository\Repository */
     private $repository;
-    /**
-     * @var mixed
-     */
+
+    /** @var bool */
     private $expectedIsContainer;
+
+    /** @var \EzSystems\EzPlatformAdminUi\Behat\PageElement\UpperMenu */
+    private $upperMenu;
+    /**
+     * @var ArgumentParser
+     */
+    private $argumentParser;
 
     public function __construct(
         Browser $browser,
@@ -84,7 +90,9 @@ class ContentViewPage extends Page
         Repository $repository,
         Breadcrumb $breadcrumb,
         ContentItemAdminPreview $contentItemAdminPreview,
-        UserUpdatePage $userUpdatePage
+        UserUpdatePage $userUpdatePage,
+        UpperMenu $upperMenu,
+        ArgumentParser $argumentParser
     ) {
         parent::__construct($browser);
 
@@ -99,6 +107,8 @@ class ContentViewPage extends Page
         $this->contentItemAdminPreview = $contentItemAdminPreview;
         $this->userUpdatePage = $userUpdatePage;
         $this->repository = $repository;
+        $this->upperMenu = $upperMenu;
+        $this->argumentParser = $argumentParser;
     }
 
     public function startCreatingContent(string $contentTypeName): ContentUpdateItemPage
@@ -121,35 +131,28 @@ class ContentViewPage extends Page
         return $this->userUpdatePage;
     }
 
-    public function goToSubItem(string $contentName, string $contentType): void
+    public function goToSubItem(string $contentItemName): void
     {
-        throw new \Exception('jak najmniej tego uzywac...');
         $this->subItemList->sortBy('Modified', false);
 
-        $this->subItemList->clickListElement($contentName, $contentType);
-
-        $this->setExpectedLocationPath(sprintf('%s/%s', $this->locationPath, $contentName));
+        $this->subItemList->goTo($contentItemName);
+        $this->setExpectedLocationPath(sprintf('%s/%s', $this->locationPath, $contentItemName));
         $this->verifyIsLoaded();
     }
 
-    public function navigateToPath(string $path): void
+    public function navigateToPath(string $path, string $menuTab): void
     {
-        throw new \Exception('jak najmniej tego uzywac...');
-        // $pathArray = explode('/', $path);
-        // $menuTab = $pathArray[0] === EnvironmentConstants::get('ROOT_CONTENT_NAME') ? 'Content structure' : $pathArray[0];
+         $this->upperMenu->goToTab('Content');
+         $this->upperMenu->goToSubTab($menuTab);
 
-        // $upperMenu = ElementFactory::createElement($this->context, UpperMenu::ELEMENT_NAME);
-        // $upperMenu->goToTab('Content');
-        // $upperMenu->goToSubTab($menuTab);
+         $this->verifyIsLoaded();
 
-        // $pathSize = count($pathArray);
-        // if ($pathSize > 1) {
-        //     for ($i = 1; $i < $pathSize; ++$i) {
-        //         $contentPage = PageObjectFactory::createPage($this->context, self::PAGE_NAME, $pathArray[$i - 1]);
-        //         $contentPage->verifyIsLoaded();
-        //         $contentPage->subItemList->table->clickListElement($pathArray[$i]);
-        //     }
-        // }
+        $pathParts = explode('/', $path);
+        $pathSize = count($pathParts);
+
+        for ($i = 1; $i < $pathSize; $i++) {
+            $this->goToSubItem($pathParts[$i]);
+        }
     }
 
     private function hasGridViewEnabledByDefault(): bool
@@ -159,9 +162,11 @@ class ContentViewPage extends Page
 
     public function setExpectedLocationPath(string $locationPath)
     {
+        $this->locationPath = $this->argumentParser->parseUrl($locationPath);
         [$this->expectedContentType, $this->expectedContentName, $contentId, $contentMainLocationId, $isContainer] = $this->getContentData($locationPath);
         $this->route = sprintf('/view/content/%s/full/1/%s', $contentId, $contentMainLocationId);
         $this->expectedIsContainer = $isContainer;
+        $this->locationPath = $locationPath;
     }
 
     private function getContentData(string $locationPath): array
@@ -250,6 +255,7 @@ class ContentViewPage extends Page
     public function sendToTrash()
     {
         $this->rightMenu->clickButton('Send to Trash');
+        $this->dialog->verifyIsLoaded();
         $this->dialog->confirm();
     }
 

@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace EzSystems\EzPlatformAdminUi\Behat\PageElement;
 
 use EzSystems\Behat\Browser\Component\Component;
+use EzSystems\Behat\Browser\Element\NodeElement;
 use EzSystems\Behat\Browser\Locator\CSSLocator;
 use PHPUnit\Framework\Assert;
 
@@ -17,6 +18,7 @@ class RightMenu extends Component
     public function clickButton(string $buttonName): void
     {
         $this->getHTMLPage()
+            ->setTimeout(5)
             ->findAll($this->getLocator('menuButton'))
             ->assert()->hasElements()
             ->getByText($buttonName)
@@ -25,12 +27,17 @@ class RightMenu extends Component
 
     public function isButtonActive(string $buttonName): bool
     {
-        return $this->getHTMLPage()->findAll($this->getLocator('menuButton'))->getByText($buttonName)->hasAttribute('disabled');
+        return !$this->getHTMLPage()->findAll($this->getLocator('menuButton'))->getByText($buttonName)->hasAttribute('disabled');
     }
 
     public function isButtonVisible(string $buttonName): bool
     {
-        return $this->getHTMLPage()->findAll($this->getLocator('menuButton'))->getByText($buttonName)->any();
+        return $this->getHTMLPage()
+            ->findAll($this->getLocator('menuButton'))
+            ->filter(function(NodeElement $element) use ($buttonName) {
+                return $element->getText() === $buttonName;
+            })
+            ->any();
     }
 
     public function verifyIsLoaded(): void
