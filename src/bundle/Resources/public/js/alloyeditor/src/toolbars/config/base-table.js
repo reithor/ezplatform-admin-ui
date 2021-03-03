@@ -1,6 +1,6 @@
-import AlloyEditor from 'alloyeditor';
+import EzConfigFixedBase from './base-fixed';
 
-export default class EzConfigTableBase {
+export default class EzConfigFixedBase {
     constructor(config) {
         this.name = this.getConfigName();
 
@@ -23,5 +23,9 @@ export default class EzConfigTableBase {
 
     getConfigName() {
         return '';
+    }
+    
+    getArrowBoxClasses() {
+        return 'ae-toolbar-floating';
     }
 }
